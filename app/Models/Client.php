@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Client Model
@@ -43,6 +44,18 @@ class Client extends Model
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    /**
+     * العلاقة مع حملات التحصيل (Many to Many)
+     * 
+     * @return BelongsToMany
+     */
+    public function campaigns(): BelongsToMany
+    {
+        return $this->belongsToMany(CollectionCampaign::class, 'collection_campaign_clients', 'client_id', 'campaign_id')
+            ->withPivot('status', 'sent_at', 'error_message')
+            ->withTimestamps();
     }
 
     /**

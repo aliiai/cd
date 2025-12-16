@@ -55,6 +55,8 @@ Route::prefix('owner')->name('owner.')->middleware(['auth', 'role:owner'])->grou
     Route::get('/dashboard', [OwnerDashboardController::class, 'index'])->name('dashboard');
     Route::resource('clients', OwnerClientController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::get('/collections', [OwnerCollectionController::class, 'index'])->name('collections.index');
+    Route::post('/collections', [OwnerCollectionController::class, 'store'])->name('collections.store');
+    Route::get('/collections/{campaign}', [OwnerCollectionController::class, 'show'])->name('collections.show');
     Route::get('/messages/create', [OwnerMessageController::class, 'create'])->name('messages.create');
     Route::get('/ai-assistance', [OwnerAiAssistanceController::class, 'index'])->name('ai-assistance.index');
     Route::get('/settings', [OwnerSettingsController::class, 'index'])->name('settings');
