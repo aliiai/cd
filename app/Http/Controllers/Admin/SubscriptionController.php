@@ -47,11 +47,16 @@ class SubscriptionController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
+            'duration_type' => 'required|in:month,year,lifetime',
             'max_debtors' => 'required|integer|min:0',
             'max_messages' => 'required|integer|min:0',
             'ai_enabled' => 'boolean',
             'is_active' => 'boolean',
         ]);
+
+        // معالجة checkbox - إذا لم يتم إرساله، يكون false
+        $validated['ai_enabled'] = $request->has('ai_enabled') ? (bool)$request->input('ai_enabled') : false;
+        $validated['is_active'] = $request->has('is_active') ? (bool)$request->input('is_active') : false;
 
         // إنشاء الباقة
         Subscription::create($validated);
@@ -96,11 +101,16 @@ class SubscriptionController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
+            'duration_type' => 'required|in:month,year,lifetime',
             'max_debtors' => 'required|integer|min:0',
             'max_messages' => 'required|integer|min:0',
             'ai_enabled' => 'boolean',
             'is_active' => 'boolean',
         ]);
+
+        // معالجة checkbox - إذا لم يتم إرساله، يكون false
+        $validated['ai_enabled'] = $request->has('ai_enabled') ? (bool)$request->input('ai_enabled') : false;
+        $validated['is_active'] = $request->has('is_active') ? (bool)$request->input('is_active') : false;
 
         // تحديث الباقة
         $subscription->update($validated);

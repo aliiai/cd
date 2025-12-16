@@ -62,6 +62,33 @@ class SubscriptionRequestController extends Controller
             'admin_notes' => $httpRequest->input('admin_notes'),
         ]);
 
+        // إنشاء اشتراك نشط للمستخدم
+        $subscription = $request->subscription;
+        $expiresAt = null;
+
+        // حساب تاريخ الانتهاء بناءً على نوع المدة
+        if ($subscription->duration_type === 'month') {
+            $expiresAt = now()->addMonth();
+        } elseif ($subscription->duration_type === 'year') {
+            $expiresAt = now()->addYear();
+        }
+        // إذا كان lifetime، يبقى expires_at = null
+
+        // إلغاء أي اشتراكات نشطة سابقة للمستخدم
+        \App\Models\UserSubscription::where('user_id', $request->user_id)
+            ->where('status', 'active')
+            ->update(['status' => 'cancelled']);
+
+        // إنشاء اشتراك جديد
+        \App\Models\UserSubscription::create([
+            'user_id' => $request->user_id,
+            'subscription_id' => $subscription->id,
+            'subscription_request_id' => $request->id,
+            'status' => 'active',
+            'started_at' => now(),
+            'expires_at' => $expiresAt,
+        ]);
+
         return back()->with('success', 'تم قبول طلب الاشتراك بنجاح.');
     }
 

@@ -9,6 +9,35 @@
 
             <!-- Right Side - Icons -->
             <div class="flex items-center space-x-4">
+                <!-- Current Subscription (Owner Only) -->
+                @if(Auth::user()->hasRole('owner'))
+                    @php
+                        $activeSubscription = Auth::user()->activeSubscription();
+                    @endphp
+                    @if($activeSubscription)
+                        <div class="flex items-center space-x-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-lg">
+                            <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-sm font-medium text-green-800">
+                                {{ $activeSubscription->subscription->name }}
+                            </span>
+                            <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                                نشط
+                            </span>
+                        </div>
+                    @else
+                        <div class="flex items-center space-x-2 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-lg">
+                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-sm font-medium text-gray-600">
+                                بدون اشتراك
+                            </span>
+                        </div>
+                    @endif
+                @endif
+
                 <!-- Language Switcher -->
                 <button 
                     type="button"

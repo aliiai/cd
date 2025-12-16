@@ -19,6 +19,7 @@ class Subscription extends Model
         'name',
         'description',
         'price',
+        'duration_type',
         'max_debtors',
         'max_messages',
         'ai_enabled',
@@ -44,6 +45,31 @@ class Subscription extends Model
     public function requests(): HasMany
     {
         return $this->hasMany(SubscriptionRequest::class);
+    }
+
+    /**
+     * العلاقة مع الاشتراكات النشطة للمستخدمين
+     * 
+     * @return HasMany
+     */
+    public function userSubscriptions(): HasMany
+    {
+        return $this->hasMany(UserSubscription::class);
+    }
+
+    /**
+     * الحصول على نص مدة الاشتراك
+     * 
+     * @return string
+     */
+    public function getDurationTextAttribute(): string
+    {
+        return match($this->duration_type) {
+            'month' => 'شهري',
+            'year' => 'سنوي',
+            'lifetime' => 'دائم',
+            default => 'غير محدد',
+        };
     }
 
     /**

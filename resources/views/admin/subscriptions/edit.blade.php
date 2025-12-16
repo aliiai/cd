@@ -64,6 +64,25 @@
                         @enderror
                     </div>
 
+                    <!-- Duration Type -->
+                    <div class="mb-4">
+                        <label for="duration_type" class="block text-sm font-medium text-gray-700 mb-2">
+                            مدة الاشتراك <span class="text-red-500">*</span>
+                        </label>
+                        <select name="duration_type" 
+                                id="duration_type" 
+                                required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">اختر المدة</option>
+                            <option value="month" {{ old('duration_type', $subscription->duration_type) === 'month' ? 'selected' : '' }}>شهري</option>
+                            <option value="year" {{ old('duration_type', $subscription->duration_type) === 'year' ? 'selected' : '' }}>سنوي</option>
+                            <option value="lifetime" {{ old('duration_type', $subscription->duration_type) === 'lifetime' ? 'selected' : '' }}>دائم</option>
+                        </select>
+                        @error('duration_type')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <!-- Max Debtors -->
                     <div class="mb-4">
                         <label for="max_debtors" class="block text-sm font-medium text-gray-700 mb-2">
@@ -120,6 +139,7 @@
                                    class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                             <span class="ml-2 text-sm text-gray-700">الباقة نشطة</span>
                         </label>
+                        <p class="mt-1 text-xs text-gray-500">إذا لم يتم تحديد هذا الخيار، ستكون الباقة غير نشطة ولن تظهر للمالكين</p>
                     </div>
 
                     <!-- Buttons -->

@@ -51,7 +51,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 // Owner Routes
 Route::prefix('owner')->name('owner.')->middleware(['auth', 'role:owner'])->group(function () {
     Route::get('/dashboard', [OwnerDashboardController::class, 'index'])->name('dashboard');
-    Route::get('/clients', [OwnerClientController::class, 'index'])->name('clients.index');
+    Route::resource('clients', OwnerClientController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::get('/collections', [OwnerCollectionController::class, 'index'])->name('collections.index');
     Route::get('/messages/create', [OwnerMessageController::class, 'create'])->name('messages.create');
     Route::get('/ai-assistance', [OwnerAiAssistanceController::class, 'index'])->name('ai-assistance.index');

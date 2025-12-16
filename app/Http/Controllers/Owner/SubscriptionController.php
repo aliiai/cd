@@ -23,16 +23,20 @@ class SubscriptionController extends Controller
      */
     public function index()
     {
-        // جلب جميع الباقات النشطة
+        // جلب جميع الباقات النشطة فقط (is_active = true)
         $subscriptions = Subscription::active()->get();
         
-        // جلب طلبات الاشتراك للمستخدم الحالي
-        $userRequests = SubscriptionRequest::where('user_id', Auth::id())
+        // جلب الاشتراك النشط الحالي للمستخدم
+        $activeSubscription = Auth::user()->activeSubscription();
+        
+        // جلب طلب الاشتراك المعلق فقط (إن وجد)
+        $pendingRequest = SubscriptionRequest::where('user_id', Auth::id())
+            ->where('status', 'pending')
             ->with('subscription')
             ->latest()
-            ->get();
+            ->first();
         
-        return view('owner.subscriptions.index', compact('subscriptions', 'userRequests'));
+        return view('owner.subscriptions.index', compact('subscriptions', 'activeSubscription', 'pendingRequest'));
     }
 
     /**

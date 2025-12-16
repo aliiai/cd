@@ -66,4 +66,42 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * العلاقة مع الاشتراكات النشطة
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function subscriptions()
+    {
+        return $this->hasMany(UserSubscription::class);
+    }
+
+    /**
+     * الحصول على الاشتراك النشط الحالي
+     * 
+     * @return UserSubscription|null
+     */
+    public function activeSubscription()
+    {
+        return $this->subscriptions()
+            ->where('status', 'active')
+            ->where(function($query) {
+                $query->whereNull('expires_at')
+                      ->orWhere('expires_at', '>', now());
+            })
+            ->with('subscription')
+            ->latest('started_at')
+            ->first();
+    }
+
+    /**
+     * التحقق من وجود اشتراك نشط
+     * 
+     * @return bool
+     */
+    public function hasActiveSubscription(): bool
+    {
+        return $this->activeSubscription() !== null;
+    }
 }
