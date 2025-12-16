@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Models\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * User Controller for Admin
@@ -13,11 +16,96 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     /**
-     * Display a listing of users
+     * عرض قائمة جميع المستخدمين
+     * 
+     * @return \Illuminate\View\View
      */
     public function index()
     {
-        return view('admin.users.index');
+        // جلب جميع المستخدمين (باستثناء Admin)
+        $users = User::whereDoesntHave('roles', function($query) {
+                $query->where('name', 'admin');
+            })
+            ->with('roles')
+            ->latest()
+            ->get();
+        
+        return view('admin.users.index', compact('users'));
+    }
+
+    /**
+     * عرض تفاصيل مستخدم معين
+     * 
+     * @param User $user
+     * @return \Illuminate\View\View
+     */
+    public function show(User $user)
+    {
+        // التأكد من أن المستخدم ليس Admin
+        if ($user->hasRole('admin')) {
+            abort(403, 'لا يمكن عرض تفاصيل Admin');
+        }
+
+        // جلب الاشتراك النشط
+        $activeSubscription = $user->activeSubscription();
+        
+        // إحصائيات المديونين
+        $totalDebtors = Client::where('owner_id', $user->id)->count();
+        $paidDebtors = Client::where('owner_id', $user->id)->where('status', 'paid')->count();
+        $overdueDebtors = Client::where('owner_id', $user->id)->where('status', 'overdue')->count();
+        $totalDebtAmount = Client::where('owner_id', $user->id)->sum('debt_amount');
+        $paidAmount = Client::where('owner_id', $user->id)->where('status', 'paid')->sum('debt_amount');
+        $collectionRate = $totalDebtAmount > 0 ? ($paidAmount / $totalDebtAmount) * 100 : 0;
+
+        // آخر المديونين
+        $recentClients = Client::where('owner_id', $user->id)
+            ->latest()
+            ->limit(5)
+            ->get();
+
+        // آخر المديونين المدفوعين
+        $recentPaidClients = Client::where('owner_id', $user->id)
+            ->where('status', 'paid')
+            ->latest()
+            ->limit(5)
+            ->get();
+
+        return view('admin.users.show', compact(
+            'user',
+            'activeSubscription',
+            'totalDebtors',
+            'paidDebtors',
+            'overdueDebtors',
+            'totalDebtAmount',
+            'paidAmount',
+            'collectionRate',
+            'recentClients',
+            'recentPaidClients'
+        ));
+    }
+
+    /**
+     * تفعيل/إيقاف حساب مستخدم
+     * 
+     * @param Request $request
+     * @param User $user
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function toggleStatus(Request $request, User $user)
+    {
+        // التأكد من أن المستخدم ليس Admin
+        if ($user->hasRole('admin')) {
+            return back()->with('error', 'لا يمكن تعديل حالة حساب Admin');
+        }
+
+        // تبديل الحالة
+        $user->update([
+            'is_active' => !$user->is_active
+        ]);
+
+        $status = $user->is_active ? 'مفعل' : 'موقوف';
+        
+        return back()->with('success', "تم {$status} حساب المستخدم بنجاح.");
     }
 }
 

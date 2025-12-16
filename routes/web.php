@@ -28,6 +28,8 @@ Route::get('/', function () {
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+    Route::get('/users/{user}', [AdminUserController::class, 'show'])->name('users.show');
+    Route::post('/users/{user}/toggle-status', [AdminUserController::class, 'toggleStatus'])->name('users.toggle-status');
     Route::get('/roles', [AdminRoleController::class, 'index'])->name('roles.index');
     Route::get('/services', [AdminServiceController::class, 'index'])->name('services.index');
     Route::get('/logs', [AdminLogController::class, 'index'])->name('logs.index');
