@@ -18,17 +18,57 @@ class UserController extends Controller
     /**
      * عرض قائمة جميع المستخدمين
      * 
-     * @return \Illuminate\View\View
+     * @param Request $request
+     * @return \Illuminate\View\View|\Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         // جلب جميع المستخدمين (باستثناء Admin)
-        $users = User::whereDoesntHave('roles', function($query) {
+        $query = User::whereDoesntHave('roles', function($query) {
                 $query->where('name', 'admin');
             })
-            ->with('roles')
-            ->latest()
-            ->get();
+            ->with('roles', 'activeSubscription');
+        
+        // البحث
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+        
+        // فلترة حسب حالة الحساب
+        if ($request->has('status') && $request->status !== 'all') {
+            if ($request->status === 'active') {
+                $query->where('is_active', true);
+            } elseif ($request->status === 'inactive') {
+                $query->where('is_active', false);
+            }
+        }
+        
+        // فلترة حسب الدور
+        if ($request->has('role') && $request->role !== 'all') {
+            $query->whereHas('roles', function($q) use ($request) {
+                $q->where('name', $request->role);
+            });
+        }
+        
+        // الترتيب
+        $sortBy = $request->get('sort_by', 'created_at');
+        $sortDir = $request->get('sort_dir', 'desc');
+        $query->orderBy($sortBy, $sortDir);
+        
+        // Pagination
+        $users = $query->paginate(10);
+        
+        // إذا كان الطلب AJAX، إرجاع JSON
+        if ($request->ajax()) {
+            return response()->json([
+                'table' => view('admin.users.partials.users-table', compact('users'))->render(),
+                'pagination' => $users->appends($request->query())->links()->render(),
+            ]);
+        }
         
         return view('admin.users.index', compact('users'));
     }

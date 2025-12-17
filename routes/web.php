@@ -10,6 +10,9 @@ use App\Http\Controllers\Admin\LogController as AdminLogController;
 use App\Http\Controllers\Admin\AiReportController as AdminAiReportController;
 use App\Http\Controllers\Admin\AuditController as AdminAuditController;
 use App\Http\Controllers\Admin\NotificationController as AdminNotificationController;
+use App\Http\Controllers\Admin\TicketController as AdminTicketController;
+use App\Http\Controllers\Admin\AdminController as AdminAdminController;
+use App\Http\Controllers\Admin\PermissionController as AdminPermissionController;
 use App\Http\Controllers\Owner\DashboardController as OwnerDashboardController;
 use App\Http\Controllers\Owner\DebtorController as OwnerDebtorController;
 use App\Http\Controllers\Owner\CollectionController as OwnerCollectionController;
@@ -22,6 +25,7 @@ use App\Http\Controllers\Admin\SubscriptionRequestController as AdminSubscriptio
 use App\Http\Controllers\Owner\SubscriptionController as OwnerSubscriptionController;
 use App\Http\Controllers\Owner\ReportController as OwnerReportController;
 use App\Http\Controllers\Owner\NotificationController as OwnerNotificationController;
+use App\Http\Controllers\Owner\TicketController as OwnerTicketController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -62,6 +66,35 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/{notification}/read', [AdminNotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::post('/notifications/read-all', [AdminNotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
+    
+    // Tickets Routes
+    Route::prefix('tickets')->name('tickets.')->group(function () {
+        Route::get('/', [AdminTicketController::class, 'index'])->name('index');
+        Route::get('/{ticket}', [AdminTicketController::class, 'show'])->name('show');
+        Route::post('/{ticket}/reply', [AdminTicketController::class, 'reply'])->name('reply');
+        Route::post('/{ticket}/update-status', [AdminTicketController::class, 'updateStatus'])->name('update-status');
+    });
+    
+    // Admins Management Routes
+    Route::prefix('admins')->name('admins.')->group(function () {
+        Route::get('/', [AdminAdminController::class, 'index'])->name('index');
+        Route::get('/create', [AdminAdminController::class, 'create'])->name('create');
+        Route::post('/', [AdminAdminController::class, 'store'])->name('store');
+        Route::get('/{admin}/edit', [AdminAdminController::class, 'edit'])->name('edit');
+        Route::put('/{admin}', [AdminAdminController::class, 'update'])->name('update');
+        Route::delete('/{admin}', [AdminAdminController::class, 'destroy'])->name('destroy');
+        Route::post('/{admin}/toggle-status', [AdminAdminController::class, 'toggleStatus'])->name('toggle-status');
+    });
+    
+    // Permissions Management Routes
+    Route::prefix('permissions')->name('permissions.')->group(function () {
+        Route::get('/', [AdminPermissionController::class, 'index'])->name('index');
+        Route::get('/create', [AdminPermissionController::class, 'create'])->name('create');
+        Route::post('/', [AdminPermissionController::class, 'store'])->name('store');
+        Route::get('/{permission}/edit', [AdminPermissionController::class, 'edit'])->name('edit');
+        Route::put('/{permission}', [AdminPermissionController::class, 'update'])->name('update');
+        Route::delete('/{permission}', [AdminPermissionController::class, 'destroy'])->name('destroy');
+    });
 });
 
 // Owner Routes
@@ -98,4 +131,14 @@ Route::prefix('owner')->name('owner.')->middleware(['auth', 'role:owner'])->grou
     Route::get('/notifications', [OwnerNotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/{notification}/read', [OwnerNotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::post('/notifications/read-all', [OwnerNotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
+    
+    // Tickets Routes
+    Route::prefix('tickets')->name('tickets.')->group(function () {
+        Route::get('/', [OwnerTicketController::class, 'index'])->name('index');
+        Route::get('/create', [OwnerTicketController::class, 'create'])->name('create');
+        Route::post('/', [OwnerTicketController::class, 'store'])->name('store');
+        Route::get('/{ticket}', [OwnerTicketController::class, 'show'])->name('show');
+        Route::post('/{ticket}/reply', [OwnerTicketController::class, 'reply'])->name('reply');
+        Route::post('/{ticket}/close', [OwnerTicketController::class, 'close'])->name('close');
+    });
 });

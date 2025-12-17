@@ -4,9 +4,17 @@
 <div class="py-12">
     <div class="w-full mx-auto sm:px-6 lg:px-8">
         <!-- Header -->
-        <div class="mb-6">
-            <h1 class="text-3xl font-bold text-gray-900">إدارة المستخدمين</h1>
-            <p class="mt-2 text-sm text-gray-600">إدارة جميع المستخدمين في النظام</p>
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">إدارة المشرفين</h1>
+                <p class="mt-2 text-sm text-gray-600">إدارة المشرفين والصلاحيات</p>
+            </div>
+            @can('create admins')
+                <a href="{{ route('admin.admins.create') }}" 
+                   class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg">
+                    + مشرف جديد
+                </a>
+            @endcan
         </div>
 
         <!-- Success/Error Messages -->
@@ -25,9 +33,9 @@
         <!-- Filters and Search -->
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
             <div class="p-6">
-                <form id="filterForm" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <form id="filterForm" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <!-- Search -->
-                    <div class="md:col-span-2">
+                    <div>
                         <label for="search" class="block text-sm font-medium text-gray-700 mb-2">البحث</label>
                         <input type="text" 
                                id="search" 
@@ -37,9 +45,21 @@
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     
+                    <!-- Role Filter -->
+                    <div>
+                        <label for="role" class="block text-sm font-medium text-gray-700 mb-2">الدور</label>
+                        <select id="role" 
+                                name="role" 
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <option value="all" {{ request('role') == 'all' || !request('role') ? 'selected' : '' }}>جميع الأدوار</option>
+                            <option value="super_admin" {{ request('role') == 'super_admin' ? 'selected' : '' }}>Super Admin</option>
+                            <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                        </select>
+                    </div>
+                    
                     <!-- Status Filter -->
                     <div>
-                        <label for="status" class="block text-sm font-medium text-gray-700 mb-2">حالة الحساب</label>
+                        <label for="status" class="block text-sm font-medium text-gray-700 mb-2">الحالة</label>
                         <select id="status" 
                                 name="status" 
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
@@ -48,32 +68,20 @@
                             <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>موقوف</option>
                         </select>
                     </div>
-                    
-                    <!-- Sort By -->
-                    <div>
-                        <label for="sort_by" class="block text-sm font-medium text-gray-700 mb-2">ترتيب حسب</label>
-                        <select id="sort_by" 
-                                name="sort_by" 
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                            <option value="created_at" {{ request('sort_by') == 'created_at' || !request('sort_by') ? 'selected' : '' }}>تاريخ التسجيل</option>
-                            <option value="name" {{ request('sort_by') == 'name' ? 'selected' : '' }}>الاسم</option>
-                            <option value="email" {{ request('sort_by') == 'email' ? 'selected' : '' }}>البريد الإلكتروني</option>
-                        </select>
-                    </div>
                 </form>
             </div>
         </div>
 
-        <!-- Users Table -->
+        <!-- Admins Table -->
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6">
-                <div id="usersTableContainer">
-                    @include('admin.users.partials.users-table', ['users' => $users])
+                <div id="adminsTableContainer">
+                    @include('admin.admins.partials.admins-table', ['admins' => $admins])
                 </div>
                 
                 <!-- Pagination -->
                 <div id="paginationContainer" class="mt-4">
-                    {{ $users->appends(request()->query())->links() }}
+                    {{ $admins->appends(request()->query())->links() }}
                 </div>
             </div>
         </div>
@@ -95,21 +103,18 @@
         };
     }
 
-    // Load users via AJAX
-    function loadUsers() {
+    // Load admins via AJAX
+    function loadAdmins() {
         const form = document.getElementById('filterForm');
         const formData = new FormData(form);
         const params = new URLSearchParams(formData);
         
-        // Add sort direction
-        const sortBy = document.getElementById('sort_by').value;
-        params.append('sort_by', sortBy);
+        params.append('sort_by', 'created_at');
         params.append('sort_dir', 'desc');
         
-        // Show loading
-        document.getElementById('usersTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div><p class="mt-4 text-gray-500">جاري التحميل...</p></div>';
+        document.getElementById('adminsTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div><p class="mt-4 text-gray-500">جاري التحميل...</p></div>';
         
-        fetch(`{{ route('admin.users.index') }}?${params.toString()}`, {
+        fetch(`{{ route('admin.admins.index') }}?${params.toString()}`, {
             method: 'GET',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
@@ -118,52 +123,44 @@
         })
         .then(response => response.json())
         .then(data => {
-            document.getElementById('usersTableContainer').innerHTML = data.table;
+            document.getElementById('adminsTableContainer').innerHTML = data.table;
             document.getElementById('paginationContainer').innerHTML = data.pagination;
             
-            // Update URL without reload
             const newUrl = window.location.pathname + '?' + params.toString();
             window.history.pushState({path: newUrl}, '', newUrl);
         })
         .catch(error => {
             console.error('Error:', error);
-            document.getElementById('usersTableContainer').innerHTML = '<div class="text-center py-12 text-red-500">حدث خطأ أثناء تحميل البيانات</div>';
+            document.getElementById('adminsTableContainer').innerHTML = '<div class="text-center py-12 text-red-500">حدث خطأ أثناء تحميل البيانات</div>';
         });
     }
 
-    // Debounced load function
-    const debouncedLoadUsers = debounce(loadUsers, 500);
+    const debouncedLoadAdmins = debounce(loadAdmins, 500);
 
-    // Event listeners
     document.addEventListener('DOMContentLoaded', function() {
         const searchInput = document.getElementById('search');
+        const roleSelect = document.getElementById('role');
         const statusSelect = document.getElementById('status');
-        const sortBySelect = document.getElementById('sort_by');
         
-        // Search input with debounce
         if (searchInput) {
-            searchInput.addEventListener('input', debouncedLoadUsers);
+            searchInput.addEventListener('input', debouncedLoadAdmins);
         }
         
-        // Status filter
+        if (roleSelect) {
+            roleSelect.addEventListener('change', loadAdmins);
+        }
+        
         if (statusSelect) {
-            statusSelect.addEventListener('change', loadUsers);
-        }
-        
-        // Sort by
-        if (sortBySelect) {
-            sortBySelect.addEventListener('change', loadUsers);
+            statusSelect.addEventListener('change', loadAdmins);
         }
     });
 
-    // Handle pagination clicks
     document.addEventListener('click', function(e) {
         if (e.target.closest('.pagination a')) {
             e.preventDefault();
             const url = e.target.closest('a').href;
             
-            // Show loading
-            document.getElementById('usersTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div><p class="mt-4 text-gray-500">جاري التحميل...</p></div>';
+            document.getElementById('adminsTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div><p class="mt-4 text-gray-500">جاري التحميل...</p></div>';
             
             fetch(url, {
                 method: 'GET',
@@ -174,18 +171,17 @@
             })
             .then(response => response.json())
             .then(data => {
-                document.getElementById('usersTableContainer').innerHTML = data.table;
+                document.getElementById('adminsTableContainer').innerHTML = data.table;
                 document.getElementById('paginationContainer').innerHTML = data.pagination;
-                
-                // Update URL
                 window.history.pushState({path: url}, '', url);
             })
             .catch(error => {
                 console.error('Error:', error);
-                document.getElementById('usersTableContainer').innerHTML = '<div class="text-center py-12 text-red-500">حدث خطأ أثناء تحميل البيانات</div>';
+                document.getElementById('adminsTableContainer').innerHTML = '<div class="text-center py-12 text-red-500">حدث خطأ أثناء تحميل البيانات</div>';
             });
         }
     });
 </script>
 @endpush
 @endsection
+

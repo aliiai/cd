@@ -1,12 +1,18 @@
-@extends('layouts.admin')
+@extends('layouts.owner')
 
 @section('content')
 <div class="py-12">
     <div class="w-full mx-auto sm:px-6 lg:px-8">
         <!-- Header -->
-        <div class="mb-6">
-            <h1 class="text-3xl font-bold text-gray-900">إدارة المستخدمين</h1>
-            <p class="mt-2 text-sm text-gray-600">إدارة جميع المستخدمين في النظام</p>
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">الشكاوى والدعم</h1>
+                <p class="mt-2 text-sm text-gray-600">إدارة شكاويك ومتابعة الردود</p>
+            </div>
+            <a href="{{ route('owner.tickets.create') }}" 
+               class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg">
+                + شكوى جديدة
+            </a>
         </div>
 
         <!-- Success/Error Messages -->
@@ -33,47 +39,52 @@
                                id="search" 
                                name="search" 
                                value="{{ request('search') }}"
-                               placeholder="ابحث بالاسم أو البريد الإلكتروني..."
+                               placeholder="ابحث برقم الشكوى، العنوان، أو الوصف..."
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     
                     <!-- Status Filter -->
                     <div>
-                        <label for="status" class="block text-sm font-medium text-gray-700 mb-2">حالة الحساب</label>
+                        <label for="status" class="block text-sm font-medium text-gray-700 mb-2">الحالة</label>
                         <select id="status" 
                                 name="status" 
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                             <option value="all" {{ request('status') == 'all' || !request('status') ? 'selected' : '' }}>جميع الحالات</option>
-                            <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>نشط</option>
-                            <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>موقوف</option>
+                            <option value="open" {{ request('status') == 'open' ? 'selected' : '' }}>مفتوحة</option>
+                            <option value="in_progress" {{ request('status') == 'in_progress' ? 'selected' : '' }}>قيد المعالجة</option>
+                            <option value="waiting_user" {{ request('status') == 'waiting_user' ? 'selected' : '' }}>في انتظار المستخدم</option>
+                            <option value="closed" {{ request('status') == 'closed' ? 'selected' : '' }}>مغلقة</option>
                         </select>
                     </div>
                     
-                    <!-- Sort By -->
+                    <!-- Type Filter -->
                     <div>
-                        <label for="sort_by" class="block text-sm font-medium text-gray-700 mb-2">ترتيب حسب</label>
-                        <select id="sort_by" 
-                                name="sort_by" 
+                        <label for="type" class="block text-sm font-medium text-gray-700 mb-2">النوع</label>
+                        <select id="type" 
+                                name="type" 
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                            <option value="created_at" {{ request('sort_by') == 'created_at' || !request('sort_by') ? 'selected' : '' }}>تاريخ التسجيل</option>
-                            <option value="name" {{ request('sort_by') == 'name' ? 'selected' : '' }}>الاسم</option>
-                            <option value="email" {{ request('sort_by') == 'email' ? 'selected' : '' }}>البريد الإلكتروني</option>
+                            <option value="all" {{ request('type') == 'all' || !request('type') ? 'selected' : '' }}>جميع الأنواع</option>
+                            <option value="technical" {{ request('type') == 'technical' ? 'selected' : '' }}>مشكلة تقنية</option>
+                            <option value="subscription" {{ request('type') == 'subscription' ? 'selected' : '' }}>مشكلة اشتراك</option>
+                            <option value="messages" {{ request('type') == 'messages' ? 'selected' : '' }}>مشكلة رسائل</option>
+                            <option value="general" {{ request('type') == 'general' ? 'selected' : '' }}>استفسار عام</option>
+                            <option value="suggestion" {{ request('type') == 'suggestion' ? 'selected' : '' }}>اقتراح</option>
                         </select>
                     </div>
                 </form>
             </div>
         </div>
 
-        <!-- Users Table -->
+        <!-- Tickets Table -->
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6">
-                <div id="usersTableContainer">
-                    @include('admin.users.partials.users-table', ['users' => $users])
+                <div id="ticketsTableContainer">
+                    @include('owner.tickets.partials.tickets-table', ['tickets' => $tickets])
                 </div>
                 
                 <!-- Pagination -->
                 <div id="paginationContainer" class="mt-4">
-                    {{ $users->appends(request()->query())->links() }}
+                    {{ $tickets->appends(request()->query())->links() }}
                 </div>
             </div>
         </div>
@@ -95,21 +106,20 @@
         };
     }
 
-    // Load users via AJAX
-    function loadUsers() {
+    // Load tickets via AJAX
+    function loadTickets() {
         const form = document.getElementById('filterForm');
         const formData = new FormData(form);
         const params = new URLSearchParams(formData);
         
-        // Add sort direction
-        const sortBy = document.getElementById('sort_by').value;
-        params.append('sort_by', sortBy);
+        // Add sort
+        params.append('sort_by', 'created_at');
         params.append('sort_dir', 'desc');
         
         // Show loading
-        document.getElementById('usersTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div><p class="mt-4 text-gray-500">جاري التحميل...</p></div>';
+        document.getElementById('ticketsTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div><p class="mt-4 text-gray-500">جاري التحميل...</p></div>';
         
-        fetch(`{{ route('admin.users.index') }}?${params.toString()}`, {
+        fetch(`{{ route('owner.tickets.index') }}?${params.toString()}`, {
             method: 'GET',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
@@ -118,41 +128,38 @@
         })
         .then(response => response.json())
         .then(data => {
-            document.getElementById('usersTableContainer').innerHTML = data.table;
+            document.getElementById('ticketsTableContainer').innerHTML = data.table;
             document.getElementById('paginationContainer').innerHTML = data.pagination;
             
-            // Update URL without reload
+            // Update URL
             const newUrl = window.location.pathname + '?' + params.toString();
             window.history.pushState({path: newUrl}, '', newUrl);
         })
         .catch(error => {
             console.error('Error:', error);
-            document.getElementById('usersTableContainer').innerHTML = '<div class="text-center py-12 text-red-500">حدث خطأ أثناء تحميل البيانات</div>';
+            document.getElementById('ticketsTableContainer').innerHTML = '<div class="text-center py-12 text-red-500">حدث خطأ أثناء تحميل البيانات</div>';
         });
     }
 
     // Debounced load function
-    const debouncedLoadUsers = debounce(loadUsers, 500);
+    const debouncedLoadTickets = debounce(loadTickets, 500);
 
     // Event listeners
     document.addEventListener('DOMContentLoaded', function() {
         const searchInput = document.getElementById('search');
         const statusSelect = document.getElementById('status');
-        const sortBySelect = document.getElementById('sort_by');
+        const typeSelect = document.getElementById('type');
         
-        // Search input with debounce
         if (searchInput) {
-            searchInput.addEventListener('input', debouncedLoadUsers);
+            searchInput.addEventListener('input', debouncedLoadTickets);
         }
         
-        // Status filter
         if (statusSelect) {
-            statusSelect.addEventListener('change', loadUsers);
+            statusSelect.addEventListener('change', loadTickets);
         }
         
-        // Sort by
-        if (sortBySelect) {
-            sortBySelect.addEventListener('change', loadUsers);
+        if (typeSelect) {
+            typeSelect.addEventListener('change', loadTickets);
         }
     });
 
@@ -162,8 +169,7 @@
             e.preventDefault();
             const url = e.target.closest('a').href;
             
-            // Show loading
-            document.getElementById('usersTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div><p class="mt-4 text-gray-500">جاري التحميل...</p></div>';
+            document.getElementById('ticketsTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div><p class="mt-4 text-gray-500">جاري التحميل...</p></div>';
             
             fetch(url, {
                 method: 'GET',
@@ -174,18 +180,17 @@
             })
             .then(response => response.json())
             .then(data => {
-                document.getElementById('usersTableContainer').innerHTML = data.table;
+                document.getElementById('ticketsTableContainer').innerHTML = data.table;
                 document.getElementById('paginationContainer').innerHTML = data.pagination;
-                
-                // Update URL
                 window.history.pushState({path: url}, '', url);
             })
             .catch(error => {
                 console.error('Error:', error);
-                document.getElementById('usersTableContainer').innerHTML = '<div class="text-center py-12 text-red-500">حدث خطأ أثناء تحميل البيانات</div>';
+                document.getElementById('ticketsTableContainer').innerHTML = '<div class="text-center py-12 text-red-500">حدث خطأ أثناء تحميل البيانات</div>';
             });
         }
     });
 </script>
 @endpush
 @endsection
+

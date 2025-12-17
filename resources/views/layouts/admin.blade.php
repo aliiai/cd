@@ -28,7 +28,7 @@
             <x-header />
 
             <!-- Page Content -->
-            <main class="flex-1 p-6">
+            <main class="flex-1 p-6 overflow-y-auto">
                 @yield('content')
             </main>
         </div>
