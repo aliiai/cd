@@ -80,21 +80,29 @@ class User extends Authenticatable
     }
 
     /**
-     * الحصول على الاشتراك النشط الحالي
+     * العلاقة مع الاشتراك النشط الحالي (Relationship)
      * 
-     * @return UserSubscription|null
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function activeSubscription()
     {
-        return $this->subscriptions()
+        return $this->hasOne(UserSubscription::class)
             ->where('status', 'active')
             ->where(function($query) {
                 $query->whereNull('expires_at')
                       ->orWhere('expires_at', '>', now());
             })
-            ->with('subscription')
-            ->latest('started_at')
-            ->first();
+            ->orderBy('started_at', 'desc');
+    }
+
+    /**
+     * الحصول على الاشتراك النشط الحالي (Method للاستخدام المباشر)
+     * 
+     * @return UserSubscription|null
+     */
+    public function getActiveSubscription()
+    {
+        return $this->activeSubscription()->first();
     }
 
     /**
@@ -104,6 +112,6 @@ class User extends Authenticatable
      */
     public function hasActiveSubscription(): bool
     {
-        return $this->activeSubscription() !== null;
+        return $this->getActiveSubscription() !== null;
     }
 }

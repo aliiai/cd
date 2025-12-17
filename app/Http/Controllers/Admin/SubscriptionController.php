@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Subscription;
+use App\Notifications\SubscriptionCreatedNotification;
+use App\Notifications\SubscriptionUpdatedNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Subscription Controller for Admin
@@ -59,7 +62,13 @@ class SubscriptionController extends Controller
         $validated['is_active'] = $request->has('is_active') ? (bool)$request->input('is_active') : false;
 
         // إنشاء الباقة
-        Subscription::create($validated);
+        $subscription = Subscription::create($validated);
+
+        // إرسال إشعار لجميع الـ Admins (باستثناء من أنشأها)
+        $admins = \App\Models\User::role('admin')->where('id', '!=', Auth::id())->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new SubscriptionCreatedNotification($subscription));
+        }
 
         return redirect()->route('admin.subscriptions.index')
             ->with('success', 'تم إنشاء الباقة بنجاح.');
@@ -114,6 +123,12 @@ class SubscriptionController extends Controller
 
         // تحديث الباقة
         $subscription->update($validated);
+
+        // إرسال إشعار لجميع الـ Admins (باستثناء من عدلها)
+        $admins = \App\Models\User::role('admin')->where('id', '!=', Auth::id())->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new SubscriptionUpdatedNotification($subscription->refresh()));
+        }
 
         return redirect()->route('admin.subscriptions.index')
             ->with('success', 'تم تحديث الباقة بنجاح.');

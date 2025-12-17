@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Client;
+use App\Models\Debtor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -47,24 +47,24 @@ class UserController extends Controller
         }
 
         // جلب الاشتراك النشط
-        $activeSubscription = $user->activeSubscription();
+        $activeSubscription = $user->getActiveSubscription();
         
         // إحصائيات المديونين
-        $totalDebtors = Client::where('owner_id', $user->id)->count();
-        $paidDebtors = Client::where('owner_id', $user->id)->where('status', 'paid')->count();
-        $overdueDebtors = Client::where('owner_id', $user->id)->where('status', 'overdue')->count();
-        $totalDebtAmount = Client::where('owner_id', $user->id)->sum('debt_amount');
-        $paidAmount = Client::where('owner_id', $user->id)->where('status', 'paid')->sum('debt_amount');
+        $totalDebtors = Debtor::where('owner_id', $user->id)->count();
+        $paidDebtors = Debtor::where('owner_id', $user->id)->where('status', 'paid')->count();
+        $overdueDebtors = Debtor::where('owner_id', $user->id)->where('status', 'overdue')->count();
+        $totalDebtAmount = Debtor::where('owner_id', $user->id)->sum('debt_amount');
+        $paidAmount = Debtor::where('owner_id', $user->id)->where('status', 'paid')->sum('debt_amount');
         $collectionRate = $totalDebtAmount > 0 ? ($paidAmount / $totalDebtAmount) * 100 : 0;
 
         // آخر المديونين
-        $recentClients = Client::where('owner_id', $user->id)
+        $recentDebtors = Debtor::where('owner_id', $user->id)
             ->latest()
             ->limit(5)
             ->get();
 
         // آخر المديونين المدفوعين
-        $recentPaidClients = Client::where('owner_id', $user->id)
+        $recentPaidDebtors = Debtor::where('owner_id', $user->id)
             ->where('status', 'paid')
             ->latest()
             ->limit(5)
@@ -72,6 +72,8 @@ class UserController extends Controller
 
         return view('admin.users.show', compact(
             'user',
+            'recentDebtors',
+            'recentPaidDebtors',
             'activeSubscription',
             'totalDebtors',
             'paidDebtors',

@@ -28,41 +28,99 @@
             </div>
         @endif
 
+        <!-- Subscription Usage Info -->
+        @if($subscriptionInfo)
+            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 rounded-lg p-4 mb-6">
+                <div class="flex items-center justify-between">
+                    <div class="flex-1">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">معلومات الاشتراك والاستهلاك</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-sm text-gray-600 mb-1">الباقة الحالية</p>
+                                <p class="text-base font-bold text-gray-900">{{ $subscriptionInfo['subscription_name'] }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600 mb-1">استهلاك الرسائل</p>
+                                <div class="flex items-center space-x-2">
+                                    <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                        <div 
+                                            class="h-2 rounded-full transition-all duration-300 {{ $subscriptionInfo['messages_usage'] >= 90 ? 'bg-red-600' : ($subscriptionInfo['messages_usage'] >= 70 ? 'bg-yellow-600' : 'bg-green-600') }}" 
+                                            style="width: {{ min($subscriptionInfo['messages_usage'], 100) }}%"
+                                        ></div>
+                                    </div>
+                                    <span class="text-sm font-bold {{ $subscriptionInfo['messages_usage'] >= 90 ? 'text-red-600' : ($subscriptionInfo['messages_usage'] >= 70 ? 'text-yellow-600' : 'text-green-600') }}">
+                                        {{ $subscriptionInfo['messages_sent'] }} / {{ $subscriptionInfo['max_messages'] }}
+                                    </span>
+                                </div>
+                                @if($subscriptionInfo['messages_remaining'] !== null)
+                                    <p class="text-xs text-gray-500 mt-1">
+                                        المتبقي: <span class="font-semibold {{ $subscriptionInfo['messages_remaining'] <= 5 ? 'text-red-600' : 'text-gray-700' }}">{{ $subscriptionInfo['messages_remaining'] }}</span> رسالة
+                                    </p>
+                                @endif
+                            </div>
+                        </div>
+                        @if($subscriptionInfo['messages_remaining'] !== null && $subscriptionInfo['messages_remaining'] <= 5 && $subscriptionInfo['messages_remaining'] > 0)
+                            <div class="mt-3 bg-yellow-100 border border-yellow-400 text-yellow-800 px-3 py-2 rounded text-sm">
+                                ⚠️ تحذير: لديك {{ $subscriptionInfo['messages_remaining'] }} رسالة متبقية فقط. يرجى ترقية اشتراكك لإرسال المزيد.
+                            </div>
+                        @elseif($subscriptionInfo['messages_remaining'] !== null && $subscriptionInfo['messages_remaining'] == 0)
+                            <div class="mt-3 bg-red-100 border border-red-400 text-red-800 px-3 py-2 rounded text-sm">
+                                ❌ لقد استنفدت جميع الرسائل المسموحة! يرجى ترقية اشتراكك لإرسال المزيد.
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        @else
+            <div class="bg-yellow-50 border-l-4 border-yellow-500 rounded-lg p-4 mb-6">
+                <div class="flex items-center">
+                    <svg class="w-5 h-5 text-yellow-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <p class="text-sm text-yellow-800">
+                        لا يوجد اشتراك نشط. يرجى الاشتراك في إحدى الباقات لإرسال الرسائل.
+                    </p>
+                </div>
+            </div>
+        @endif
+
         <!-- Campaigns Table -->
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
             <div class="p-6">
                 <h2 class="text-xl font-bold text-gray-900 mb-4">الحملات السابقة</h2>
                 @if($campaigns->count() > 0)
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto rounded-lg shadow-lg border border-gray-200">
                         <table class="w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
+                            <thead class="bg-gradient-to-r from-gray-700 to-gray-600">
                                 <tr>
-                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">رقم الحملة</th>
-                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">عدد المستلمين</th>
-                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">قناة الإرسال</th>
-                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">حالة الإرسال</th>
-                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">وقت الإرسال</th>
-                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الإجراءات</th>
+                                    <th class="px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">رقم الحملة</th>
+                                    <th class="px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">عدد المستلمين</th>
+                                    <th class="px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">قناة الإرسال</th>
+                                    <th class="px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">حالة الإرسال</th>
+                                    <th class="px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">وقت الإرسال</th>
+                                    <th class="px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">الإجراءات</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @foreach($campaigns as $campaign)
-                                    <tr class="hover:bg-gray-50 transition-colors duration-150">
+                                    <tr class="hover:bg-blue-50 transition-all duration-200 hover:shadow-md">
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                             {{ $campaign->campaign_number }}
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {{ $campaign->total_recipients }}
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                                                {{ $campaign->total_recipients }}
+                                            </span>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                                             {{ $campaign->channel_text }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                            <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $campaign->status_color }}">
+                                            <span class="px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm {{ $campaign->status_color }}">
                                                 {{ $campaign->status_text }}
                                             </span>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                                             @if($campaign->send_type === 'scheduled' && $campaign->scheduled_at)
                                                 {{ $campaign->scheduled_at->format('Y-m-d H:i') }}
                                             @else
@@ -71,8 +129,13 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <a href="{{ route('owner.collections.show', $campaign) }}" 
-                                               class="text-blue-600 hover:text-blue-900 font-medium">
-                                                عرض التفاصيل
+                                               class="inline-flex items-center px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors duration-200 shadow-sm hover:shadow-md"
+                                               title="عرض التفاصيل">
+                                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                                </svg>
+                                                <span class="text-xs font-medium">عرض التفاصيل</span>
                                             </a>
                                         </td>
                                     </tr>
@@ -111,7 +174,7 @@
         </div>
 
         <!-- Form -->
-        <form id="campaignForm" action="{{ route('owner.collections.store') }}" method="POST" class="p-6">
+        <form id="campaignForm" action="{{ route('owner.collections.store') }}" method="POST" class="p-6" onsubmit="return validateCampaignSubmission(event)">
             @csrf
 
             <!-- Grid Layout -->
@@ -143,8 +206,8 @@
                                 multiple
                                 size="6"
                                 class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
-                            @foreach($clients as $client)
-                                <option value="{{ $client->id }}">{{ $client->name }} - {{ $client->phone }} ({{ number_format($client->debt_amount, 2) }} ر.س)</option>
+                            @foreach($debtors as $debtor)
+                                <option value="{{ $debtor->id }}">{{ $debtor->name }} - {{ $debtor->phone }} ({{ number_format($debtor->debt_amount, 2) }} ر.س)</option>
                             @endforeach
                         </select>
                         <p class="mt-2 text-xs text-gray-500">اضغط Ctrl (أو Cmd على Mac) لاختيار أكثر من مدين</p>
@@ -159,8 +222,8 @@
                                 id="single_client_id"
                                 class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
                             <option value="">اختر المديون</option>
-                            @foreach($clients as $client)
-                                <option value="{{ $client->id }}">{{ $client->name }} - {{ $client->phone }} ({{ number_format($client->debt_amount, 2) }} ر.س)</option>
+                            @foreach($debtors as $debtor)
+                                <option value="{{ $debtor->id }}">{{ $debtor->name }} - {{ $debtor->phone }} ({{ number_format($debtor->debt_amount, 2) }} ر.س)</option>
                             @endforeach
                         </select>
                     </div>
@@ -374,13 +437,13 @@
             document.getElementById('single_client_id').setAttribute('required', 'required');
         } else if (selection === 'all') {
             // إضافة hidden inputs لجميع المديونين
-            @if($clients->count() > 0)
-                @foreach($clients as $client)
-                    const input{{ $client->id }} = document.createElement('input');
-                    input{{ $client->id }}.type = 'hidden';
-                    input{{ $client->id }}.name = 'client_ids[]';
-                    input{{ $client->id }}.value = '{{ $client->id }}';
-                    document.getElementById('campaignForm').appendChild(input{{ $client->id }});
+            @if($debtors->count() > 0)
+                @foreach($debtors as $debtor)
+                    const input{{ $debtor->id }} = document.createElement('input');
+                    input{{ $debtor->id }}.type = 'hidden';
+                    input{{ $debtor->id }}.name = 'client_ids[]';
+                    input{{ $debtor->id }}.value = '{{ $debtor->id }}';
+                    document.getElementById('campaignForm').appendChild(input{{ $debtor->id }});
                 @endforeach
             @endif
         }
@@ -427,9 +490,10 @@
         }
     }
 
-    // Handle Form Submission
-    document.getElementById('campaignForm').addEventListener('submit', function(e) {
+    // Validate Campaign Submission
+    function validateCampaignSubmission(e) {
         const selection = document.getElementById('client_selection').value;
+        let selectedClientsCount = 0;
         
         // التحقق من اختيار المديونين
         if (selection === 'single') {
@@ -439,20 +503,22 @@
                 alert('يرجى اختيار المديون');
                 return false;
             }
+            selectedClientsCount = 1;
             // إضافة hidden input
             const hiddenInput = document.createElement('input');
             hiddenInput.type = 'hidden';
             hiddenInput.name = 'client_ids[]';
             hiddenInput.value = singleClientId;
-            this.appendChild(hiddenInput);
+            document.getElementById('campaignForm').appendChild(hiddenInput);
         } else if (selection === 'all') {
             // التحقق من وجود مديونين
-            const allClientsCount = {{ $clients->count() }};
-            if (allClientsCount === 0) {
+            const allDebtorsCount = {{ $debtors->count() }};
+            if (allDebtorsCount === 0) {
                 e.preventDefault();
                 alert('لا يوجد مديونين متاحين');
                 return false;
             }
+            selectedClientsCount = allDebtorsCount;
         } else if (selection === 'multiple') {
             const selectedClients = Array.from(document.getElementById('client_ids').selectedOptions);
             if (selectedClients.length === 0) {
@@ -460,12 +526,49 @@
                 alert('يرجى اختيار مديون واحد على الأقل');
                 return false;
             }
+            selectedClientsCount = selectedClients.length;
         } else {
             e.preventDefault();
             alert('يرجى اختيار طريقة اختيار المديونين');
             return false;
         }
-    });
+
+        // التحقق من حدود الاشتراك - عدد الرسائل
+        @if($subscriptionInfo)
+            const maxMessages = {{ $subscriptionInfo['max_messages'] ?? 0 }};
+            const messagesSent = {{ $subscriptionInfo['messages_sent'] ?? 0 }};
+            const messagesRemaining = {{ $subscriptionInfo['messages_remaining'] ?? 0 }};
+            
+            if (maxMessages > 0) {
+                if (messagesRemaining === 0) {
+                    e.preventDefault();
+                    alert('❌ لقد استنفدت جميع الرسائل المسموحة! الحد المسموح: ' + maxMessages + ' رسالة. سيتم توجيهك إلى صفحة الاشتراكات لترقية اشتراكك.');
+                    setTimeout(() => {
+                        window.location.href = '{{ route("owner.subscriptions.index") }}';
+                    }, 1000);
+                    return false;
+                }
+                
+                if (selectedClientsCount > messagesRemaining) {
+                    e.preventDefault();
+                    alert('❌ لا يمكنك إرسال ' + selectedClientsCount + ' رسالة! لديك ' + messagesRemaining + ' رسالة متبقية فقط من الحد المسموح (' + maxMessages + '). سيتم توجيهك إلى صفحة الاشتراكات لترقية اشتراكك.');
+                    setTimeout(() => {
+                        window.location.href = '{{ route("owner.subscriptions.index") }}';
+                    }, 1000);
+                    return false;
+                }
+            }
+        @else
+            e.preventDefault();
+            alert('❌ لا يوجد اشتراك نشط. يرجى الاشتراك في إحدى الباقات أولاً. سيتم توجيهك إلى صفحة الاشتراكات.');
+            setTimeout(() => {
+                window.location.href = '{{ route("owner.subscriptions.index") }}';
+            }, 1000);
+            return false;
+        @endif
+
+        return true;
+    }
 
     // Close modal when clicking outside
     document.getElementById('campaignModal').addEventListener('click', function(e) {

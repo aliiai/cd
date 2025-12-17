@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Owner;
 use App\Http\Controllers\Controller;
 use App\Models\Subscription;
 use App\Models\SubscriptionRequest;
+use App\Notifications\SubscriptionRequestCreatedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -27,7 +28,7 @@ class SubscriptionController extends Controller
         $subscriptions = Subscription::active()->get();
         
         // جلب الاشتراك النشط الحالي للمستخدم
-        $activeSubscription = Auth::user()->activeSubscription();
+        $activeSubscription = Auth::user()->getActiveSubscription();
         
         // جلب طلب الاشتراك المعلق فقط (إن وجد)
         $pendingRequest = SubscriptionRequest::where('user_id', Auth::id())
@@ -70,12 +71,18 @@ class SubscriptionController extends Controller
         $paymentProofPath = $request->file('payment_proof')->store('payment_proofs', 'public');
 
         // إنشاء طلب اشتراك جديد
-        SubscriptionRequest::create([
+        $subscriptionRequest = SubscriptionRequest::create([
             'user_id' => Auth::id(),
             'subscription_id' => $validated['subscription_id'],
             'payment_proof' => $paymentProofPath,
             'status' => 'pending',
         ]);
+
+        // إرسال إشعار لجميع الـ Admins
+        $admins = \App\Models\User::role('admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new \App\Notifications\SubscriptionRequestCreatedNotification($subscriptionRequest->load(['user', 'subscription'])));
+        }
 
         return back()->with('success', 'تم إرسال طلب الاشتراك بنجاح. سيتم مراجعته من قبل الإدارة.');
     }

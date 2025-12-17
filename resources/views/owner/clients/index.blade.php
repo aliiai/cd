@@ -28,6 +28,62 @@
             </div>
         @endif
 
+        <!-- Subscription Usage Info -->
+        @if($subscriptionInfo)
+            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 rounded-lg p-4 mb-6">
+                <div class="flex items-center justify-between">
+                    <div class="flex-1">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">معلومات الاشتراك والاستهلاك</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-sm text-gray-600 mb-1">الباقة الحالية</p>
+                                <p class="text-base font-bold text-gray-900">{{ $subscriptionInfo['subscription_name'] }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600 mb-1">عدد المديونين</p>
+                                <div class="flex items-center space-x-2">
+                                    <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                        <div 
+                                            class="h-2 rounded-full transition-all duration-300 {{ $subscriptionInfo['debtors_usage'] >= 90 ? 'bg-red-600' : ($subscriptionInfo['debtors_usage'] >= 70 ? 'bg-yellow-600' : 'bg-green-600') }}" 
+                                            style="width: {{ min($subscriptionInfo['debtors_usage'], 100) }}%"
+                                        ></div>
+                                    </div>
+                                    <span class="text-sm font-bold {{ $subscriptionInfo['debtors_usage'] >= 90 ? 'text-red-600' : ($subscriptionInfo['debtors_usage'] >= 70 ? 'text-yellow-600' : 'text-green-600') }}">
+                                        {{ $subscriptionInfo['current_debtors'] }} / {{ $subscriptionInfo['max_debtors'] }}
+                                    </span>
+                                </div>
+                                @if($subscriptionInfo['debtors_remaining'] !== null)
+                                    <p class="text-xs text-gray-500 mt-1">
+                                        المتبقي: <span class="font-semibold {{ $subscriptionInfo['debtors_remaining'] <= 2 ? 'text-red-600' : 'text-gray-700' }}">{{ $subscriptionInfo['debtors_remaining'] }}</span> مديون
+                                    </p>
+                                @endif
+                            </div>
+                        </div>
+                        @if($subscriptionInfo['debtors_remaining'] !== null && $subscriptionInfo['debtors_remaining'] <= 2 && $subscriptionInfo['debtors_remaining'] > 0)
+                            <div class="mt-3 bg-yellow-100 border border-yellow-400 text-yellow-800 px-3 py-2 rounded text-sm">
+                                ⚠️ تحذير: لديك {{ $subscriptionInfo['debtors_remaining'] }} مديون متبقي فقط. يرجى ترقية اشتراكك لإضافة المزيد.
+                            </div>
+                        @elseif($subscriptionInfo['debtors_remaining'] !== null && $subscriptionInfo['debtors_remaining'] == 0)
+                            <div class="mt-3 bg-red-100 border border-red-400 text-red-800 px-3 py-2 rounded text-sm">
+                                ❌ لقد وصلت للحد الأقصى المسموح للمديونين! يرجى ترقية اشتراكك لإضافة المزيد.
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        @else
+            <div class="bg-yellow-50 border-l-4 border-yellow-500 rounded-lg p-4 mb-6">
+                <div class="flex items-center">
+                    <svg class="w-5 h-5 text-yellow-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <p class="text-sm text-yellow-800">
+                        لا يوجد اشتراك نشط. يرجى الاشتراك في إحدى الباقات لإضافة المديونين.
+                    </p>
+                </div>
+            </div>
+        @endif
+
         <!-- Clients Table -->
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6" >
@@ -121,7 +177,7 @@
             </div>
 
             <!-- Form -->
-            <form id="clientForm" action="" method="POST">
+            <form id="clientForm" action="" method="POST" onsubmit="return validateClientSubmission(event)">
                 @csrf
                 <input type="hidden" name="_method" id="formMethod" value="POST">
 
@@ -331,5 +387,34 @@
             closeClientModal();
         }
     });
+
+    // Validate Client Submission
+    function validateClientSubmission(e) {
+        const form = document.getElementById('clientForm');
+        const method = document.getElementById('formMethod').value;
+        
+        // التحقق من الحدود فقط عند إضافة مديون جديد (ليس عند التعديل)
+        if (method === 'POST') {
+            @if($subscriptionInfo)
+                const maxDebtors = {{ $subscriptionInfo['max_debtors'] ?? 0 }};
+                const currentDebtors = {{ $subscriptionInfo['current_debtors'] ?? 0 }};
+                const debtorsRemaining = {{ $subscriptionInfo['debtors_remaining'] ?? 0 }};
+                
+                if (maxDebtors > 0) {
+                    if (debtorsRemaining === 0) {
+                        e.preventDefault();
+                        alert('❌ لقد وصلت للحد الأقصى المسموح للمديونين! الحد المسموح: ' + maxDebtors + ' مديون، الحالي: ' + currentDebtors + '. يرجى ترقية اشتراكك لإضافة المزيد من المديونين.');
+                        return false;
+                    }
+                }
+            @else
+                e.preventDefault();
+                alert('❌ لا يوجد اشتراك نشط. يرجى الاشتراك في إحدى الباقات أولاً.');
+                return false;
+            @endif
+        }
+
+        return true;
+    }
 </script>
 @endsection

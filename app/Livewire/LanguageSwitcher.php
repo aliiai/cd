@@ -31,11 +31,14 @@ class LanguageSwitcher extends Component
      */
     public function mount()
     {
-        // الحصول على اللغة الحالية من Session
-        $this->currentLocale = Session::get('locale', config('app.locale', 'en'));
+        // الحصول على اللغة الحالية من Session، الافتراضي هو الإنجليزية
+        $this->currentLocale = Session::get('locale', 'en');
         
         // تحديد الاتجاه بناءً على اللغة
         $this->direction = $this->currentLocale === 'ar' ? 'rtl' : 'ltr';
+        
+        // تعيين اللغة للتطبيق
+        App::setLocale($this->currentLocale);
     }
 
     /**
@@ -66,6 +69,12 @@ class LanguageSwitcher extends Component
         
         // إرسال event لتحديث الصفحة
         $this->dispatch('language-changed', locale: $locale, direction: $this->direction);
+        
+        // تحديث اتجاه الصفحة فوراً
+        $this->js("
+            document.documentElement.setAttribute('dir', '{$this->direction}');
+            document.documentElement.setAttribute('lang', '{$locale}');
+        ");
         
         // إعادة تحميل الصفحة لتطبيق جميع التغييرات (الترجمة، الاتجاه، إلخ)
         $this->redirect(request()->header('Referer') ?? url()->previous(), navigate: false);

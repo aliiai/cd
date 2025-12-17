@@ -32,8 +32,15 @@ class LanguageController extends Controller
             $locale = config('app.locale', 'en');
         }
         
-        // حفظ اللغة في Session
+        // حفظ اللغة في Session أولاً
         Session::put('locale', $locale);
+        
+        // التأكد من حفظ Session
+        Session::save();
+        
+        // تعيين اللغة فوراً للتطبيق
+        app()->setLocale($locale);
+        config(['app.locale' => $locale]);
         
         // إرجاع استجابة JSON للـ AJAX requests (Livewire)
         if (request()->expectsJson() || request()->wantsJson()) {
@@ -46,7 +53,7 @@ class LanguageController extends Controller
         }
         
         // إعادة التوجيه إلى الصفحة السابقة أو الصفحة الرئيسية
-        return Redirect::back();
+        return Redirect::back()->with('locale_changed', true);
     }
 }
 

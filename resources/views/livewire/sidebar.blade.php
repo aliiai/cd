@@ -34,35 +34,127 @@
     </div>
 
     <!-- Navigation Links -->
-    <nav class="flex-1 p-4 overflow-y-auto custom-scrollbar">
+    <nav class="flex-1 p-4 overflow-y-auto custom-scrollbar" x-data="{ openDropdowns: {} }">
         <ul class="space-y-2">
             @foreach($links as $link)
                 @php
                     // التحقق من أن الرابط نشط (active)
                     $isActive = request()->routeIs($link['route']) || request()->routeIs($link['route'] . '.*');
+                    
+                    // التحقق من أن أي رابط فرعي نشط (للـ Dropdown)
+                    $hasActiveChild = false;
+                    if (isset($link['type']) && $link['type'] === 'dropdown' && isset($link['children'])) {
+                        foreach ($link['children'] as $child) {
+                            if (request()->routeIs($child['route']) || request()->routeIs($child['route'] . '.*')) {
+                                $hasActiveChild = true;
+                                $isActive = true;
+                                break;
+                            }
+                        }
+                    }
                 @endphp
                 <li>
-                    <a 
-                        href="{{ route($link['route']) }}" 
-                        class="flex items-center px-4 py-3 text-gray-300 rounded-xl hover:bg-gray-700/50 hover:text-white hover:shadow-lg transition-all duration-200 group {{ $isActive ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg scale-105' : '' }}"
-                        title="{{ $link['name'] }}"
-                    >
-                        <!-- Icon -->
-                        <svg 
-                            class="w-5 h-5 flex-shrink-0 transition-all duration-200 group-hover:scale-110 {{ $isActive ? 'text-white' : 'text-gray-400' }}" 
-                            fill="none" 
-                            stroke="currentColor" 
-                            viewBox="0 0 24 24"
+                    @if(isset($link['type']) && $link['type'] === 'dropdown' && isset($link['children']))
+                        <!-- Dropdown Menu Item -->
+                        <div x-data="{ isOpen: {{ $hasActiveChild ? 'true' : 'false' }} }">
+                            <button 
+                                @click="isOpen = !isOpen"
+                                class="w-full flex items-center justify-between px-4 py-3 text-gray-300 rounded-xl hover:bg-gray-700/50 hover:text-white hover:shadow-lg transition-all duration-200 group {{ $isActive ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg' : '' }}"
+                                title="{{ $link['name'] }}"
+                            >
+                                <div class="flex items-center">
+                                    <!-- Icon -->
+                                    <svg 
+                                        class="w-5 h-5 flex-shrink-0 transition-all duration-200 group-hover:scale-110 {{ $isActive ? 'text-white' : 'text-gray-400' }}" 
+                                        fill="none" 
+                                        stroke="currentColor" 
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $link['icon'] }}" />
+                                    </svg>
+                                    <!-- Link Text (يظهر فقط عندما يكون مفتوح) -->
+                                    @if($isOpen)
+                                    <span class="ml-3 font-medium">
+                                        {{ $link['name'] }}
+                                    </span>
+                                    @endif
+                                </div>
+                                <!-- Dropdown Arrow (يظهر فقط عندما يكون مفتوح) -->
+                                @if($isOpen)
+                                <svg 
+                                    class="w-4 h-4 transition-transform duration-200 {{ $isActive ? 'text-white' : 'text-gray-400' }}"
+                                    :class="{ 'rotate-90': isOpen }"
+                                    fill="none" 
+                                    stroke="currentColor" 
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                                @endif
+                            </button>
+                            
+                            <!-- Dropdown Children (يظهر فقط عندما يكون Sidebar مفتوح) -->
+                            @if($isOpen)
+                            <ul 
+                                x-show="isOpen"
+                                x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="opacity-0 transform -translate-y-2"
+                                x-transition:enter-end="opacity-100 transform translate-y-0"
+                                x-transition:leave="transition ease-in duration-150"
+                                x-transition:leave-start="opacity-100 transform translate-y-0"
+                                x-transition:leave-end="opacity-0 transform -translate-y-2"
+                                class="mt-2 space-y-1 mr-4"
+                            >
+                                @foreach($link['children'] as $child)
+                                    @php
+                                        $isChildActive = request()->routeIs($child['route']) || request()->routeIs($child['route'] . '.*');
+                                    @endphp
+                                    <li>
+                                        <a 
+                                            href="{{ route($child['route']) }}" 
+                                            class="flex items-center px-4 py-2 text-sm text-gray-400 rounded-lg hover:bg-gray-700/50 hover:text-white transition-all duration-200 group {{ $isChildActive ? 'bg-gray-700/70 text-white font-medium' : '' }}"
+                                            title="{{ $child['name'] }}"
+                                        >
+                                            <!-- Child Icon -->
+                                            <svg 
+                                                class="w-4 h-4 flex-shrink-0 transition-all duration-200 {{ $isChildActive ? 'text-white' : 'text-gray-500' }}" 
+                                                fill="none" 
+                                                stroke="currentColor" 
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $child['icon'] }}" />
+                                            </svg>
+                                            <span class="ml-3">{{ $child['name'] }}</span>
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                            @endif
+                        </div>
+                    @else
+                        <!-- Regular Link Item -->
+                        <a 
+                            href="{{ route($link['route']) }}" 
+                            class="flex items-center px-4 py-3 text-gray-300 rounded-xl hover:bg-gray-700/50 hover:text-white hover:shadow-lg transition-all duration-200 group {{ $isActive ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg scale-105' : '' }}"
+                            title="{{ $link['name'] }}"
                         >
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $link['icon'] }}" />
-                        </svg>
-                        <!-- Link Text (يظهر فقط عندما يكون مفتوح) -->
-                        @if($isOpen)
-                        <span class="ml-3 font-medium">
-                            {{ $link['name'] }}
-                        </span>
-                        @endif
-                    </a>
+                            <!-- Icon -->
+                            <svg 
+                                class="w-5 h-5 flex-shrink-0 transition-all duration-200 group-hover:scale-110 {{ $isActive ? 'text-white' : 'text-gray-400' }}" 
+                                fill="none" 
+                                stroke="currentColor" 
+                                viewBox="0 0 24 24"
+                            >
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $link['icon'] }}" />
+                            </svg>
+                            <!-- Link Text (يظهر فقط عندما يكون مفتوح) -->
+                            @if($isOpen)
+                            <span class="ml-3 font-medium">
+                                {{ $link['name'] }}
+                            </span>
+                            @endif
+                        </a>
+                    @endif
                 </li>
             @endforeach
         </ul>

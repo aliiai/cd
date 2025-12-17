@@ -66,11 +66,21 @@ class CollectionCampaign extends Model
      * 
      * @return BelongsToMany
      */
-    public function clients(): BelongsToMany
+    public function debtors(): BelongsToMany
     {
-        return $this->belongsToMany(Client::class, 'collection_campaign_clients', 'campaign_id', 'client_id')
+        return $this->belongsToMany(Debtor::class, 'collection_campaign_clients', 'campaign_id', 'client_id')
             ->withPivot('status', 'sent_at', 'error_message')
             ->withTimestamps();
+    }
+
+    /**
+     * Alias للعلاقة مع المديونين (للتوافق مع الكود القديم)
+     * 
+     * @return BelongsToMany
+     */
+    public function clients(): BelongsToMany
+    {
+        return $this->debtors();
     }
 
     /**

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Owner;
 
 use App\Http\Controllers\Controller;
 use App\Models\Client;
+use App\Notifications\ClientAddedNotification;
+use App\Notifications\ClientStatusChangedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,7 +28,28 @@ class ClientController extends Controller
             ->latest()
             ->get();
         
-        return view('owner.clients.index', compact('clients'));
+        // معلومات الاشتراك والاستهلاك
+        $user = Auth::user();
+        $activeSubscription = $user->getActiveSubscription();
+        $subscriptionInfo = null;
+        
+        if ($activeSubscription) {
+            $subscription = $activeSubscription->subscription;
+            $currentDebtorsCount = $clients->count();
+            $maxDebtors = $subscription->max_debtors ?? 0;
+            $debtorsRemaining = $maxDebtors > 0 ? max(0, $maxDebtors - $currentDebtorsCount) : null;
+            $debtorsUsage = $maxDebtors > 0 ? ($currentDebtorsCount / $maxDebtors) * 100 : 0;
+            
+            $subscriptionInfo = [
+                'subscription_name' => $subscription->name,
+                'max_debtors' => $maxDebtors,
+                'current_debtors' => $currentDebtorsCount,
+                'debtors_remaining' => $debtorsRemaining,
+                'debtors_usage' => $debtorsUsage,
+            ];
+        }
+        
+        return view('owner.clients.index', compact('clients', 'subscriptionInfo'));
     }
 
     /**
@@ -49,11 +72,37 @@ class ClientController extends Controller
             'status' => 'required|in:new,contacted,promise_to_pay,paid,overdue,failed',
         ]);
 
+        // التحقق من حدود الاشتراك - عدد المديونين
+        $user = Auth::user();
+        $activeSubscription = $user->getActiveSubscription();
+        
+        if (!$activeSubscription) {
+            return back()->with('error', 'لا يوجد اشتراك نشط. يرجى الاشتراك في إحدى الباقات أولاً.');
+        }
+
+        $subscription = $activeSubscription->subscription;
+        $maxDebtors = $subscription->max_debtors ?? 0;
+        
+        // حساب عدد المديونين الحالي
+        $currentDebtorsCount = Client::where('owner_id', Auth::id())->count();
+        
+        // التحقق من تجاوز الحد
+        if ($maxDebtors > 0 && $currentDebtorsCount >= $maxDebtors) {
+            return back()->with('error', "لقد وصلت للحد الأقصى المسموح للمديونين! الحد المسموح: {$maxDebtors} مديون، الحالي: {$currentDebtorsCount}. يرجى ترقية اشتراكك لإضافة المزيد من المديونين.");
+        }
+
         // إضافة owner_id تلقائياً
         $validated['owner_id'] = Auth::id();
 
         // إنشاء المديون
-        Client::create($validated);
+        $client = Client::create($validated);
+
+        // إرسال إشعار إضافة مديون جديد
+        try {
+            Auth::user()->notify(new ClientAddedNotification($client));
+        } catch (\Exception $e) {
+            \Log::error('Failed to send notification: ' . $e->getMessage());
+        }
 
         return redirect()->route('owner.clients.index')
             ->with('success', 'تم إضافة المديون بنجاح.');
@@ -85,8 +134,16 @@ class ClientController extends Controller
             'status' => 'required|in:new,contacted,promise_to_pay,paid,overdue,failed',
         ]);
 
+        // حفظ الحالة القديمة
+        $oldStatus = $client->status;
+
         // تحديث بيانات المديون
         $client->update($validated);
+
+        // إرسال إشعار تغيير الحالة إذا تغيرت
+        if ($oldStatus !== $client->status) {
+            Auth::user()->notify(new ClientStatusChangedNotification($client, $oldStatus, $client->status));
+        }
 
         return redirect()->route('owner.clients.index')
             ->with('success', 'تم تحديث بيانات المديون بنجاح.');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\SubscriptionRequest;
+use App\Notifications\SubscriptionRequestStatusNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -89,6 +90,9 @@ class SubscriptionRequestController extends Controller
             'expires_at' => $expiresAt,
         ]);
 
+        // إرسال إشعار للمالك
+        $request->user->notify(new SubscriptionRequestStatusNotification($request->refresh()));
+
         return back()->with('success', 'تم قبول طلب الاشتراك بنجاح.');
     }
 
@@ -118,6 +122,9 @@ class SubscriptionRequestController extends Controller
             'approved_by' => Auth::id(),
             'admin_notes' => $validated['admin_notes'],
         ]);
+
+        // إرسال إشعار للمالك
+        $request->user->notify(new SubscriptionRequestStatusNotification($request->refresh()));
 
         return back()->with('success', 'تم رفض طلب الاشتراك.');
     }
