@@ -5,8 +5,8 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6 text-gray-900">
-                <h1 class="text-2xl font-bold mb-4">Admin Dashboard</h1>
-                <p class="text-gray-600">Welcome to the Admin Dashboard. This is your control panel.</p>
+                <h1 class="text-2xl font-bold mb-4">لوحة تحكم المدير</h1>
+                <p class="text-gray-600">مرحباً بك في لوحة تحكم المدير. هذه هي لوحة التحكم الخاصة بك.</p>
             </div>
         </div>
     </div>
