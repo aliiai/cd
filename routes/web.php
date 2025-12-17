@@ -15,6 +15,7 @@ use App\Http\Controllers\Owner\DebtorController as OwnerDebtorController;
 use App\Http\Controllers\Owner\CollectionController as OwnerCollectionController;
 use App\Http\Controllers\Owner\MessageController as OwnerMessageController;
 use App\Http\Controllers\Owner\AiAssistanceController as OwnerAiAssistanceController;
+use App\Http\Controllers\Owner\AnalyticsController as OwnerAnalyticsController;
 use App\Http\Controllers\Owner\SettingsController as OwnerSettingsController;
 use App\Http\Controllers\Admin\SubscriptionController as AdminSubscriptionController;
 use App\Http\Controllers\Admin\SubscriptionRequestController as AdminSubscriptionRequestController;
@@ -77,6 +78,12 @@ Route::prefix('owner')->name('owner.')->middleware(['auth', 'role:owner'])->grou
     // Subscriptions
     Route::get('/subscriptions', [OwnerSubscriptionController::class, 'index'])->name('subscriptions.index');
     Route::post('/subscriptions', [OwnerSubscriptionController::class, 'store'])->name('subscriptions.store');
+    
+    // Analytics Routes
+    Route::prefix('analytics')->name('analytics.')->group(function () {
+        Route::get('/collection-status', [OwnerAnalyticsController::class, 'collectionStatus'])->name('collection-status');
+        Route::get('/income', [OwnerAnalyticsController::class, 'income'])->name('income');
+    });
     
     // Reports Routes
     Route::prefix('reports')->name('reports.')->group(function () {

@@ -38,14 +38,17 @@
         <ul class="space-y-2">
             @foreach($links as $link)
                 @php
-                    // التحقق من أن الرابط نشط (active)
-                    $isActive = request()->routeIs($link['route']) || request()->routeIs($link['route'] . '.*');
+                    // التحقق من أن الرابط نشط (active) - فقط إذا كان يحتوي على route
+                    $isActive = false;
+                    if (isset($link['route'])) {
+                        $isActive = request()->routeIs($link['route']) || request()->routeIs($link['route'] . '.*');
+                    }
                     
                     // التحقق من أن أي رابط فرعي نشط (للـ Dropdown)
                     $hasActiveChild = false;
                     if (isset($link['type']) && $link['type'] === 'dropdown' && isset($link['children'])) {
                         foreach ($link['children'] as $child) {
-                            if (request()->routeIs($child['route']) || request()->routeIs($child['route'] . '.*')) {
+                            if (isset($child['route']) && (request()->routeIs($child['route']) || request()->routeIs($child['route'] . '.*'))) {
                                 $hasActiveChild = true;
                                 $isActive = true;
                                 break;
