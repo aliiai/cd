@@ -1,10 +1,10 @@
 <x-guest-layout>
-    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gradient-to-br from-primary-50 to-secondary-50">
         <!-- Logo Section -->
         <div class="mb-8">
             <a href="/" class="flex items-center justify-center">
                 <div class="bg-white p-4 rounded-full shadow-lg">
-                    <svg class="w-16 h-16 text-indigo-600" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg class="w-16 h-16 text-primary-600" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M11.395 44.428C4.557 40.198 0 32.632 0 24 0 10.745 10.745 0 24 0a23.891 23.891 0 0113.997 4.502c-.2 17.907-11.097 33.245-26.602 39.926z" fill="currentColor"/>
                         <path d="M14.134 45.885A23.914 23.914 0 0024 48c13.255 0 24-10.745 24-24 0-3.516-.756-6.856-2.115-9.866-4.659 15.143-16.608 27.092-31.75 31.751z" fill="currentColor"/>
                     </svg>
@@ -52,7 +52,7 @@
                             <img x-show="photoPreview" 
                                  :src="photoPreview" 
                                  alt="Preview" 
-                                 class="h-20 w-20 rounded-full object-cover border-2 border-indigo-500 shadow-md"
+                                 class="h-20 w-20 rounded-full object-cover border-2 border-primary-500 shadow-md"
                                  x-cloak>
                         </div>
                         <!-- Upload Button -->
@@ -97,7 +97,7 @@
                            required 
                            autofocus 
                            autocomplete="name"
-                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 @error('name') border-red-500 @enderror"
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200 @error('name') border-red-500 @enderror"
                            placeholder="أدخل الاسم الكامل">
                     @error('name')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -115,7 +115,7 @@
                            value="{{ old('email') }}"
                            required 
                            autocomplete="username"
-                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 @error('email') border-red-500 @enderror"
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200 @error('email') border-red-500 @enderror"
                            placeholder="example@email.com">
                     @error('email')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -133,7 +133,7 @@
                            value="{{ old('phone') }}"
                            required 
                            autocomplete="tel"
-                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 @error('phone') border-red-500 @enderror"
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200 @error('phone') border-red-500 @enderror"
                            placeholder="+966501234567">
                     @error('phone')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -150,7 +150,7 @@
                            name="password" 
                            required 
                            autocomplete="new-password"
-                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 @error('password') border-red-500 @enderror"
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200 @error('password') border-red-500 @enderror"
                            placeholder="8 أحرف على الأقل">
                     <p class="mt-1 text-xs text-gray-500">يجب أن تحتوي على حرف كبير وصغير ورقم وعلامة</p>
                     @error('password')
@@ -168,7 +168,7 @@
                            name="password_confirmation" 
                            required 
                            autocomplete="new-password"
-                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 @error('password_confirmation') border-red-500 @enderror"
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200 @error('password_confirmation') border-red-500 @enderror"
                            placeholder="أعد إدخال كلمة المرور">
                     @error('password_confirmation')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -183,12 +183,12 @@
                                    name="terms" 
                                    id="terms" 
                                    required
-                                   class="mt-1 h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                   class="mt-1 h-4 w-4 text-primary-600 focus:ring-indigo-500 border-gray-300 rounded">
                             <span class="mr-2 text-sm text-gray-700">
                                 أوافق على 
-                                <a href="{{ route('terms.show') }}" target="_blank" class="text-indigo-600 hover:text-indigo-800 underline">شروط الخدمة</a>
+                                <a href="{{ route('terms.show') }}" target="_blank" class="text-primary-600 hover:text-primary-800 underline">شروط الخدمة</a>
                                 و
-                                <a href="{{ route('policy.show') }}" target="_blank" class="text-indigo-600 hover:text-indigo-800 underline">سياسة الخصوصية</a>
+                                <a href="{{ route('policy.show') }}" target="_blank" class="text-primary-600 hover:text-primary-800 underline">سياسة الخصوصية</a>
                             </span>
                         </label>
                         @error('terms')
@@ -200,11 +200,11 @@
                 <!-- Submit Button and Login Link -->
                 <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                     <a href="{{ route('login') }}" 
-                       class="text-sm text-indigo-600 hover:text-indigo-800 font-medium transition-colors duration-200">
+                       class="text-sm text-primary-600 hover:text-primary-800 font-medium transition-colors duration-200">
                         لديك حساب؟ <span class="underline">تسجيل الدخول</span>
                     </a>
                     <button type="submit" 
-                            class="w-full sm:w-auto px-8 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                            class="w-full sm:w-auto px-8 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                         إنشاء حساب
                     </button>
                 </div>

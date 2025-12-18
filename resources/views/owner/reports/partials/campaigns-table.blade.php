@@ -9,7 +9,7 @@
         <!-- Channel -->
         <td class="px-6 py-4 whitespace-nowrap">
             @if($campaign->channel == 'sms')
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
                     SMS
                 </span>
             @else
@@ -46,7 +46,7 @@
         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
             <a 
                 href="{{ route('owner.collections.show', $campaign->id) }}" 
-                class="text-blue-600 hover:text-blue-900 transition-colors duration-200"
+                class="text-primary-600 hover:text-primary-900 transition-colors duration-200"
             >
                 عرض التفاصيل
             </a>

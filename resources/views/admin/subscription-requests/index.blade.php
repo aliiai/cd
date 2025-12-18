@@ -55,7 +55,7 @@
                                             @if($request->payment_proof)
                                                 <a href="{{ asset('storage/' . $request->payment_proof) }}" 
                                                    target="_blank"
-                                                   class="text-blue-600 hover:text-blue-900">
+                                                   class="text-primary-600 hover:text-primary-900">
                                                     عرض الصورة
                                                 </a>
                                             @else
@@ -78,7 +78,7 @@
                                             @if($request->status === 'pending')
                                                 <div class="flex space-x-2 space-x-reverse">
                                                     <a href="{{ route('admin.subscription-requests.show', $request) }}" 
-                                                       class="text-blue-600 hover:text-blue-900">عرض التفاصيل</a>
+                                                       class="text-primary-600 hover:text-primary-900">عرض التفاصيل</a>
                                                 </div>
                                             @else
                                                 <span class="text-gray-400">-</span>

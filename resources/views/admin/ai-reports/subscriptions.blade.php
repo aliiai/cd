@@ -12,15 +12,15 @@
         <!-- Statistics Cards -->
         <div class="flex flex-wrap justify-between gap-4 mb-6">
             <!-- Active Subscriptions -->
-            <div class="w-1/4 bg-gradient-to-br from-white to-green-50 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 p-6 border-l-4 border-green-500 hover:border-green-600">
+            <div class="w-1/4 bg-gradient-to-br from-white to-primary-50 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 p-6 border-l-4 border-primary-500 hover:border-primary-600">
                 <div class="flex items-start justify-between">
                     <div class="flex-1">
                         <p class="text-sm font-medium text-gray-600 mb-1">الاشتراكات النشطة</p>
                         <p class="text-3xl font-bold text-gray-900 mt-2">{{ $activeSubscriptions }}</p>
                         <p class="text-xs text-gray-500 mt-1">اشتراك نشط</p>
                     </div>
-                    <div class="bg-gradient-to-br from-green-100 to-green-200 rounded-xl p-3 shadow-sm">
-                        <svg class="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="bg-gradient-to-br from-primary-100 to-primary-200 rounded-xl p-3 shadow-sm">
+                        <svg class="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
@@ -28,17 +28,17 @@
             </div>
 
             <!-- Most Used Subscription -->
-            <div class="w-1/4 bg-gradient-to-br from-white to-blue-50 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 p-6 border-l-4 border-blue-500 hover:border-blue-600">
+            <div class="w-1/4 bg-gradient-to-br from-white to-primary-50 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 p-6 border-l-4 border-primary-500 hover:border-primary-600">
                 <div class="flex items-start justify-between">
                     <div class="flex-1">
                         <p class="text-sm font-medium text-gray-600 mb-1">أكثر باقة استخدامًا</p>
                         <p class="text-xl font-bold text-gray-900 mt-2 line-clamp-1">{{ $mostUsedSubscription->name ?? 'غير محدد' }}</p>
                         <p class="text-xs text-gray-500 mt-1">
-                            <span class="font-semibold text-blue-600">{{ $mostUsedSubscription->user_subscriptions_count ?? 0 }}</span> اشتراك
+                            <span class="font-semibold text-primary-600">{{ $mostUsedSubscription->user_subscriptions_count ?? 0 }}</span> اشتراك
                         </p>
                     </div>
-                    <div class="bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl p-3 shadow-sm">
-                        <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="bg-gradient-to-br from-primary-100 to-primary-200 rounded-xl p-3 shadow-sm">
+                        <svg class="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                         </svg>
                     </div>
@@ -87,7 +87,7 @@
                     <select 
                         id="subscriptionInput"
                         name="subscription_id" 
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                     >
                         <option value="">جميع الباقات</option>
                         @foreach($allSubscriptions as $sub)
@@ -104,7 +104,7 @@
                     <select 
                         id="statusInput"
                         name="status" 
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                     >
                         <option value="">جميع الحالات</option>
                         <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>نشط</option>
@@ -121,7 +121,7 @@
                         id="dateFromInput"
                         name="date_from" 
                         value="{{ request('date_from') }}"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                     >
                 </div>
 
@@ -133,7 +133,7 @@
                         id="dateToInput"
                         name="date_to" 
                         value="{{ request('date_to') }}"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                     >
                 </div>
 
@@ -152,7 +152,7 @@
         <!-- Loading Indicator -->
         <div id="loadingIndicator" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 z-50 flex items-center justify-center">
             <div class="bg-white rounded-lg p-6 flex items-center space-x-3">
-                <svg class="animate-spin h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <svg class="animate-spin h-5 w-5 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>

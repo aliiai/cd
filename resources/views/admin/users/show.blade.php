@@ -8,7 +8,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <a href="{{ route('admin.users.index') }}" 
-                       class="text-blue-600 hover:text-blue-900 text-sm mb-2 inline-block">
+                       class="text-primary-600 hover:text-primary-900 text-sm mb-2 inline-block">
                         ← العودة إلى قائمة المستخدمين
                     </a>
                     <h1 class="text-3xl font-bold text-gray-900">تفاصيل المستخدم</h1>

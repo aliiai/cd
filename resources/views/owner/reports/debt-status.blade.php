@@ -14,9 +14,9 @@
             @foreach($debtStatusReport as $report)
                 @php
                     $borderColor = match($report['status']) {
-                        'new' => 'border-blue-500',
+                        'new' => 'border-primary-500',
                         'contacted' => 'border-yellow-500',
-                        'promise_to_pay' => 'border-purple-500',
+                        'promise_to_pay' => 'border-secondary-500',
                         'paid' => 'border-green-500',
                         'overdue' => 'border-red-500',
                         default => 'border-gray-500',
@@ -30,8 +30,8 @@
                                 {{ $report['status_text'] }}
                             </span>
                             @if($report['status'] == 'new')
-                                <div class="bg-blue-100 rounded-full p-2">
-                                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="bg-primary-100 rounded-full p-2">
+                                    <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                                     </svg>
                                 </div>
@@ -42,8 +42,8 @@
                                     </svg>
                                 </div>
                             @elseif($report['status'] == 'promise_to_pay')
-                                <div class="bg-purple-100 rounded-full p-2">
-                                    <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="bg-secondary-100 rounded-full p-2">
+                                    <svg class="w-5 h-5 text-secondary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                 </div>
@@ -84,7 +84,7 @@
                         <!-- Action Button -->
                         <a 
                             href="{{ route('owner.debtors.index', ['status' => $report['status']]) }}" 
-                            class="block w-full text-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium"
+                            class="block w-full text-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors duration-200 font-medium"
                         >
                             عرض المديونين
                         </a>

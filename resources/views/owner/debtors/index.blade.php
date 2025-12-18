@@ -10,7 +10,7 @@
                 <p class="mt-2 text-sm text-gray-600">إدارة جميع المديونين وعرض حالتهم</p>
             </div>
             <button onclick="openDebtorModal()" 
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg">
+                    class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg">
                 + إضافة مديون جديد
             </button>
         </div>
@@ -30,7 +30,7 @@
 
         <!-- Subscription Usage Info -->
         @if($subscriptionInfo)
-            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 rounded-lg p-4 mb-6">
+            <div class="bg-gradient-to-r from-primary-50 to-secondary-50 border-l-4 border-primary-500 rounded-lg p-4 mb-6">
                 <div class="flex items-center justify-between">
                     <div class="flex-1">
                         <h3 class="text-lg font-semibold text-gray-900 mb-2">معلومات الاشتراك والاستهلاك</h3>
@@ -96,7 +96,7 @@
                                name="search" 
                                value="{{ request('search') }}"
                                placeholder="ابحث بالاسم، البريد الإلكتروني، أو رقم الهاتف..."
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                     </div>
                     
                     <!-- Status Filter -->
@@ -104,7 +104,7 @@
                         <label for="status" class="block text-sm font-medium text-gray-700 mb-2">حالة الدين</label>
                         <select id="status" 
                                 name="status" 
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                             <option value="all" {{ request('status') == 'all' || !request('status') ? 'selected' : '' }}>جميع الحالات</option>
                             <option value="new" {{ request('status') == 'new' ? 'selected' : '' }}>جديد</option>
                             <option value="contacted" {{ request('status') == 'contacted' ? 'selected' : '' }}>تم التواصل</option>
@@ -120,7 +120,7 @@
                         <label for="sort_by" class="block text-sm font-medium text-gray-700 mb-2">ترتيب حسب</label>
                         <select id="sort_by" 
                                 name="sort_by" 
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                             <option value="created_at" {{ request('sort_by') == 'created_at' || !request('sort_by') ? 'selected' : '' }}>تاريخ الإضافة</option>
                             <option value="name" {{ request('sort_by') == 'name' ? 'selected' : '' }}>الاسم</option>
                             <option value="debt_amount" {{ request('sort_by') == 'debt_amount' ? 'selected' : '' }}>قيمة الدين</option>
@@ -177,7 +177,7 @@
                                name="name" 
                                id="name" 
                                required
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                         @error('name')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -192,7 +192,7 @@
                                name="phone" 
                                id="phone" 
                                required
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                         @error('phone')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -206,7 +206,7 @@
                         <input type="email" 
                                name="email" 
                                id="email"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                         @error('email')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -223,7 +223,7 @@
                                step="0.01"
                                min="0"
                                required
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                         @error('debt_amount')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -238,7 +238,7 @@
                                name="due_date" 
                                id="due_date" 
                                required
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                         @error('due_date')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -253,7 +253,7 @@
                                name="payment_link" 
                                id="payment_link"
                                placeholder="https://..."
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                         @error('payment_link')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -267,7 +267,7 @@
                         <select name="status" 
                                 id="status" 
                                 required
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                             <option value="new">جديد</option>
                             <option value="contacted">تم التواصل</option>
                             <option value="promise_to_pay">وعد بالدفع</option>
@@ -288,7 +288,7 @@
                         <textarea name="notes" 
                                   id="notes" 
                                   rows="3"
-                                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"></textarea>
                         @error('notes')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -303,7 +303,7 @@
                         إلغاء
                     </button>
                     <button type="submit" 
-                            class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+                            class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700">
                         حفظ
                     </button>
                 </div>
@@ -422,7 +422,7 @@
         params.append('ajax', '1');
         
         // Show loading state
-        document.getElementById('debtorsTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div><p class="mt-2 text-gray-500">جاري التحميل...</p></div>';
+        document.getElementById('debtorsTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div><p class="mt-2 text-gray-500">جاري التحميل...</p></div>';
         document.getElementById('paginationContainer').innerHTML = '';
         
         // Make AJAX request
@@ -475,7 +475,7 @@
             const url = e.target.closest('a').href;
             
             // Show loading state
-            document.getElementById('debtorsTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div><p class="mt-2 text-gray-500">جاري التحميل...</p></div>';
+            document.getElementById('debtorsTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div><p class="mt-2 text-gray-500">جاري التحميل...</p></div>';
             document.getElementById('paginationContainer').innerHTML = '';
             
             // Make AJAX request

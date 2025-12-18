@@ -68,7 +68,7 @@
         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
             <a 
                 href="{{ route('admin.users.show', $provider->id) }}" 
-                class="text-blue-600 hover:text-blue-900 transition-colors duration-200"
+                class="text-primary-600 hover:text-primary-900 transition-colors duration-200"
             >
                 عرض التفاصيل
             </a>

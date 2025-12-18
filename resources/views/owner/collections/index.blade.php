@@ -10,7 +10,7 @@
                 <p class="mt-2 text-sm text-gray-600">إنشاء وإدارة حملات التحصيل للمديونين</p>
             </div>
             <button onclick="openCampaignModal()" 
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg">
+                    class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg">
                 + إنشاء حملة تحصيل
             </button>
         </div>
@@ -30,7 +30,7 @@
 
         <!-- Subscription Usage Info -->
         @if($subscriptionInfo)
-            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 rounded-lg p-4 mb-6">
+            <div class="bg-gradient-to-r from-primary-50 to-secondary-50 border-l-4 border-primary-500 rounded-lg p-4 mb-6">
                 <div class="flex items-center justify-between">
                     <div class="flex-1">
                         <h3 class="text-lg font-semibold text-gray-900 mb-2">معلومات الاشتراك والاستهلاك</h3>
@@ -103,12 +103,12 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @foreach($campaigns as $campaign)
-                                    <tr class="hover:bg-blue-50 transition-all duration-200 hover:shadow-md">
+                                    <tr class="hover:bg-primary-50 transition-all duration-200 hover:shadow-md">
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                             {{ $campaign->campaign_number }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
                                                 {{ $campaign->total_recipients }}
                                             </span>
                                         </td>
@@ -129,7 +129,7 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <a href="{{ route('owner.collections.show', $campaign) }}" 
-                                               class="inline-flex items-center px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors duration-200 shadow-sm hover:shadow-md"
+                                               class="inline-flex items-center px-3 py-1.5 bg-primary-100 text-primary-700 rounded-lg hover:bg-primary-200 transition-colors duration-200 shadow-sm hover:shadow-md"
                                                title="عرض التفاصيل">
                                                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -150,7 +150,7 @@
                         </svg>
                         <p class="mt-4 text-gray-500 text-lg">لا توجد حملات حالياً.</p>
                         <button onclick="openCampaignModal()" 
-                                class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
+                                class="mt-4 inline-block bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
                             إنشاء حملة تحصيل
                         </button>
                     </div>
@@ -188,7 +188,7 @@
                         </label>
                         <select id="client_selection" 
                                 onchange="handleClientSelection()"
-                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200">
                             <option value="">اختر طريقة الاختيار</option>
                             <option value="single">مدين واحد</option>
                             <option value="multiple">أكثر من مدين</option>
@@ -205,7 +205,7 @@
                                 id="client_ids" 
                                 multiple
                                 size="6"
-                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200">
                             @foreach($debtors as $debtor)
                                 <option value="{{ $debtor->id }}">{{ $debtor->name }} - {{ $debtor->phone }} ({{ number_format($debtor->debt_amount, 2) }} ر.س)</option>
                             @endforeach
@@ -220,7 +220,7 @@
                         </label>
                         <select name="single_client_id" 
                                 id="single_client_id"
-                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200">
                             <option value="">اختر المديون</option>
                             @foreach($debtors as $debtor)
                                 <option value="{{ $debtor->id }}">{{ $debtor->name }} - {{ $debtor->phone }} ({{ number_format($debtor->debt_amount, 2) }} ر.س)</option>
@@ -238,7 +238,7 @@
                             <select name="channel" 
                                     id="channel" 
                                     required
-                                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200">
                                 <option value="">اختر القناة</option>
                                 <option value="sms">SMS</option>
                                 <option value="email">Email</option>
@@ -256,7 +256,7 @@
                             <select name="template" 
                                     id="template" 
                                     onchange="loadTemplate()"
-                                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200">
                                 <option value="">اختر قالب (اختياري)</option>
                                 <option value="reminder">تذكير بالدفع</option>
                                 <option value="overdue">تذكير بالمتأخرات</option>
@@ -301,7 +301,7 @@
                                name="scheduled_at" 
                                id="scheduled_at"
                                min="{{ now()->format('Y-m-d\TH:i') }}"
-                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200">
                         @error('scheduled_at')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -320,7 +320,7 @@
                                   rows="8"
                                   required
                                   oninput="updatePreview()"
-                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none"></textarea>
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 resize-none"></textarea>
                         @error('message')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror

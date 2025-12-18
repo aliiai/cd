@@ -7,7 +7,7 @@
         <div class="mb-6">
             <h1 class="text-3xl font-bold text-gray-900">تفاصيل طلب الاشتراك</h1>
             <a href="{{ route('admin.subscription-requests.index') }}" 
-               class="mt-2 inline-block text-sm text-blue-600 hover:text-blue-900">
+               class="mt-2 inline-block text-sm text-primary-600 hover:text-primary-900">
                 ← العودة إلى قائمة الطلبات
             </a>
         </div>
@@ -85,7 +85,7 @@
                         </div>
                         <a href="{{ asset('storage/' . $request->payment_proof) }}" 
                            target="_blank"
-                           class="inline-block text-sm text-blue-600 hover:text-blue-900">
+                           class="inline-block text-sm text-primary-600 hover:text-primary-900">
                             فتح الصورة في نافذة جديدة
                         </a>
                     @else
@@ -112,7 +112,7 @@
                                 <textarea name="admin_notes" 
                                           id="approve_notes" 
                                           rows="3"
-                                          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"></textarea>
                             </div>
                             <button type="submit" 
                                     class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
@@ -132,7 +132,7 @@
                                           rows="3"
                                           required
                                           minlength="10"
-                                          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"></textarea>
                             </div>
                             <button type="submit" 
                                     class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">

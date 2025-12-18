@@ -3,8 +3,8 @@
         <!-- Operation Type -->
         <td class="px-6 py-4 whitespace-nowrap">
             <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium 
-                @if($activity['type'] == 'add_client') bg-blue-100 text-blue-800
-                @elseif($activity['type'] == 'create_campaign') bg-purple-100 text-purple-800
+                @if($activity['type'] == 'add_client') bg-primary-100 text-primary-800
+                @elseif($activity['type'] == 'create_campaign') bg-secondary-100 text-secondary-800
                 @elseif($activity['type'] == 'change_status') bg-green-100 text-green-800
                 @else bg-gray-100 text-gray-800
                 @endif">

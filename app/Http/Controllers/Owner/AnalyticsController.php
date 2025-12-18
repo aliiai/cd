@@ -59,10 +59,10 @@ class AnalyticsController extends Controller
             'counts' => array_column($statusDistribution, 'count'),
             'amounts' => array_column($statusDistribution, 'total_amount'),
             'colors' => [
-                '#3B82F6', // blue (new)
-                '#EAB308', // yellow (contacted)
-                '#A855F7', // purple (promise_to_pay)
-                '#10B981', // green (paid)
+                'rgb(92, 112, 224)', // primary (new)
+                'rgb(129, 95, 228)', // secondary (contacted)
+                'rgb(92, 112, 224)', // primary (promise_to_pay)
+                'rgb(129, 95, 228)', // secondary (paid)
                 '#EF4444', // red (overdue)
                 '#6B7280', // gray (failed)
             ],

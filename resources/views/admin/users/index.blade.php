@@ -34,7 +34,7 @@
                                name="search" 
                                value="{{ request('search') }}"
                                placeholder="ابحث بالاسم أو البريد الإلكتروني..."
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                     </div>
                     
                     <!-- Status Filter -->
@@ -42,7 +42,7 @@
                         <label for="status" class="block text-sm font-medium text-gray-700 mb-2">حالة الحساب</label>
                         <select id="status" 
                                 name="status" 
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                             <option value="all" {{ request('status') == 'all' || !request('status') ? 'selected' : '' }}>جميع الحالات</option>
                             <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>نشط</option>
                             <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>موقوف</option>
@@ -54,7 +54,7 @@
                         <label for="sort_by" class="block text-sm font-medium text-gray-700 mb-2">ترتيب حسب</label>
                         <select id="sort_by" 
                                 name="sort_by" 
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                             <option value="created_at" {{ request('sort_by') == 'created_at' || !request('sort_by') ? 'selected' : '' }}>تاريخ التسجيل</option>
                             <option value="name" {{ request('sort_by') == 'name' ? 'selected' : '' }}>الاسم</option>
                             <option value="email" {{ request('sort_by') == 'email' ? 'selected' : '' }}>البريد الإلكتروني</option>
@@ -107,7 +107,7 @@
         params.append('sort_dir', 'desc');
         
         // Show loading
-        document.getElementById('usersTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div><p class="mt-4 text-gray-500">جاري التحميل...</p></div>';
+        document.getElementById('usersTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div><p class="mt-4 text-gray-500">جاري التحميل...</p></div>';
         
         fetch(`{{ route('admin.users.index') }}?${params.toString()}`, {
             method: 'GET',
@@ -163,7 +163,7 @@
             const url = e.target.closest('a').href;
             
             // Show loading
-            document.getElementById('usersTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div><p class="mt-4 text-gray-500">جاري التحميل...</p></div>';
+            document.getElementById('usersTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div><p class="mt-4 text-gray-500">جاري التحميل...</p></div>';
             
             fetch(url, {
                 method: 'GET',

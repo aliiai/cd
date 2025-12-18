@@ -13,7 +13,7 @@
             </thead>
             <tbody class="bg-white divide-y divide-gray-200" id="usersTableBody">
                 @foreach($users as $user)
-                    <tr class="hover:bg-blue-50 transition-all duration-200 hover:shadow-md">
+                    <tr class="hover:bg-primary-50 transition-all duration-200 hover:shadow-md">
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                             {{ $user->name }}
                         </td>
@@ -23,7 +23,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm">
                             @if($user->roles->count() > 0)
                                 @foreach($user->roles as $role)
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
                                         {{ $role->name }}
                                     </span>
                                 @endforeach
@@ -48,7 +48,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex items-center space-x-3 space-x-reverse gap-2">
                                 <a href="{{ route('admin.users.show', $user) }}" 
-                                   class="inline-flex items-center px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors duration-200 shadow-sm hover:shadow-md"
+                                   class="inline-flex items-center px-3 py-1.5 bg-primary-100 text-primary-700 rounded-lg hover:bg-primary-200 transition-colors duration-200 shadow-sm hover:shadow-md"
                                    title="عرض التفاصيل">
                                     <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>

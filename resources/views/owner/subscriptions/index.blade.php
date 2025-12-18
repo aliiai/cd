@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="py-12">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="w-full mx-auto sm:px-6 lg:px-8">
         <!-- Header -->
         <div class="mb-6">
             <h1 class="text-3xl font-bold text-gray-900">الباقات المتاحة</h1>
@@ -71,7 +71,7 @@
                             <div class="mb-4">
                                 <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ $subscription->name }}</h3>
                                 <div class="flex items-baseline">
-                                    <span class="text-4xl font-bold text-blue-600">
+                                    <span class="text-4xl font-bold text-primary-600">
                                         {{ number_format($subscription->price, 2) }}
                                     </span>
                                     <span class="text-lg text-gray-600 mr-2">ر.س</span>
@@ -121,7 +121,7 @@
                                 </div>
 
                                 <div class="flex items-start">
-                                    <svg class="w-5 h-5 text-blue-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-5 h-5 text-primary-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
                                     <span class="text-sm font-medium text-gray-900">المدة: {{ $subscription->duration_text }}</span>
@@ -141,7 +141,7 @@
                                 </button>
                             @else
                                 <button onclick="openSubscriptionModal({{ $subscription->id }}, '{{ $subscription->name }}', {{ $subscription->price }}, '{{ $subscription->duration_text }}')" 
-                                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg">
+                                        class="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 px-4 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg">
                                     تفعيل الاشتراك
                                 </button>
                             @endif
@@ -172,9 +172,9 @@
             </div>
 
             <!-- Bank Account Info -->
-            <div class="mb-6 p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
+            <div class="mb-6 p-4 bg-gradient-to-br from-primary-50 to-secondary-50 rounded-lg border border-primary-200">
                 <h4 class="font-semibold text-gray-900 mb-3 flex items-center">
-                    <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-primary-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                     </svg>
                     معلومات الحساب البنكي
@@ -202,7 +202,7 @@
                            id="payment_proof" 
                            accept="image/*"
                            required
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                     @error('payment_proof')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -221,7 +221,7 @@
                         إلغاء
                     </button>
                     <button type="submit" 
-                            class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+                            class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700">
                         إرسال الطلب
                     </button>
                 </div>

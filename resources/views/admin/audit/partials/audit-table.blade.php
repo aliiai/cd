@@ -13,15 +13,15 @@
             </thead>
             <tbody class="bg-white divide-y divide-gray-200" id="auditTableBody">
                 @foreach($activities as $activity)
-                    <tr class="hover:bg-blue-50 transition-all duration-200 hover:shadow-md">
+                    <tr class="hover:bg-primary-50 transition-all duration-200 hover:shadow-md">
                         <!-- Operation Type -->
                         <td class="px-6 py-4 whitespace-nowrap text-sm">
                             @php
                                 $typeColor = match($activity['type']) {
-                                    'add_debtor' => 'bg-blue-100 text-blue-800',
-                                    'create_campaign' => 'bg-purple-100 text-purple-800',
+                                    'add_debtor' => 'bg-primary-100 text-primary-800',
+                                    'create_campaign' => 'bg-secondary-100 text-secondary-800',
                                     'change_status' => 'bg-green-100 text-green-800',
-                                    'send_message' => 'bg-indigo-100 text-indigo-800',
+                                    'send_message' => 'bg-primary-100 text-primary-800',
                                     'create_ticket' => 'bg-yellow-100 text-yellow-800',
                                     'subscription_request' => 'bg-pink-100 text-pink-800',
                                     default => 'bg-gray-100 text-gray-800',
@@ -84,7 +84,7 @@
                                 @endphp
                                 @if($route !== '#')
                                     <a href="{{ $route }}" 
-                                       class="inline-flex items-center px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors duration-200 shadow-sm hover:shadow-md"
+                                       class="inline-flex items-center px-3 py-1.5 bg-primary-100 text-primary-700 rounded-lg hover:bg-primary-200 transition-colors duration-200 shadow-sm hover:shadow-md"
                                        title="عرض التفاصيل">
                                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>

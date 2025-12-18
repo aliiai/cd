@@ -34,6 +34,7 @@ Route::get('/', function () {
 // Admin Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/messages-data', [AdminDashboardController::class, 'getMessagesData'])->name('dashboard.messages-data');
     Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
     Route::get('/users/{user}', [AdminUserController::class, 'show'])->name('users.show');
     Route::post('/users/{user}/toggle-status', [AdminUserController::class, 'toggleStatus'])->name('users.toggle-status');
@@ -49,6 +50,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
         Route::get('/subscriptions', [AdminAiReportController::class, 'subscriptions'])->name('subscriptions');
     });
     Route::get('/settings', [AdminSettingsController::class, 'index'])->name('settings');
+    Route::post('/settings/profile', [AdminSettingsController::class, 'updateProfile'])->name('settings.profile');
+    Route::post('/settings/password', [AdminSettingsController::class, 'updatePassword'])->name('settings.password');
+    Route::post('/settings/preferences', [AdminSettingsController::class, 'updatePreferences'])->name('settings.preferences');
+    Route::post('/settings/logout-other-sessions', [AdminSettingsController::class, 'logoutOtherSessions'])->name('settings.logout-other-sessions');
     Route::get('/audit', [AdminAuditController::class, 'index'])->name('audit.index');
     
     // Subscriptions Management
@@ -107,6 +112,9 @@ Route::prefix('owner')->name('owner.')->middleware(['auth', 'role:owner'])->grou
     Route::get('/messages/create', [OwnerMessageController::class, 'create'])->name('messages.create');
     Route::get('/ai-assistance', [OwnerAiAssistanceController::class, 'index'])->name('ai-assistance.index');
     Route::get('/settings', [OwnerSettingsController::class, 'index'])->name('settings');
+    Route::post('/settings/profile', [OwnerSettingsController::class, 'updateProfile'])->name('settings.profile');
+    Route::post('/settings/password', [OwnerSettingsController::class, 'updatePassword'])->name('settings.password');
+    Route::post('/settings/logout-other-sessions', [OwnerSettingsController::class, 'logoutOtherSessions'])->name('settings.logout-other-sessions');
     
     // Subscriptions
     Route::get('/subscriptions', [OwnerSubscriptionController::class, 'index'])->name('subscriptions.index');

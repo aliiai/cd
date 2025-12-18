@@ -11,7 +11,7 @@
                     <p class="mt-2 text-sm text-gray-600">{{ $ticket->subject }} - من: {{ $ticket->user->name }}</p>
                 </div>
                 <a href="{{ route('admin.tickets.index') }}" 
-                   class="text-blue-600 hover:text-blue-800 font-medium">
+                   class="text-primary-600 hover:text-primary-800 font-medium">
                     ← العودة للقائمة
                 </a>
             </div>
@@ -62,7 +62,7 @@
                 @if($ticket->attachment)
                     <div class="mt-4">
                         <p class="text-sm font-medium text-gray-600 mb-2">المرفق</p>
-                        <a href="{{ asset('storage/' . $ticket->attachment) }}" target="_blank" class="text-blue-600 hover:text-blue-800">
+                        <a href="{{ asset('storage/' . $ticket->attachment) }}" target="_blank" class="text-primary-600 hover:text-primary-800">
                             <img src="{{ asset('storage/' . $ticket->attachment) }}" alt="Attachment" class="max-w-xs rounded-lg shadow-md">
                         </a>
                     </div>
@@ -78,14 +78,14 @@
                     <label for="status" class="text-sm font-medium text-gray-700">تغيير الحالة:</label>
                     <select name="status" 
                             id="status"
-                            class="px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            class="px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                         <option value="open" {{ $ticket->status == 'open' ? 'selected' : '' }}>مفتوحة</option>
                         <option value="in_progress" {{ $ticket->status == 'in_progress' ? 'selected' : '' }}>قيد المعالجة</option>
                         <option value="waiting_user" {{ $ticket->status == 'waiting_user' ? 'selected' : '' }}>في انتظار المستخدم</option>
                         <option value="closed" {{ $ticket->status == 'closed' ? 'selected' : '' }}>مغلقة</option>
                     </select>
                     <button type="submit" 
-                            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg">
+                            class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg">
                         تحديث
                     </button>
                 </form>
@@ -101,9 +101,9 @@
                 <div class="space-y-4 max-h-96 overflow-y-auto mb-6" id="messagesContainer">
                     @foreach($ticket->messages as $message)
                         <div class="flex {{ $message->is_admin ? 'justify-start' : 'justify-end' }}">
-                            <div class="max-w-2xl {{ $message->is_admin ? 'bg-gray-100' : 'bg-blue-100' }} rounded-lg p-4 shadow-sm">
+                            <div class="max-w-2xl {{ $message->is_admin ? 'bg-gray-100' : 'bg-primary-100' }} rounded-lg p-4 shadow-sm">
                                 <div class="flex items-center justify-between mb-2">
-                                    <span class="text-xs font-semibold {{ $message->is_admin ? 'text-gray-700' : 'text-blue-700' }}">
+                                    <span class="text-xs font-semibold {{ $message->is_admin ? 'text-gray-700' : 'text-primary-700' }}">
                                         {{ $message->is_admin ? 'الأدمن' : $message->user->name }}
                                     </span>
                                     <span class="text-xs text-gray-500">{{ $message->created_at->format('Y-m-d H:i') }}</span>
@@ -111,7 +111,7 @@
                                 <p class="text-sm text-gray-900 whitespace-pre-wrap">{{ $message->message }}</p>
                                 @if($message->attachment)
                                     <div class="mt-2">
-                                        <a href="{{ asset('storage/' . $message->attachment) }}" target="_blank" class="text-blue-600 hover:text-blue-800">
+                                        <a href="{{ asset('storage/' . $message->attachment) }}" target="_blank" class="text-primary-600 hover:text-primary-800">
                                             <img src="{{ asset('storage/' . $message->attachment) }}" alt="Attachment" class="max-w-xs rounded-lg shadow-md">
                                         </a>
                                     </div>
@@ -129,19 +129,19 @@
                             <textarea name="message" 
                                       rows="3"
                                       required
-                                      class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                      class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                                       placeholder="اكتب ردك هنا..."></textarea>
                         </div>
                         <div class="mb-4">
                             <input type="file" 
                                    name="attachment" 
                                    accept="image/*"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                             <p class="mt-1 text-xs text-gray-500">الحد الأقصى 2MB - الصور فقط</p>
                         </div>
                         <div class="flex items-center justify-end">
                             <button type="submit" 
-                                    class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg">
+                                    class="px-6 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg">
                                 إرسال الرد
                             </button>
                         </div>

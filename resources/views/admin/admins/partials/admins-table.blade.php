@@ -14,7 +14,7 @@
             </thead>
             <tbody class="bg-white divide-y divide-gray-200" id="adminsTableBody">
                 @foreach($admins as $admin)
-                    <tr class="hover:bg-blue-50 transition-all duration-200 hover:shadow-md">
+                    <tr class="hover:bg-primary-50 transition-all duration-200 hover:shadow-md">
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                             {{ $admin->name }}
                         </td>
@@ -23,11 +23,11 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm">
                             @if($admin->hasRole('super_admin'))
-                                <span class="px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm bg-purple-100 text-purple-800">
+                                <span class="px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm bg-secondary-100 text-secondary-800">
                                     Super Admin
                                 </span>
                             @elseif($admin->hasRole('admin'))
-                                <span class="px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm bg-indigo-100 text-indigo-800">
+                                <span class="px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm bg-primary-100 text-primary-800">
                                     Admin
                                 </span>
                             @else
@@ -55,7 +55,7 @@
                             <div class="flex items-center space-x-3 space-x-reverse gap-2">
                                 @can('edit admins')
                                     <a href="{{ route('admin.admins.edit', $admin) }}" 
-                                       class="inline-flex items-center px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors duration-200 shadow-sm hover:shadow-md"
+                                       class="inline-flex items-center px-3 py-1.5 bg-primary-100 text-primary-700 rounded-lg hover:bg-primary-200 transition-colors duration-200 shadow-sm hover:shadow-md"
                                        title="تعديل">
                                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -121,7 +121,7 @@
         <p class="mt-4 text-gray-500 text-lg">لا يوجد مشرفين حالياً.</p>
         @can('create admins')
             <a href="{{ route('admin.admins.create') }}" 
-               class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
+               class="mt-4 inline-block bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
                 إنشاء مشرف جديد
             </a>
         @endcan

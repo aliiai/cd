@@ -28,7 +28,7 @@
                                name="subject" 
                                value="{{ old('subject') }}"
                                required
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('subject') border-red-500 @enderror">
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('subject') border-red-500 @enderror">
                         @error('subject')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -42,7 +42,7 @@
                         <select id="type" 
                                 name="type" 
                                 required
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('type') border-red-500 @enderror">
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('type') border-red-500 @enderror">
                             <option value="">اختر النوع</option>
                             <option value="technical" {{ old('type') == 'technical' ? 'selected' : '' }}>مشكلة تقنية</option>
                             <option value="subscription" {{ old('type') == 'subscription' ? 'selected' : '' }}>مشكلة اشتراك</option>
@@ -64,7 +64,7 @@
                                   name="description" 
                                   rows="6"
                                   required
-                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('description') border-red-500 @enderror"
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('description') border-red-500 @enderror"
                                   placeholder="اكتب تفاصيل شكواك هنا...">{{ old('description') }}</textarea>
                         @error('description')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -81,7 +81,7 @@
                                id="attachment" 
                                name="attachment" 
                                accept="image/*"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('attachment') border-red-500 @enderror">
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('attachment') border-red-500 @enderror">
                         @error('attachment')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror

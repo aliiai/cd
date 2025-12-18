@@ -12,13 +12,13 @@
         <!-- Row 1: Summary Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <!-- Total Debtors Card -->
-            <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-xl border border-blue-200 p-6 hover:shadow-2xl transition-all duration-200">
+            <div class="bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl shadow-xl border border-primary-200 p-6 hover:shadow-2xl transition-all duration-200">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm font-medium text-blue-600 mb-1">إجمالي المديونين</p>
-                        <p class="text-3xl font-bold text-blue-900">{{ number_format($totalDebtors) }}</p>
+                        <p class="text-sm font-medium text-primary-600 mb-1">إجمالي المديونين</p>
+                        <p class="text-3xl font-bold text-primary-900">{{ number_format($totalDebtors) }}</p>
                     </div>
-                    <div class="bg-blue-500 rounded-full p-3 shadow-lg">
+                    <div class="bg-primary-500 rounded-full p-3 shadow-lg">
                         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
@@ -33,7 +33,7 @@
                         <p class="text-sm font-medium text-purple-600 mb-1">إجمالي قيمة الديون</p>
                         <p class="text-3xl font-bold text-purple-900">{{ number_format($totalDebtAmount, 2) }} ر.س</p>
                     </div>
-                    <div class="bg-purple-500 rounded-full p-3 shadow-lg">
+                    <div class="bg-secondary-500 rounded-full p-3 shadow-lg">
                         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
@@ -48,7 +48,7 @@
                         <p class="text-sm font-medium text-green-600 mb-1">المبالغ المحصلة</p>
                         <p class="text-3xl font-bold text-green-900">{{ number_format($paidAmount, 2) }} ر.س</p>
                     </div>
-                    <div class="bg-green-500 rounded-full p-3 shadow-lg">
+                    <div class="bg-primary-500 rounded-full p-3 shadow-lg">
                         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
@@ -57,13 +57,13 @@
             </div>
 
             <!-- Collection Rate Card -->
-            <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl shadow-xl border border-indigo-200 p-6 hover:shadow-2xl transition-all duration-200">
+            <div class="bg-gradient-to-br from-secondary-50 to-secondary-100 rounded-xl shadow-xl border border-secondary-200 p-6 hover:shadow-2xl transition-all duration-200">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm font-medium text-indigo-600 mb-1">نسبة التحصيل</p>
-                        <p class="text-3xl font-bold text-indigo-900">{{ number_format($collectionRate, 1) }}%</p>
+                        <p class="text-sm font-medium text-secondary-600 mb-1">نسبة التحصيل</p>
+                        <p class="text-3xl font-bold text-secondary-900">{{ number_format($collectionRate, 1) }}%</p>
                     </div>
-                    <div class="bg-indigo-500 rounded-full p-3 shadow-lg">
+                    <div class="bg-secondary-500 rounded-full p-3 shadow-lg">
                         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                         </svg>
@@ -123,7 +123,7 @@
                                 <tbody class="bg-white divide-y divide-gray-200" id="statusTableBody">
                                     @foreach($statusDistribution as $status)
                                         <tr 
-                                            class="hover:bg-blue-50 transition-all duration-200 hover:shadow-md cursor-pointer"
+                                            class="hover:bg-primary-50 transition-all duration-200 hover:shadow-md cursor-pointer"
                                             onclick="filterDebtors('{{ $status['status'] }}')"
                                         >
                                             <td class="px-4 py-4 whitespace-nowrap">
@@ -165,7 +165,7 @@
                         <div class="space-y-3">
                             <div>
                                 <label class="block text-xs font-medium text-gray-700 mb-2">الفترة الزمنية</label>
-                                <select name="time_filter" id="time_filter" onchange="this.form.submit()" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
+                                <select name="time_filter" id="time_filter" onchange="this.form.submit()" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 text-sm">
                                     <option value="today" {{ $timeFilter === 'today' ? 'selected' : '' }}>اليوم</option>
                                     <option value="7" {{ $timeFilter === '7' ? 'selected' : '' }}>آخر 7 أيام</option>
                                     <option value="30" {{ $timeFilter === '30' ? 'selected' : '' }}>آخر 30 يوم</option>
@@ -176,11 +176,11 @@
                             @if($timeFilter === 'custom')
                                 <div>
                                     <label class="block text-xs font-medium text-gray-700 mb-1">من</label>
-                                    <input type="date" name="date_from" value="{{ $dateFrom ? $dateFrom->format('Y-m-d') : '' }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
+                                    <input type="date" name="date_from" value="{{ $dateFrom ? $dateFrom->format('Y-m-d') : '' }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 text-sm">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-medium text-gray-700 mb-1">إلى</label>
-                                    <input type="date" name="date_to" value="{{ $dateTo ? $dateTo->format('Y-m-d') : '' }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
+                                    <input type="date" name="date_to" value="{{ $dateTo ? $dateTo->format('Y-m-d') : '' }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 text-sm">
                                 </div>
                                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm shadow-md hover:shadow-lg">
                                     تطبيق
@@ -198,10 +198,10 @@
                             </div>
                         </div>
 
-                        <div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200 shadow-md hover:shadow-lg transition-shadow">
+                        <div class="bg-gradient-to-r from-primary-50 to-primary-100 rounded-lg p-4 border border-primary-200 shadow-md hover:shadow-lg transition-shadow">
                             <div class="text-center">
-                                <p class="text-xs font-medium text-blue-600 mb-1">من وعد بالدفع → مدفوع</p>
-                                <p class="text-2xl font-bold text-blue-900">{{ $promiseToPaid }}</p>
+                                <p class="text-xs font-medium text-primary-600 mb-1">من وعد بالدفع → مدفوع</p>
+                                <p class="text-2xl font-bold text-primary-900">{{ $promiseToPaid }}</p>
                             </div>
                         </div>
 
@@ -229,8 +229,8 @@
                     @if(count($insights) > 0)
                         <div class="space-y-3">
                             @foreach($insights as $insight)
-                                <div class="flex items-start p-3 rounded-lg border shadow-sm hover:shadow-md transition-shadow {{ $insight['type'] === 'success' ? 'bg-green-50 border-green-200' : ($insight['type'] === 'warning' ? 'bg-yellow-50 border-yellow-200' : 'bg-blue-50 border-blue-200') }}">
-                                    <svg class="w-5 h-5 flex-shrink-0 mt-0.5 {{ $insight['type'] === 'success' ? 'text-green-600' : ($insight['type'] === 'warning' ? 'text-yellow-600' : 'text-blue-600') }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="flex items-start p-3 rounded-lg border shadow-sm hover:shadow-md transition-shadow {{ $insight['type'] === 'success' ? 'bg-green-50 border-green-200' : ($insight['type'] === 'warning' ? 'bg-yellow-50 border-yellow-200' : 'bg-blue-50 border-primary-200') }}">
+                                    <svg class="w-5 h-5 flex-shrink-0 mt-0.5 {{ $insight['type'] === 'success' ? 'text-green-600' : ($insight['type'] === 'warning' ? 'text-yellow-600' : 'text-primary-600') }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $insight['icon'] }}"></path>
                                     </svg>
                                     <p class="text-sm font-medium {{ $insight['type'] === 'success' ? 'text-green-800' : ($insight['type'] === 'warning' ? 'text-yellow-800' : 'text-blue-800') }} mr-2">

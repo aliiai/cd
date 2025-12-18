@@ -3,7 +3,7 @@
     <button 
         type="button"
         @click="open = !open"
-        class="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors duration-200"
+        class="relative p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors duration-200"
         title="Notifications"
     >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -28,16 +28,16 @@
         x-transition:leave="transition ease-in duration-75"
         x-transition:leave-start="transform opacity-100 scale-100"
         x-transition:leave-end="transform opacity-0 scale-95"
-        class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg z-50 border border-gray-200"
+        class="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg z-50 border border-gray-200 dark:border-gray-700"
         style="display: none;"
     >
         <!-- Header -->
-        <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
-            <h3 class="text-sm font-semibold text-gray-900">الإشعارات</h3>
+        <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+            <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">الإشعارات</h3>
             @if($unreadCount > 0)
                 <button 
                     wire:click="markAllAsRead"
-                    class="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                    class="text-xs text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300 font-medium"
                 >
                     تحديد الكل كمقروء
                 </button>
@@ -52,7 +52,7 @@
                     $isUnread = is_null($notification->read_at);
                 @endphp
                 <div 
-                    class="px-4 py-3 border-b border-gray-100 hover:bg-gray-50 transition-colors duration-150 {{ $isUnread ? 'bg-blue-50' : '' }}"
+                    class="px-4 py-3 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150 {{ $isUnread ? 'bg-primary-50 dark:bg-primary-900/30' : '' }}"
                     wire:key="notification-{{ $notification->id }}"
                 >
                     <div class="flex items-start justify-between">
@@ -62,24 +62,24 @@
                                 wire:click="markAsRead('{{ $notification->id }}')"
                                 class="block"
                             >
-                                <p class="text-sm font-medium text-gray-900 {{ $isUnread ? 'font-bold' : '' }}">
+                                <p class="text-sm font-medium text-gray-900 dark:text-gray-100 {{ $isUnread ? 'font-bold' : '' }}">
                                     {{ $data['title'] ?? 'إشعار' }}
                                 </p>
-                                <p class="text-xs text-gray-600 mt-1 line-clamp-2">
+                                <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
                                     {{ $data['message'] ?? '' }}
                                 </p>
-                                <p class="text-xs text-gray-400 mt-1">
+                                <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
                                     {{ $notification->created_at->diffForHumans() }}
                                 </p>
                             </a>
                         </div>
                         <div class="flex items-center space-x-2 mr-2">
                             @if($isUnread)
-                                <span class="h-2 w-2 bg-blue-500 rounded-full"></span>
+                                <span class="h-2 w-2 bg-primary-500 rounded-full"></span>
                             @endif
                             <button 
                                 wire:click="deleteNotification('{{ $notification->id }}')"
-                                class="text-gray-400 hover:text-red-600 transition-colors duration-200"
+                                class="text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-colors duration-200"
                                 title="حذف"
                             >
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -91,20 +91,20 @@
                 </div>
             @empty
                 <div class="px-4 py-8 text-center">
-                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                     </svg>
-                    <p class="mt-2 text-sm text-gray-500">لا توجد إشعارات</p>
+                    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">لا توجد إشعارات</p>
                 </div>
             @endforelse
         </div>
 
         <!-- Footer -->
         @if($notifications->count() > 0)
-            <div class="px-4 py-3 border-t border-gray-200 text-center">
+            <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700 text-center">
                 <a 
                     href="{{ Auth::user()->hasRole('admin') ? route('admin.notifications.index') : route('owner.notifications.index') }}"
-                    class="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                    class="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300 font-medium"
                 >
                     عرض جميع الإشعارات
                 </a>

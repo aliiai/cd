@@ -21,7 +21,7 @@
                                name="search" 
                                value="{{ request('search') }}"
                                placeholder="ابحث برقم الشكوى، العنوان، أو اسم المستخدم..."
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                     </div>
                     
                     <!-- Status Filter -->
@@ -29,7 +29,7 @@
                         <label for="status" class="block text-sm font-medium text-gray-700 mb-2">الحالة</label>
                         <select id="status" 
                                 name="status" 
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                             <option value="all" {{ request('status') == 'all' || !request('status') ? 'selected' : '' }}>جميع الحالات</option>
                             <option value="open" {{ request('status') == 'open' ? 'selected' : '' }}>مفتوحة</option>
                             <option value="in_progress" {{ request('status') == 'in_progress' ? 'selected' : '' }}>قيد المعالجة</option>
@@ -43,7 +43,7 @@
                         <label for="type" class="block text-sm font-medium text-gray-700 mb-2">النوع</label>
                         <select id="type" 
                                 name="type" 
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                             <option value="all" {{ request('type') == 'all' || !request('type') ? 'selected' : '' }}>جميع الأنواع</option>
                             <option value="technical" {{ request('type') == 'technical' ? 'selected' : '' }}>مشكلة تقنية</option>
                             <option value="subscription" {{ request('type') == 'subscription' ? 'selected' : '' }}>مشكلة اشتراك</option>

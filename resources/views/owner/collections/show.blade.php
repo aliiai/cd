@@ -6,7 +6,7 @@
         <!-- Header -->
         <div class="mb-8">
             <a href="{{ route('owner.collections.index') }}" 
-               class="inline-flex items-center text-blue-600 hover:text-blue-900 text-sm mb-4 transition-colors duration-200">
+               class="inline-flex items-center text-primary-600 hover:text-primary-900 text-sm mb-4 transition-colors duration-200">
                 <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
@@ -26,13 +26,13 @@
         <!-- Statistics Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <!-- Total Recipients Card -->
-            <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-lg border border-blue-200 p-6 hover:shadow-xl transition-shadow duration-200">
+            <div class="bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl shadow-lg border border-blue-200 p-6 hover:shadow-xl transition-shadow duration-200">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm font-medium text-blue-600 mb-1">إجمالي المستلمين</p>
-                        <p class="text-3xl font-bold text-blue-900">{{ $campaign->total_recipients }}</p>
+                        <p class="text-sm font-medium text-primary-600 mb-1">إجمالي المستلمين</p>
+                        <p class="text-3xl font-bold text-primary-900">{{ $campaign->total_recipients }}</p>
                     </div>
-                    <div class="bg-blue-500 rounded-full p-3">
+                    <div class="bg-primary-500 rounded-full p-3">
                         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
@@ -98,7 +98,7 @@
                                             إرسال فوري
                                         </span>
                                     @else
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
                                             مجدول
                                         </span>
                                     @endif
@@ -134,7 +134,7 @@
                     <div class="p-6">
                         @if($campaign->template)
                             <div class="mb-4">
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-secondary-100 text-secondary-800">
                                     <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
                                     </svg>
@@ -185,7 +185,7 @@
                                             'failed' => 'M6 18L18 6M6 6l12 12',
                                         ];
                                     @endphp
-                                    <div class="bg-gradient-to-br from-white to-gray-50 rounded-lg border border-gray-200 p-4 hover:shadow-md transition-all duration-200 hover:border-blue-300">
+                                    <div class="bg-gradient-to-br from-white to-gray-50 rounded-lg border border-gray-200 p-4 hover:shadow-md transition-all duration-200 hover:border-primary-300">
                                         <div class="flex items-start justify-between mb-3">
                                             <div class="flex-1">
                                                 <h3 class="text-sm font-bold text-gray-900 mb-1">{{ $debtor->name }}</h3>

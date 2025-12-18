@@ -26,7 +26,7 @@
         @endif
 
         <!-- Subscription Card -->
-        <div class="bg-white rounded-lg shadow-sm p-6 mb-6 border-l-4 border-blue-500">
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6 border-l-4 border-primary-500">
             <h2 class="text-xl font-bold text-gray-900 mb-4">الاشتراك الحالي</h2>
             @if($activeSubscription)
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -58,7 +58,7 @@
             @else
                 <div class="text-center py-8">
                     <p class="text-gray-500">لا يوجد اشتراك نشط حالياً</p>
-                    <a href="{{ route('owner.subscriptions.index') }}" class="mt-4 inline-block px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
+                    <a href="{{ route('owner.subscriptions.index') }}" class="mt-4 inline-block px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors duration-200">
                         عرض الباقات
                     </a>
                 </div>
@@ -69,7 +69,7 @@
         @if($activeSubscription)
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Debtors Usage -->
-                <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-purple-500">
+                <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-secondary-500">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-bold text-gray-900">عدد المديونين</h3>
                         <span class="text-2xl font-bold {{ $debtorsUsage >= 90 ? 'text-red-600' : ($debtorsUsage >= 70 ? 'text-yellow-600' : 'text-green-600') }}">
@@ -86,7 +86,7 @@
                 </div>
 
                 <!-- Messages Usage -->
-                <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-indigo-500">
+                <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-primary-500">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-bold text-gray-900">عدد الرسائل</h3>
                         <span class="text-2xl font-bold {{ $messagesUsage >= 90 ? 'text-red-600' : ($messagesUsage >= 70 ? 'text-yellow-600' : 'text-green-600') }}">

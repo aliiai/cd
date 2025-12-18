@@ -21,7 +21,7 @@
                                name="search" 
                                value="{{ request('search') }}"
                                placeholder="ابحث بالمستخدم، العملية، أو السجل..."
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                     </div>
                     
                     <!-- Action Type Filter -->
@@ -29,7 +29,7 @@
                         <label for="action_type" class="block text-sm font-medium text-gray-700 mb-2">نوع العملية</label>
                         <select id="action_type" 
                                 name="action_type" 
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                             <option value="all" {{ request('action_type') == 'all' || !request('action_type') ? 'selected' : '' }}>جميع الأنواع</option>
                             <option value="add_debtor" {{ request('action_type') == 'add_debtor' ? 'selected' : '' }}>إضافة مديون</option>
                             <option value="create_campaign" {{ request('action_type') == 'create_campaign' ? 'selected' : '' }}>إنشاء حملة</option>
@@ -45,7 +45,7 @@
                         <label for="user_id" class="block text-sm font-medium text-gray-700 mb-2">المستخدم</label>
                         <select id="user_id" 
                                 name="user_id" 
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                             <option value="all" {{ request('user_id') == 'all' || !request('user_id') ? 'selected' : '' }}>جميع المستخدمين</option>
                             @foreach($users as $user)
                                 <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
@@ -58,7 +58,7 @@
                         <label for="status" class="block text-sm font-medium text-gray-700 mb-2">الحالة</label>
                         <select id="status" 
                                 name="status" 
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                             <option value="all" {{ request('status') == 'all' || !request('status') ? 'selected' : '' }}>جميع الحالات</option>
                             <option value="success" {{ request('status') == 'success' ? 'selected' : '' }}>نجح</option>
                             <option value="failed" {{ request('status') == 'failed' ? 'selected' : '' }}>فشل</option>
@@ -75,7 +75,7 @@
                                id="date_from" 
                                name="date_from" 
                                value="{{ request('date_from') }}"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                     </div>
                     
                     <!-- Date To -->
@@ -85,7 +85,7 @@
                                id="date_to" 
                                name="date_to" 
                                value="{{ request('date_to') }}"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                     </div>
                 </form>
             </div>
@@ -134,7 +134,7 @@
         if (dateTo) params.append('date_to', dateTo);
         
         // Show loading
-        document.getElementById('auditTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div><p class="mt-4 text-gray-500">جاري التحميل...</p></div>';
+        document.getElementById('auditTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div><p class="mt-4 text-gray-500">جاري التحميل...</p></div>';
         
         fetch(`{{ route('admin.audit.index') }}?${params.toString()}`, {
             method: 'GET',
@@ -201,7 +201,7 @@
             e.preventDefault();
             const url = e.target.closest('a').href;
             
-            document.getElementById('auditTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div><p class="mt-4 text-gray-500">جاري التحميل...</p></div>';
+            document.getElementById('auditTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div><p class="mt-4 text-gray-500">جاري التحميل...</p></div>';
             
             fetch(url, {
                 method: 'GET',
