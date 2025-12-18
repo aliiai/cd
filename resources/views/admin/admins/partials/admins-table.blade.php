@@ -68,8 +68,7 @@
                                     @if(!$admin->hasRole('super_admin') || Auth::user()->hasRole('super_admin'))
                                         <form action="{{ route('admin.admins.toggle-status', $admin) }}" 
                                               method="POST" 
-                                              class="inline"
-                                              onsubmit="return confirm('هل أنت متأكد من {{ $admin->is_active ? 'إيقاف' : 'تفعيل' }} هذا الحساب؟');">
+                                              class="inline toggle-status-form">
                                             @csrf
                                             <button type="submit" 
                                                     class="inline-flex items-center px-3 py-1.5 {{ $admin->is_active ? 'bg-red-100 text-red-700 hover:bg-red-200' : 'bg-green-100 text-green-700 hover:bg-green-200' }} rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
@@ -91,8 +90,7 @@
                                     @if(!$admin->hasRole('super_admin') && $admin->id !== Auth::id())
                                         <form action="{{ route('admin.admins.destroy', $admin) }}" 
                                               method="POST" 
-                                              class="inline"
-                                              onsubmit="return confirm('هل أنت متأكد من حذف هذا المشرف؟');">
+                                              class="inline delete-form">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" 

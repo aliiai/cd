@@ -187,18 +187,32 @@ class DebtorController extends Controller
     /**
      * حذف مديون
      * 
+     * @param Request $request
      * @param Debtor $debtor
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
-    public function destroy(Debtor $debtor)
+    public function destroy(Request $request, Debtor $debtor)
     {
         // التحقق من أن المديون يخص المالك الحالي
         if ($debtor->owner_id !== Auth::id()) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'غير مصرح لك بحذف هذا المديون.'
+                ], 403);
+            }
             abort(403, 'غير مصرح لك بحذف هذا المديون.');
         }
 
         // حذف المديون
         $debtor->delete();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'تم حذف المديون بنجاح.'
+            ]);
+        }
 
         return redirect()->route('owner.debtors.index')
             ->with('success', 'تم حذف المديون بنجاح.');

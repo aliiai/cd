@@ -119,8 +119,7 @@
                                 </a>
                                 <form action="{{ route('admin.subscriptions.destroy', $subscription) }}" 
                                       method="POST" 
-                                      class="flex-1"
-                                      onsubmit="return confirm('هل أنت متأكد من حذف هذه الباقة؟');">
+                                      class="flex-1 delete-form">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">

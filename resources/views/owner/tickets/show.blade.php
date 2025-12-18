@@ -131,7 +131,7 @@
         @if($ticket->status !== 'closed')
             <div class="bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden">
                 <div class="p-6">
-                    <form action="{{ route('owner.tickets.close', $ticket) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من إغلاق هذه الشكوى؟');">
+                    <form action="{{ route('owner.tickets.close', $ticket) }}" method="POST" class="close-ticket-form">
                         @csrf
                         <button type="submit" 
                                 class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg">

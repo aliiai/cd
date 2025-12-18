@@ -500,7 +500,7 @@
             const singleClientId = document.getElementById('single_client_id').value;
             if (!singleClientId) {
                 e.preventDefault();
-                alert('يرجى اختيار المديون');
+                swalError('يرجى اختيار المديون', 'تنبيه');
                 return false;
             }
             selectedClientsCount = 1;
@@ -515,7 +515,7 @@
             const allDebtorsCount = {{ $debtors->count() }};
             if (allDebtorsCount === 0) {
                 e.preventDefault();
-                alert('لا يوجد مديونين متاحين');
+                swalError('لا يوجد مديونين متاحين', 'تنبيه');
                 return false;
             }
             selectedClientsCount = allDebtorsCount;
@@ -523,13 +523,13 @@
             const selectedClients = Array.from(document.getElementById('client_ids').selectedOptions);
             if (selectedClients.length === 0) {
                 e.preventDefault();
-                alert('يرجى اختيار مديون واحد على الأقل');
+                swalError('يرجى اختيار مديون واحد على الأقل', 'تنبيه');
                 return false;
             }
             selectedClientsCount = selectedClients.length;
         } else {
             e.preventDefault();
-            alert('يرجى اختيار طريقة اختيار المديونين');
+            swalError('يرجى اختيار طريقة اختيار المديونين', 'تنبيه');
             return false;
         }
 
@@ -542,28 +542,25 @@
             if (maxMessages > 0) {
                 if (messagesRemaining === 0) {
                     e.preventDefault();
-                    alert('❌ لقد استنفدت جميع الرسائل المسموحة! الحد المسموح: ' + maxMessages + ' رسالة. سيتم توجيهك إلى صفحة الاشتراكات لترقية اشتراكك.');
-                    setTimeout(() => {
+                    swalError('لقد استنفدت جميع الرسائل المسموحة! الحد المسموح: ' + maxMessages + ' رسالة. سيتم توجيهك إلى صفحة الاشتراكات لترقية اشتراكك.', 'حد الرسائل').then(() => {
                         window.location.href = '{{ route("owner.subscriptions.index") }}';
-                    }, 1000);
+                    });
                     return false;
                 }
                 
                 if (selectedClientsCount > messagesRemaining) {
                     e.preventDefault();
-                    alert('❌ لا يمكنك إرسال ' + selectedClientsCount + ' رسالة! لديك ' + messagesRemaining + ' رسالة متبقية فقط من الحد المسموح (' + maxMessages + '). سيتم توجيهك إلى صفحة الاشتراكات لترقية اشتراكك.');
-                    setTimeout(() => {
+                    swalError('لا يمكنك إرسال ' + selectedClientsCount + ' رسالة! لديك ' + messagesRemaining + ' رسالة متبقية فقط من الحد المسموح (' + maxMessages + '). سيتم توجيهك إلى صفحة الاشتراكات لترقية اشتراكك.', 'حد الرسائل').then(() => {
                         window.location.href = '{{ route("owner.subscriptions.index") }}';
-                    }, 1000);
+                    });
                     return false;
                 }
             }
         @else
             e.preventDefault();
-            alert('❌ لا يوجد اشتراك نشط. يرجى الاشتراك في إحدى الباقات أولاً. سيتم توجيهك إلى صفحة الاشتراكات.');
-            setTimeout(() => {
+            swalError('لا يوجد اشتراك نشط. يرجى الاشتراك في إحدى الباقات أولاً. سيتم توجيهك إلى صفحة الاشتراكات.', 'لا يوجد اشتراك').then(() => {
                 window.location.href = '{{ route("owner.subscriptions.index") }}';
-            }, 1000);
+            });
             return false;
         @endif
 

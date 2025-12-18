@@ -132,8 +132,7 @@
                                                 </button>
                                                 <form action="{{ route('owner.clients.destroy', $client) }}" 
                                                       method="POST" 
-                                                      class="inline"
-                                                      onsubmit="return confirm('هل أنت متأكد من حذف هذا المديون؟');">
+                                                      class="inline delete-form">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="text-red-600 hover:text-red-900 font-medium">حذف</button>
@@ -403,13 +402,13 @@
                 if (maxDebtors > 0) {
                     if (debtorsRemaining === 0) {
                         e.preventDefault();
-                        alert('❌ لقد وصلت للحد الأقصى المسموح للمديونين! الحد المسموح: ' + maxDebtors + ' مديون، الحالي: ' + currentDebtors + '. يرجى ترقية اشتراكك لإضافة المزيد من المديونين.');
+                        swalError('لقد وصلت للحد الأقصى المسموح للمديونين! الحد المسموح: ' + maxDebtors + ' مديون، الحالي: ' + currentDebtors + '. يرجى ترقية اشتراكك لإضافة المزيد من المديونين.', 'حد المديونين');
                         return false;
                     }
                 }
             @else
                 e.preventDefault();
-                alert('❌ لا يوجد اشتراك نشط. يرجى الاشتراك في إحدى الباقات أولاً.');
+                swalError('لا يوجد اشتراك نشط. يرجى الاشتراك في إحدى الباقات أولاً.', 'لا يوجد اشتراك');
                 return false;
             @endif
         }

@@ -120,9 +120,7 @@ class UserController extends Controller
             'overdueDebtors',
             'totalDebtAmount',
             'paidAmount',
-            'collectionRate',
-            'recentClients',
-            'recentPaidClients'
+            'collectionRate'
         ));
     }
 
@@ -131,12 +129,18 @@ class UserController extends Controller
      * 
      * @param Request $request
      * @param User $user
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
     public function toggleStatus(Request $request, User $user)
     {
         // التأكد من أن المستخدم ليس Admin
         if ($user->hasRole('admin')) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'لا يمكن تعديل حالة حساب Admin'
+                ], 403);
+            }
             return back()->with('error', 'لا يمكن تعديل حالة حساب Admin');
         }
 
@@ -145,9 +149,17 @@ class UserController extends Controller
             'is_active' => !$user->is_active
         ]);
 
-        $status = $user->is_active ? 'مفعل' : 'موقوف';
+        $status = $user->is_active ? 'تفعيل' : 'إيقاف';
+        $message = "تم {$status} حساب المستخدم بنجاح.";
         
-        return back()->with('success', "تم {$status} حساب المستخدم بنجاح.");
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => $message
+            ]);
+        }
+        
+        return back()->with('success', $message);
     }
 }
 

@@ -137,17 +137,31 @@ class SubscriptionController extends Controller
     /**
      * حذف باقة
      * 
+     * @param Request $request
      * @param Subscription $subscription
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
-    public function destroy(Subscription $subscription)
+    public function destroy(Request $request, Subscription $subscription)
     {
         // التحقق من وجود طلبات مرتبطة بالباقة
         if ($subscription->requests()->count() > 0) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'لا يمكن حذف هذه الباقة لأنها مرتبطة بطلبات اشتراك.'
+                ], 400);
+            }
             return back()->with('error', 'لا يمكن حذف هذه الباقة لأنها مرتبطة بطلبات اشتراك.');
         }
 
         $subscription->delete();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'تم حذف الباقة بنجاح.'
+            ]);
+        }
 
         return redirect()->route('admin.subscriptions.index')
             ->with('success', 'تم حذف الباقة بنجاح.');

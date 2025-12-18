@@ -15,6 +15,10 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
+    
+    <!-- Sweet Alert 2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 <body class="font-sans antialiased h-screen overflow-hidden bg-gray-50 dark:bg-gray-900" style="font-family: 'Cairo', sans-serif;">
     <div class="flex h-full">
@@ -65,6 +69,237 @@
 
     @livewireScripts
     @stack('scripts')
+    
+    <!-- Sweet Alert 2 Helper Functions -->
+    <script>
+        // ========== Sweet Alert Helper Functions ==========
+        
+        // دالة تأكيد مع Sweet Alert
+        window.swalConfirm = function(options) {
+            const defaultOptions = {
+                title: 'هل أنت متأكد؟',
+                text: 'هل تريد المتابعة؟',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#5C70E0',
+                cancelButtonColor: '#6B7280',
+                confirmButtonText: 'نعم، متأكد',
+                cancelButtonText: 'إلغاء',
+                reverseButtons: true,
+                customClass: {
+                    popup: 'rtl',
+                    title: 'text-right',
+                    content: 'text-right',
+                }
+            };
+            
+            return Swal.fire(Object.assign(defaultOptions, options));
+        };
+        
+        // دالة رسالة نجاح
+        window.swalSuccess = function(message, title = 'تم بنجاح!') {
+            return Swal.fire({
+                title: title,
+                text: message,
+                icon: 'success',
+                confirmButtonColor: '#10B981',
+                confirmButtonText: 'حسناً',
+                customClass: {
+                    popup: 'rtl',
+                    title: 'text-right',
+                    content: 'text-right',
+                }
+            });
+        };
+        
+        // دالة رسالة خطأ
+        window.swalError = function(message, title = 'خطأ!') {
+            return Swal.fire({
+                title: title,
+                text: message,
+                icon: 'error',
+                confirmButtonColor: '#EF4444',
+                confirmButtonText: 'حسناً',
+                customClass: {
+                    popup: 'rtl',
+                    title: 'text-right',
+                    content: 'text-right',
+                }
+            });
+        };
+        
+        // دالة رسالة معلومات
+        window.swalInfo = function(message, title = 'تنبيه') {
+            return Swal.fire({
+                title: title,
+                text: message,
+                icon: 'info',
+                confirmButtonColor: '#5C70E0',
+                confirmButtonText: 'حسناً',
+                customClass: {
+                    popup: 'rtl',
+                    title: 'text-right',
+                    content: 'text-right',
+                }
+            });
+        };
+        
+        // استبدال confirm() الافتراضي
+        window.originalConfirm = window.confirm;
+        window.confirm = function(message) {
+            return swalConfirm({
+                text: message
+            }).then((result) => {
+                return result.isConfirmed;
+            });
+        };
+        
+        // استبدال alert() الافتراضي
+        window.originalAlert = window.alert;
+        window.alert = function(message) {
+            return swalInfo(message);
+        };
+        
+        // ========== Form Submission Handlers ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle toggle-status forms
+            document.addEventListener('submit', function(e) {
+                const form = e.target;
+                
+                // Toggle Status Forms
+                if (form.classList.contains('toggle-status-form')) {
+                    e.preventDefault();
+                    const action = form.action;
+                    const button = form.querySelector('button[type="submit"]');
+                    const isActive = button?.classList.contains('bg-red-100') || button?.classList.contains('bg-red-600');
+                    const actionText = isActive ? 'إيقاف' : 'تفعيل';
+                    
+                    swalConfirm({
+                        text: `هل تريد ${actionText} هذا الحساب؟`,
+                        confirmButtonColor: isActive ? '#EF4444' : '#10B981',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            const formData = new FormData(form);
+                            fetch(action, {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest',
+                                }
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    return response.json().catch(() => ({ success: true }));
+                                }
+                                return response.json().then(data => ({ success: false, message: data.message || 'حدث خطأ' }));
+                            })
+                            .then(data => {
+                                if (data.success) {
+                                    swalSuccess(data.message || `تم ${actionText} الحساب بنجاح`).then(() => {
+                                        window.location.reload();
+                                    });
+                                } else {
+                                    swalError(data.message || 'حدث خطأ أثناء تنفيذ العملية');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                swalError('حدث خطأ أثناء تنفيذ العملية');
+                            });
+                        }
+                    });
+                }
+                
+                // Delete Forms
+                if (form.classList.contains('delete-form')) {
+                    e.preventDefault();
+                    const action = form.action;
+                    const deleteText = form.dataset.deleteText || 'حذف';
+                    const itemName = form.dataset.itemName || 'هذا العنصر';
+                    
+                    swalConfirm({
+                        text: `هل أنت متأكد من ${deleteText} ${itemName}؟`,
+                        confirmButtonColor: '#EF4444',
+                        icon: 'warning',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            const formData = new FormData(form);
+                            const method = form.querySelector('input[name="_method"]')?.value || 'POST';
+                            
+                            fetch(action, {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest',
+                                }
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    return response.json().catch(() => ({ success: true }));
+                                }
+                                return response.json().then(data => ({ success: false, message: data.message || 'حدث خطأ' }));
+                            })
+                            .then(data => {
+                                if (data.success) {
+                                    swalSuccess(data.message || `تم ${deleteText} بنجاح`).then(() => {
+                                        window.location.reload();
+                                    });
+                                } else {
+                                    swalError(data.message || 'حدث خطأ أثناء تنفيذ العملية');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                swalError('حدث خطأ أثناء تنفيذ العملية');
+                            });
+                        }
+                    });
+                }
+                
+                // Close Ticket Forms
+                if (form.classList.contains('close-ticket-form')) {
+                    e.preventDefault();
+                    const action = form.action;
+                    
+                    swalConfirm({
+                        text: 'هل أنت متأكد من إغلاق هذه الشكوى؟',
+                        confirmButtonColor: '#EF4444',
+                        icon: 'warning',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            const formData = new FormData(form);
+                            fetch(action, {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest',
+                                }
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    return response.json().catch(() => ({ success: true }));
+                                }
+                                return response.json().then(data => ({ success: false, message: data.message || 'حدث خطأ' }));
+                            })
+                            .then(data => {
+                                if (data.success) {
+                                    swalSuccess(data.message || 'تم إغلاق الشكوى بنجاح').then(() => {
+                                        window.location.reload();
+                                    });
+                                } else {
+                                    swalError(data.message || 'حدث خطأ أثناء تنفيذ العملية');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                swalError('حدث خطأ أثناء تنفيذ العملية');
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
     
     <!-- Dark Mode Script -->
     <script>

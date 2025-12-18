@@ -200,21 +200,41 @@ class TicketController extends Controller
     /**
      * إغلاق الشكوى
      * 
+     * @param Request $request
      * @param Ticket $ticket
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
-    public function close(Ticket $ticket)
+    public function close(Request $request, Ticket $ticket)
     {
         // التحقق من أن الشكوى تخص المالك الحالي
         if ($ticket->user_id !== Auth::id()) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'غير مصرح لك بإغلاق هذه الشكوى.'
+                ], 403);
+            }
             abort(403, 'غير مصرح لك بإغلاق هذه الشكوى.');
         }
 
         if (!$ticket->canBeClosed()) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'الشكوى مغلقة بالفعل.'
+                ], 400);
+            }
             return back()->with('error', 'الشكوى مغلقة بالفعل.');
         }
 
         $ticket->close();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'تم إغلاق الشكوى بنجاح.'
+            ]);
+        }
 
         return back()->with('success', 'تم إغلاق الشكوى بنجاح.');
     }

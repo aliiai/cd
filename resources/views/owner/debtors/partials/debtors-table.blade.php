@@ -49,8 +49,7 @@
                                 </button>
                                 <form action="{{ route('owner.debtors.destroy', $debtor) }}" 
                                       method="POST" 
-                                      class="inline"
-                                      onsubmit="return confirm('هل أنت متأكد من حذف هذا المديون؟');">
+                                      class="inline delete-form">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" 

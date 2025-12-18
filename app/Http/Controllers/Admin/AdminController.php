@@ -254,32 +254,64 @@ class AdminController extends Controller
     /**
      * حذف مشرف
      * 
+     * @param Request $request
      * @param User $admin
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
-    public function destroy(User $admin)
+    public function destroy(Request $request, User $admin)
     {
         // التحقق من الصلاحية
         if (!Auth::user()->can('delete admins')) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'غير مصرح لك بحذف المشرفين.'
+                ], 403);
+            }
             abort(403, 'غير مصرح لك بحذف المشرفين.');
         }
 
         // التحقق من أن المستخدم مشرف
         if (!$admin->hasAnyRole(['admin', 'super_admin'])) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'المستخدم المحدد ليس مشرفاً.'
+                ], 404);
+            }
             abort(404, 'المستخدم المحدد ليس مشرفاً.');
         }
 
         // حماية Super Admin من الحذف
         if ($admin->hasRole('super_admin')) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'لا يمكن حذف Super Admin.'
+                ], 403);
+            }
             abort(403, 'لا يمكن حذف Super Admin.');
         }
 
         // منع حذف نفسه
         if ($admin->id === Auth::id()) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'لا يمكنك حذف حسابك الخاص.'
+                ], 403);
+            }
             return back()->with('error', 'لا يمكنك حذف حسابك الخاص.');
         }
 
         $admin->delete();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'تم حذف المشرف بنجاح.'
+            ]);
+        }
 
         return redirect()->route('admin.admins.index')
             ->with('success', 'تم حذف المشرف بنجاح.');
@@ -290,27 +322,51 @@ class AdminController extends Controller
      * 
      * @param Request $request
      * @param User $admin
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
     public function toggleStatus(Request $request, User $admin)
     {
         // التحقق من الصلاحية
         if (!Auth::user()->can('edit admins')) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'غير مصرح لك بتعديل المشرفين.'
+                ], 403);
+            }
             abort(403, 'غير مصرح لك بتعديل المشرفين.');
         }
 
         // التحقق من أن المستخدم مشرف
         if (!$admin->hasAnyRole(['admin', 'super_admin'])) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'المستخدم المحدد ليس مشرفاً.'
+                ], 404);
+            }
             abort(404, 'المستخدم المحدد ليس مشرفاً.');
         }
 
         // حماية Super Admin
         if ($admin->hasRole('super_admin') && !Auth::user()->hasRole('super_admin')) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'لا يمكنك تعطيل Super Admin.'
+                ], 403);
+            }
             abort(403, 'لا يمكنك تعطيل Super Admin.');
         }
 
         // منع تعطيل نفسه
         if ($admin->id === Auth::id()) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'لا يمكنك تعطيل حسابك الخاص.'
+                ], 403);
+            }
             return back()->with('error', 'لا يمكنك تعطيل حسابك الخاص.');
         }
 
@@ -323,6 +379,13 @@ class AdminController extends Controller
             Auth::user()->notify(new \App\Notifications\AdminStatusChangedNotification($admin, $admin->is_active));
         } catch (\Exception $e) {
             \Log::error('Failed to send admin status notification: ' . $e->getMessage());
+        }
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => "تم {$status} حساب المشرف بنجاح."
+            ]);
         }
 
         return back()->with('success', "تم {$status} حساب المشرف بنجاح.");
