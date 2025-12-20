@@ -117,6 +117,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 // Owner Routes
 Route::prefix('owner')->name('owner.')->middleware(['auth', 'role:owner'])->group(function () {
     Route::get('/dashboard', [OwnerDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/collection-data', [OwnerDashboardController::class, 'getCollectionData'])->name('dashboard.collection-data');
     Route::resource('debtors', OwnerDebtorController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::get('/collections', [OwnerCollectionController::class, 'index'])->name('collections.index');
     Route::post('/collections', [OwnerCollectionController::class, 'store'])->name('collections.store');

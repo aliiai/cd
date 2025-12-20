@@ -1,89 +1,73 @@
 @extends('layouts.owner')
 
 @section('content')
-<div class="py-12">
-    <div class="w-full mx-auto sm:px-6 lg:px-8">
-        <!-- Header -->
-        <div class="mb-6">
-            <h1 class="text-3xl font-bold text-gray-900">تقرير الرسائل</h1>
-            <p class="text-gray-600 mt-2">ملخص شامل لجميع الرسائل المرسلة</p>
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-primary-50 to-secondary-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <div class="w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        {{-- ========== Header Section ========== --}}
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">تقرير الرسائل</h1>
+            <p class="text-lg text-gray-600 dark:text-gray-400">ملخص شامل لجميع الرسائل المرسلة</p>
         </div>
 
-        <!-- Statistics Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <!-- Total Messages -->
-            <div class="bg-gradient-to-br from-white to-blue-50 rounded-xl shadow-md p-6 border-l-4 border-blue-500">
-                <div class="flex items-start justify-between">
-                    <div class="flex-1">
-                        <p class="text-sm font-medium text-gray-600 mb-1">إجمالي الرسائل</p>
-                        <p class="text-3xl font-bold text-gray-900 mt-2">{{ $totalMessages }}</p>
-                    </div>
-                    <div class="bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl p-3 shadow-sm">
-                        <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
+        {{-- ========== Statistics Cards ========== --}}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            
+            {{-- بطاقة إجمالي الرسائل --}}
+            @include('owner.dashboard.partials.stat-card-primary', [
+                'value' => number_format($totalMessages),
+                'subtitle' => 'رسالة',
+                'gradientFrom' => 'from-primary-500',
+                'gradientTo' => 'to-primary-600',
+                'badge' => 'إجمالي',
+                'icon' => '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>',
+                'footer' => '<div class="flex items-center gap-4 text-sm"><div class="flex items-center"><div class="w-2 h-2 bg-white/80 rounded-full ml-2"></div><span>SMS: ' . number_format($smsCount) . '</span></div><div class="flex items-center"><div class="w-2 h-2 bg-secondary-300 rounded-full ml-2"></div><span>Email: ' . number_format($emailCount) . '</span></div></div>'
+            ])
 
-            <!-- SMS Count -->
-            <div class="bg-gradient-to-br from-white to-green-50 rounded-xl shadow-md p-6 border-l-4 border-green-500">
-                <div class="flex items-start justify-between">
-                    <div class="flex-1">
-                        <p class="text-sm font-medium text-gray-600 mb-1">رسائل SMS</p>
-                        <p class="text-3xl font-bold text-gray-900 mt-2">{{ $smsCount }}</p>
-                    </div>
-                    <div class="bg-gradient-to-br from-green-100 to-green-200 rounded-xl p-3 shadow-sm">
-                        <svg class="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
+            {{-- بطاقة رسائل SMS --}}
+            @include('owner.dashboard.partials.stat-card-primary', [
+                'value' => number_format($smsCount),
+                'subtitle' => 'رسالة SMS',
+                'gradientFrom' => 'from-emerald-500',
+                'gradientTo' => 'to-emerald-600',
+                'badge' => 'SMS',
+                'icon' => '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>'
+            ])
 
-            <!-- Success Rate -->
-            <div class="bg-gradient-to-br from-white to-emerald-50 rounded-xl shadow-md p-6 border-l-4 border-emerald-500">
-                <div class="flex items-start justify-between">
-                    <div class="flex-1">
-                        <p class="text-sm font-medium text-gray-600 mb-1">نسبة النجاح</p>
-                        <p class="text-3xl font-bold text-gray-900 mt-2">{{ number_format($successRate, 1) }}%</p>
-                        <p class="text-xs text-gray-500 mt-1">{{ $successCount }} رسالة</p>
-                    </div>
-                    <div class="bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-xl p-3 shadow-sm">
-                        <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
+            {{-- بطاقة نسبة النجاح --}}
+            @include('owner.dashboard.partials.stat-card-primary', [
+                'value' => number_format($successRate, 1) . ' <span class="text-2xl">%</span>',
+                'subtitle' => 'نسبة النجاح',
+                'gradientFrom' => 'from-blue-500',
+                'gradientTo' => 'to-blue-600',
+                'badge' => 'نجاح',
+                'icon' => '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>',
+                'footer' => '<div class="text-sm"><span>' . number_format($successCount) . ' رسالة ناجحة</span></div>'
+            ])
 
-            <!-- Failed Rate -->
-            <div class="bg-gradient-to-br from-white to-red-50 rounded-xl shadow-md p-6 border-l-4 border-red-500">
-                <div class="flex items-start justify-between">
-                    <div class="flex-1">
-                        <p class="text-sm font-medium text-gray-600 mb-1">نسبة الفشل</p>
-                        <p class="text-3xl font-bold text-gray-900 mt-2">{{ number_format($failedRate, 1) }}%</p>
-                        <p class="text-xs text-gray-500 mt-1">{{ $failedCount }} رسالة</p>
-                    </div>
-                    <div class="bg-gradient-to-br from-red-100 to-red-200 rounded-xl p-3 shadow-sm">
-                        <svg class="w-7 h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
+            {{-- بطاقة نسبة الفشل --}}
+            @include('owner.dashboard.partials.stat-card-primary', [
+                'value' => number_format($failedRate, 1) . ' <span class="text-2xl">%</span>',
+                'subtitle' => 'نسبة الفشل',
+                'gradientFrom' => 'from-red-500',
+                'gradientTo' => 'to-red-600',
+                'badge' => 'فشل',
+                'icon' => '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>',
+                'footer' => '<div class="text-sm"><span>' . number_format($failedCount) . ' رسالة فاشلة</span></div>'
+            ])
+
         </div>
 
-        <!-- Filters -->
-        <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
-            <form id="searchForm" method="GET" action="{{ route('owner.reports.messages') }}" class="flex flex-wrap items-end gap-4">
-                <!-- Channel Filter -->
-                <div class="flex-1 min-w-[150px]">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">قناة التواصل</label>
+        {{-- ========== Filters ========== --}}
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8 border border-gray-200 dark:border-gray-700">
+            <form id="searchForm" method="GET" action="{{ route('owner.reports.messages') }}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                {{-- Channel Filter --}}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">قناة التواصل</label>
                     <select 
                         id="channelInput"
                         name="channel" 
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm transition-colors"
                     >
                         <option value="">جميع القنوات</option>
                         <option value="sms" {{ request('channel') == 'sms' ? 'selected' : '' }}>SMS</option>
@@ -91,13 +75,13 @@
                     </select>
                 </div>
 
-                <!-- Status Filter -->
-                <div class="flex-1 min-w-[150px]">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">الحالة</label>
+                {{-- Status Filter --}}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">الحالة</label>
                     <select 
                         id="statusInput"
                         name="status" 
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm transition-colors"
                     >
                         <option value="">جميع الحالات</option>
                         <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>قيد الانتظار</option>
@@ -106,35 +90,35 @@
                     </select>
                 </div>
 
-                <!-- Date From -->
-                <div class="flex-1 min-w-[150px]">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">من تاريخ</label>
+                {{-- Date From --}}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">من تاريخ</label>
                     <input 
                         type="date" 
                         id="dateFromInput"
                         name="date_from" 
                         value="{{ request('date_from') }}"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm transition-colors"
                     >
                 </div>
 
-                <!-- Date To -->
-                <div class="flex-1 min-w-[150px]">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">إلى تاريخ</label>
+                {{-- Date To --}}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">إلى تاريخ</label>
                     <input 
                         type="date" 
                         id="dateToInput"
                         name="date_to" 
                         value="{{ request('date_to') }}"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm transition-colors"
                     >
                 </div>
 
-                <!-- Reset Button -->
-                <div>
+                {{-- Reset Button --}}
+                <div class="flex items-end">
                     <a 
                         href="{{ route('owner.reports.messages') }}" 
-                        class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-200 inline-block"
+                        class="w-full px-6 py-2.5 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition-colors duration-200 text-center font-medium shadow-sm hover:shadow-md"
                     >
                         إعادة تعيين
                     </a>
@@ -142,39 +126,39 @@
             </form>
         </div>
 
-        <!-- Loading Indicator -->
-        <div id="loadingIndicator" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 z-50 flex items-center justify-center">
-            <div class="bg-white rounded-lg p-6 flex items-center space-x-3">
-                <svg class="animate-spin h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                <span class="text-gray-700">جاري البحث...</span>
-            </div>
-        </div>
-
-        <!-- Messages Table -->
-        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+        {{-- ========== Messages Table ========== --}}
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
             <div class="overflow-x-auto" id="tableContainer">
-                <table class="w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
+                <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gradient-to-r from-primary-500 to-secondary-500">
                         <tr>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">المديون</th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">القناة</th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Preview</th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">التاريخ</th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الحالة</th>
+                            <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider">المديون</th>
+                            <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider">القناة</th>
+                            <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider">Preview</th>
+                            <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider">التاريخ</th>
+                            <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider">الحالة</th>
                         </tr>
                     </thead>
-                    <tbody id="tableBody" class="bg-white divide-y divide-gray-200">
+                    <tbody id="tableBody" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         @include('owner.reports.partials.messages-table')
                     </tbody>
                 </table>
             </div>
 
-            <!-- Pagination -->
-            <div id="paginationContainer" class="px-6 py-4 border-t border-gray-200">
+            {{-- Pagination --}}
+            <div id="paginationContainer" class="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
                 {{ $messages->links() }}
+            </div>
+        </div>
+
+        {{-- ========== Loading Indicator ========== --}}
+        <div id="loadingIndicator" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+            <div class="bg-white dark:bg-gray-800 rounded-xl p-8 flex items-center space-x-4 shadow-2xl">
+                <svg class="animate-spin h-8 w-8 text-primary-600 dark:text-primary-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span class="text-gray-700 dark:text-gray-300 font-medium">جاري البحث...</span>
             </div>
         </div>
     </div>
@@ -231,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => {
             console.error('Error:', error);
             loadingIndicator.classList.add('hidden');
-            tableBody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-red-500">حدث خطأ أثناء البحث.</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-red-500 dark:text-red-400">حدث خطأ أثناء البحث.</td></tr>';
         });
     }
 
@@ -275,7 +259,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => {
             console.error('Error:', error);
             loadingIndicator.classList.add('hidden');
-            tableBody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-red-500">حدث خطأ أثناء تحميل الصفحة.</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-red-500 dark:text-red-400">حدث خطأ أثناء تحميل الصفحة.</td></tr>';
         });
     }
 
@@ -297,4 +281,3 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 @endpush
 @endsection
-

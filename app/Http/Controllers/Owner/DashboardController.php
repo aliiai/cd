@@ -86,8 +86,8 @@ class DashboardController extends Controller
         
         // ========== 2. بيانات الرسوم البيانية ==========
         
-        // تطور التحصيل عبر الزمن (آخر 30 يوم)
-        $collectionTrendData = $this->getCollectionTrendData($ownerId, 30);
+        // تطور التحصيل عبر الزمن (أسبوعي - آخر 7 أيام)
+        $collectionTrendData = $this->getCollectionTrendDataWeekly($ownerId);
         
         // توزيع حالات الديون
         $statusDistributionData = $this->getStatusDistributionData($ownerId);
@@ -98,6 +98,24 @@ class DashboardController extends Controller
         // ========== 3. التنبيهات الذكية ==========
         
         $alerts = $this->generateSmartAlerts($ownerId, $user, $activeSubscription, $totalDebtors, $totalMessages, $maxMessages);
+        
+        // ========== 4. نشاط اليوم ==========
+        
+        $todayMessages = DB::table('collection_campaign_clients')
+            ->join('collection_campaigns', 'collection_campaign_clients.campaign_id', '=', 'collection_campaigns.id')
+            ->where('collection_campaigns.owner_id', $ownerId)
+            ->whereDate('collection_campaign_clients.created_at', today())
+            ->where('collection_campaign_clients.status', 'sent')
+            ->count();
+        
+        $todayDebtors = Debtor::where('owner_id', $ownerId)
+            ->whereDate('created_at', today())
+            ->count();
+        
+        $todayCollected = Debtor::where('owner_id', $ownerId)
+            ->where('status', 'paid')
+            ->whereDate('updated_at', today())
+            ->sum('debt_amount');
         
         return view('owner.dashboard', compact(
             'totalDebtors',
@@ -116,7 +134,10 @@ class DashboardController extends Controller
             'statusDistributionData',
             'channelUsageData',
             'alerts',
-            'activeSubscription'
+            'activeSubscription',
+            'todayMessages',
+            'todayDebtors',
+            'todayCollected'
         ));
     }
     
@@ -143,6 +164,35 @@ class DashboardController extends Controller
             
             $amounts[] = $dailyAmount;
             $current->addDay();
+        }
+        
+        return [
+            'labels' => $labels,
+            'amounts' => $amounts,
+        ];
+    }
+    
+    /**
+     * جلب بيانات تطور التحصيل عبر الزمن (أسبوعي - آخر 7 أيام)
+     */
+    private function getCollectionTrendDataWeekly($ownerId)
+    {
+        $labels = [];
+        $amounts = [];
+        $daysOfWeek = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+        
+        for ($i = 6; $i >= 0; $i--) {
+            $date = now()->subDays($i);
+            $dayIndex = $date->dayOfWeek;
+            $dayName = $daysOfWeek[$dayIndex];
+            $labels[] = $dayName;
+            
+            $amount = Debtor::where('owner_id', $ownerId)
+                ->where('status', 'paid')
+                ->whereDate('updated_at', $date->format('Y-m-d'))
+                ->sum('debt_amount');
+            
+            $amounts[] = $amount;
         }
         
         return [
@@ -310,6 +360,110 @@ class DashboardController extends Controller
         }
         
         return $alerts;
+    }
+    
+    /**
+     * جلب بيانات التحصيل حسب الفلتر (AJAX)
+     */
+    public function getCollectionData(Request $request)
+    {
+        $ownerId = Auth::id();
+        $filter = $request->input('filter', 'weekly'); // daily, weekly, monthly, yearly
+        
+        $labels = [];
+        $amounts = [];
+        
+        // أسماء الأيام بالعربي
+        $daysOfWeek = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+        
+        // أسماء الشهور بالعربي
+        $months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+        
+        switch ($filter) {
+            case 'daily':
+                // ساعات اليوم (24 ساعة)
+                for ($i = 0; $i < 24; $i++) {
+                    $labels[] = $i . ':00';
+                    $amount = Debtor::where('owner_id', $ownerId)
+                        ->where('status', 'paid')
+                        ->whereDate('updated_at', today())
+                        ->whereRaw('HOUR(updated_at) = ?', [$i])
+                        ->sum('debt_amount');
+                    $amounts[] = $amount;
+                }
+                break;
+                
+            case 'weekly':
+                // آخر 7 أيام
+                for ($i = 6; $i >= 0; $i--) {
+                    $date = now()->subDays($i);
+                    $dayIndex = $date->dayOfWeek;
+                    $dayName = $daysOfWeek[$dayIndex];
+                    $labels[] = $dayName;
+                    
+                    $amount = Debtor::where('owner_id', $ownerId)
+                        ->where('status', 'paid')
+                        ->whereDate('updated_at', $date->format('Y-m-d'))
+                        ->sum('debt_amount');
+                    $amounts[] = $amount;
+                }
+                break;
+                
+            case 'monthly':
+                // أسابيع الشهر الحالي (4-5 أسابيع)
+                $startOfMonth = now()->startOfMonth();
+                $endOfMonth = now()->endOfMonth();
+                $currentDate = $startOfMonth->copy();
+                $weekNumber = 1;
+                
+                while ($currentDate->lte($endOfMonth)) {
+                    $weekStart = $currentDate->copy();
+                    $weekEnd = $currentDate->copy()->addDays(6);
+                    
+                    // التأكد من عدم تجاوز نهاية الشهر
+                    if ($weekEnd->gt($endOfMonth)) {
+                        $weekEnd = $endOfMonth->copy();
+                    }
+                    
+                    $labels[] = 'أسبوع ' . $weekNumber;
+                    
+                    $amount = Debtor::where('owner_id', $ownerId)
+                        ->where('status', 'paid')
+                        ->whereBetween('updated_at', [
+                            $weekStart->format('Y-m-d 00:00:00'),
+                            $weekEnd->format('Y-m-d 23:59:59')
+                        ])
+                        ->sum('debt_amount');
+                    $amounts[] = $amount;
+                    
+                    $currentDate->addDays(7);
+                    $weekNumber++;
+                    
+                    // منع الحلقة اللانهائية
+                    if ($weekNumber > 6) break;
+                }
+                break;
+                
+            case 'yearly':
+                // آخر 12 شهر (سنوي - نفس شهري لكن بتجميع سنوي)
+                for ($i = 11; $i >= 0; $i--) {
+                    $date = now()->subMonths($i);
+                    $labels[] = $months[$date->month - 1];
+                    
+                    $amount = Debtor::where('owner_id', $ownerId)
+                        ->where('status', 'paid')
+                        ->whereYear('updated_at', $date->year)
+                        ->whereMonth('updated_at', $date->month)
+                        ->sum('debt_amount');
+                    $amounts[] = $amount;
+                }
+                break;
+        }
+        
+        return response()->json([
+            'labels' => $labels,
+            'amounts' => $amounts,
+        ]);
     }
 }
 

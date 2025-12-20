@@ -178,6 +178,13 @@ class ReportController extends Controller
 
         $campaigns = $query->latest()->paginate(10)->appends($request->query());
 
+        // حساب الإحصائيات (من جميع الحملات بدون فلترة)
+        $allCampaignsQuery = CollectionCampaign::where('owner_id', $ownerId);
+        $totalCampaigns = $allCampaignsQuery->count();
+        $smsCount = $allCampaignsQuery->clone()->where('channel', 'sms')->count();
+        $emailCount = $allCampaignsQuery->clone()->where('channel', 'email')->count();
+        $sentCount = $allCampaignsQuery->clone()->where('status', 'sent')->count();
+
         // إذا كان الطلب AJAX، إرجاع JSON
         if ($request->ajax()) {
             return response()->json([
@@ -186,7 +193,13 @@ class ReportController extends Controller
             ]);
         }
 
-        return view('owner.reports.campaigns', compact('campaigns'));
+        return view('owner.reports.campaigns', compact(
+            'campaigns',
+            'totalCampaigns',
+            'smsCount',
+            'emailCount',
+            'sentCount'
+        ));
     }
 
     /**
