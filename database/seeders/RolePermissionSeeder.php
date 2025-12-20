@@ -21,19 +21,28 @@ class RolePermissionSeeder extends Seeder
             'view admin dashboard',
             'view owner dashboard',
             
-            // Users Management
-            'manage users',
+            // Users Management (مع منطق: create/edit/delete تظهر فقط بعد view)
             'view users',
             'create users',
             'edit users',
             'delete users',
             
-            // Subscriptions Management
-            'manage subscriptions',
+            // Subscriptions Management (مع منطق: create/edit/delete تظهر فقط بعد view)
             'view subscriptions',
             'create subscriptions',
             'edit subscriptions',
             'delete subscriptions',
+            
+            // Audit Logs
+            'view audit logs',
+            
+            // System Settings (view فقط أو view + change)
+            'view system settings',
+            'change system settings',
+            
+            // Support Tickets (view أو لا، manage أو لا)
+            'view support tickets',
+            'manage support tickets',
             
             // Reports
             'view reports',
@@ -50,14 +59,6 @@ class RolePermissionSeeder extends Seeder
             // Messages Logs
             'view messages logs',
             
-            // System Settings
-            'manage system settings',
-            'view system settings',
-            
-            // Support Tickets
-            'manage support tickets',
-            'view support tickets',
-            
             // Admins Management
             'manage admins',
             'view admins',
@@ -71,6 +72,13 @@ class RolePermissionSeeder extends Seeder
             'create permissions',
             'edit permissions',
             'delete permissions',
+            
+            // Roles Management
+            'manage roles',
+            'view roles',
+            'create roles',
+            'edit roles',
+            'delete roles',
         ];
 
         foreach ($permissions as $permission) {
@@ -94,11 +102,28 @@ class RolePermissionSeeder extends Seeder
             'view users',
             'manage subscriptions',
             'view subscriptions',
+            'create subscriptions',
+            'edit subscriptions',
+            'delete subscriptions',
             'view reports',
             'view ai reports',
             'view messages logs',
             'manage support tickets',
             'view support tickets',
+            // إدارة الأدمن والصلاحيات (للمستخدمين الذين لديهم دور admin)
+            'view admins',
+            'view permissions',
+            'view roles',
+            'create roles',
+            'edit roles',
+            'delete roles',
+            'create permissions',
+            'edit permissions',
+            'delete permissions',
+            // سجلات التدقيق والإعدادات
+            'view audit logs',
+            'view system settings',
+            'change system settings',
         ]);
         
         $ownerRole->givePermissionTo('view owner dashboard');

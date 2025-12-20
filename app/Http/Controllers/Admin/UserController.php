@@ -23,6 +23,12 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = auth()->user();
+        if (!$user->hasRole('super_admin') && !$user->can('view users')) {
+            abort(403, 'غير مصرح لك بعرض المستخدمين.');
+        }
+
         // جلب جميع المستخدمين (باستثناء Admin)
         $query = User::whereDoesntHave('roles', function($query) {
                 $query->where('name', 'admin');
@@ -81,6 +87,12 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $currentUser = auth()->user();
+        if (!$currentUser->hasRole('super_admin') && !$currentUser->can('view users')) {
+            abort(403, 'غير مصرح لك بعرض المستخدمين.');
+        }
+
         // التأكد من أن المستخدم ليس Admin
         if ($user->hasRole('admin')) {
             abort(403, 'لا يمكن عرض تفاصيل Admin');
@@ -133,6 +145,18 @@ class UserController extends Controller
      */
     public function toggleStatus(Request $request, User $user)
     {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $currentUser = auth()->user();
+        if (!$currentUser->hasRole('super_admin') && !$currentUser->can('edit users')) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'غير مصرح لك بتعديل المستخدمين.'
+                ], 403);
+            }
+            abort(403, 'غير مصرح لك بتعديل المستخدمين.');
+        }
+
         // التأكد من أن المستخدم ليس Admin
         if ($user->hasRole('admin')) {
             if ($request->ajax()) {

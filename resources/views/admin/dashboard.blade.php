@@ -6,8 +6,8 @@
         
         {{-- ========== Header Section ========== --}}
         <div class="mb-8">
-            <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">لوحة تحكم المدير</h1>
-            <p class="text-lg text-gray-600 dark:text-gray-400">نظرة شاملة على أداء المنصة</p>
+            <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">{{ __('common.admin_dashboard_title') }}</h1>
+            <p class="text-lg text-gray-600 dark:text-gray-400">{{ __('common.admin_dashboard_description') }}</p>
         </div>
 
         {{-- ========== 1. البطاقات الإحصائية الكبيرة ========== --}}
@@ -16,32 +16,32 @@
             {{-- بطاقة مقدمي الخدمة --}}
             @include('admin.dashboard.partials.stat-card-primary', [
                 'value' => $totalOwners,
-                'subtitle' => 'مقدم خدمة',
+                'subtitle' => __('common.service_provider'),
                 'gradientFrom' => 'from-primary-500',
                 'gradientTo' => 'to-primary-600',
-                'badge' => 'إجمالي',
+                'badge' => __('common.total'),
                 'icon' => '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>',
-                'footer' => '<div class="flex items-center gap-4 text-sm"><div class="flex items-center"><div class="w-2 h-2 bg-green-300 rounded-full ml-2"></div><span>نشط: ' . $activeOwners . '</span></div><div class="flex items-center"><div class="w-2 h-2 bg-red-300 rounded-full ml-2"></div><span>غير نشط: ' . $inactiveOwners . '</span></div></div>'
+                'footer' => '<div class="flex items-center gap-4 text-sm"><div class="flex items-center"><div class="w-2 h-2 bg-green-300 rounded-full ml-2"></div><span>' . __('common.active') . ': ' . $activeOwners . '</span></div><div class="flex items-center"><div class="w-2 h-2 bg-red-300 rounded-full ml-2"></div><span>' . __('common.inactive') . ': ' . $inactiveOwners . '</span></div></div>'
             ])
 
             {{-- بطاقة المديونين --}}
             @include('admin.dashboard.partials.stat-card-primary', [
                 'value' => $totalDebtors,
-                'subtitle' => 'مديون',
+                'subtitle' => __('common.debtor'),
                 'gradientFrom' => 'from-secondary-500',
                 'gradientTo' => 'to-secondary-600',
-                'badge' => 'إجمالي',
+                'badge' => __('common.total'),
                 'icon' => '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>',
-                'footer' => '<div class="text-sm"><span class="font-semibold">' . number_format($totalDebtAmount, 2) . ' ر.س</span><span class="opacity-80"> إجمالي قيمة الديون</span></div>'
+                'footer' => '<div class="text-sm"><span class="font-semibold">' . number_format($totalDebtAmount, 2) . ' ر.س</span><span class="opacity-80"> ' . __('common.total_debt_value') . '</span></div>'
             ])
 
             {{-- بطاقة الرسائل --}}
             @include('admin.dashboard.partials.stat-card-primary', [
                 'value' => $totalMessages,
-                'subtitle' => 'رسالة مرسلة',
+                'subtitle' => __('common.sent_message'),
                 'gradientFrom' => 'from-primary-400',
                 'gradientTo' => 'to-primary-500',
-                'badge' => 'إجمالي',
+                'badge' => __('common.total'),
                 'icon' => '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>',
                 'footer' => '<div class="flex items-center gap-4 text-sm"><div class="flex items-center"><div class="w-2 h-2 bg-white/80 rounded-full ml-2"></div><span>SMS: ' . number_format($smsCount) . '</span></div><div class="flex items-center"><div class="w-2 h-2 bg-secondary-300 rounded-full ml-2"></div><span>Email: ' . number_format($emailCount) . '</span></div></div>'
             ])
@@ -49,12 +49,12 @@
             {{-- بطاقة الاشتراكات --}}
             @include('admin.dashboard.partials.stat-card-primary', [
                 'value' => $activeSubscriptions,
-                'subtitle' => 'اشتراك نشط',
+                'subtitle' => __('common.active_subscription'),
                 'gradientFrom' => 'from-secondary-400',
                 'gradientTo' => 'to-secondary-500',
-                'badge' => 'نشط',
+                'badge' => __('common.active'),
                 'icon' => '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>',
-                'footer' => '<div class="text-sm"><span class="font-semibold">' . number_format($totalSubscriptions) . '</span><span class="opacity-80"> إجمالي الاشتراكات</span></div>'
+                'footer' => '<div class="text-sm"><span class="font-semibold">' . number_format($totalSubscriptions) . '</span><span class="opacity-80"> ' . __('common.total_subscriptions') . '</span></div>'
             ])
 
         </div>
@@ -64,28 +64,28 @@
             
             {{-- بطاقة المبالغ المحصلة --}}
             @include('admin.dashboard.partials.stat-card-secondary', [
-                'title' => 'المبالغ المحصلة',
+                'title' => __('common.collected_amounts'),
                 'value' => number_format($totalCollected, 2) . ' <span class="text-lg text-gray-500 dark:text-gray-400">ر.س</span>',
                 'borderColor' => 'border-primary-500 dark:border-primary-400',
                 'icon' => '<svg class="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
-                'footer' => '<div class="flex items-center text-sm text-gray-600 dark:text-gray-400"><span>نسبة التحصيل:</span><span class="font-bold text-primary-600 dark:text-primary-400 mr-2">' . number_format($collectionRate, 1) . '%</span></div>'
+                'footer' => '<div class="flex items-center text-sm text-gray-600 dark:text-gray-400"><span>' . __('common.collection_rate') . ':</span><span class="font-bold text-primary-600 dark:text-primary-400 mr-2">' . number_format($collectionRate, 1) . '%</span></div>'
             ])
 
             {{-- بطاقة استخدام AI --}}
             @include('admin.dashboard.partials.stat-card-secondary', [
-                'title' => 'استخدام الذكاء الاصطناعي',
+                'title' => __('common.ai_usage'),
                 'value' => number_format($aiUsageCount),
-                'subtitle' => 'حملة استخدمت AI',
+                'subtitle' => __('common.campaign_used_ai'),
                 'borderColor' => 'border-secondary-500 dark:border-secondary-400',
                 'icon' => '<svg class="w-6 h-6 text-secondary-600 dark:text-secondary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>',
                 'progress' => min($aiUsagePercentage, 100),
-                'footer' => '<p class="text-xs text-gray-500 dark:text-gray-400 mt-2">' . number_format($aiUsagePercentage, 1) . '% من إجمالي الحملات</p>'
+                'footer' => '<p class="text-xs text-gray-500 dark:text-gray-400 mt-2">' . number_format($aiUsagePercentage, 1) . '% ' . __('common.of_total_campaigns') . '</p>'
             ])
 
             {{-- بطاقة نشاط اليوم --}}
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border-r-4 border-primary-400 dark:border-primary-500">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300">نشاط اليوم</h3>
+                    <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300">{{ __('common.today_activity') }}</h3>
                     <div class="bg-primary-100 dark:bg-primary-900/30 rounded-lg p-2">
                         <svg class="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -94,15 +94,15 @@
                 </div>
                 <div class="space-y-3">
                     <div class="flex items-center justify-between">
-                        <span class="text-gray-600 dark:text-gray-400">رسائل مرسلة</span>
+                        <span class="text-gray-600 dark:text-gray-400">{{ __('common.messages_sent') }}</span>
                         <span class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ number_format($todayMessages) }}</span>
                     </div>
                     <div class="flex items-center justify-between">
-                        <span class="text-gray-600 dark:text-gray-400">مديونين جدد</span>
+                        <span class="text-gray-600 dark:text-gray-400">{{ __('common.new_debtors') }}</span>
                         <span class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ number_format($todayDebtors) }}</span>
                     </div>
                     <div class="flex items-center justify-between">
-                        <span class="text-gray-600 dark:text-gray-400">مستخدمين منضمين</span>
+                        <span class="text-gray-600 dark:text-gray-400">{{ __('common.joined_users') }}</span>
                         <span class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ number_format($todayUsers) }}</span>
                     </div>
                 </div>

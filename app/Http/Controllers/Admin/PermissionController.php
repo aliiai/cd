@@ -23,8 +23,9 @@ class PermissionController extends Controller
      */
     public function index(Request $request)
     {
-        // التحقق من الصلاحية
-        if (!Auth::user()->can('view permissions')) {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = Auth::user();
+        if (!$user->hasRole('super_admin') && !$user->can('view permissions')) {
             abort(403, 'غير مصرح لك بعرض الصلاحيات.');
         }
 
@@ -55,8 +56,9 @@ class PermissionController extends Controller
      */
     public function create()
     {
-        // التحقق من الصلاحية
-        if (!Auth::user()->can('create permissions')) {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = Auth::user();
+        if (!$user->hasRole('super_admin') && !$user->can('create permissions')) {
             abort(403, 'غير مصرح لك بإنشاء صلاحية جديدة.');
         }
 
@@ -71,8 +73,9 @@ class PermissionController extends Controller
      */
     public function store(Request $request)
     {
-        // التحقق من الصلاحية
-        if (!Auth::user()->can('create permissions')) {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = Auth::user();
+        if (!$user->hasRole('super_admin') && !$user->can('create permissions')) {
             abort(403, 'غير مصرح لك بإنشاء صلاحية جديدة.');
         }
 
@@ -94,8 +97,9 @@ class PermissionController extends Controller
      */
     public function edit(Permission $permission)
     {
-        // التحقق من الصلاحية
-        if (!Auth::user()->can('edit permissions')) {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = Auth::user();
+        if (!$user->hasRole('super_admin') && !$user->can('edit permissions')) {
             abort(403, 'غير مصرح لك بتعديل الصلاحيات.');
         }
 
@@ -114,8 +118,9 @@ class PermissionController extends Controller
      */
     public function update(Request $request, Permission $permission)
     {
-        // التحقق من الصلاحية
-        if (!Auth::user()->can('edit permissions')) {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = Auth::user();
+        if (!$user->hasRole('super_admin') && !$user->can('edit permissions')) {
             abort(403, 'غير مصرح لك بتعديل الصلاحيات.');
         }
 
@@ -137,8 +142,9 @@ class PermissionController extends Controller
      */
     public function destroy(Permission $permission)
     {
-        // التحقق من الصلاحية
-        if (!Auth::user()->can('delete permissions')) {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = Auth::user();
+        if (!$user->hasRole('super_admin') && !$user->can('delete permissions')) {
             abort(403, 'غير مصرح لك بحذف الصلاحيات.');
         }
 

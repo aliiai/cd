@@ -28,6 +28,11 @@ class AuditController extends Controller
      */
     public function index(Request $request)
     {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = auth()->user();
+        if (!$user->hasRole('super_admin') && !$user->can('view audit logs')) {
+            abort(403, 'غير مصرح لك بعرض سجلات التدقيق.');
+        }
         // جمع الأنشطة من مصادر مختلفة لجميع المستخدمين
         $activities = [];
         

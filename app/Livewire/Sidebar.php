@@ -62,13 +62,103 @@ class Sidebar extends Component
         $sidebarConfig = config('sidebar', []);
 
         // التحقق من دور المستخدم وإرجاع الروابط المناسبة
+        $links = [];
         if ($user->hasRole('admin')) {
-            return $sidebarConfig['admin'] ?? [];
+            $links = $sidebarConfig['admin'] ?? [];
         } elseif ($user->hasRole('owner')) {
-            return $sidebarConfig['owner'] ?? [];
+            $links = $sidebarConfig['owner'] ?? [];
         }
 
-        // إذا لم يكن للمستخدم دور معروف، إرجاع مصفوفة فارغة
-        return [];
+        // تطبيق الترجمة على الروابط
+        return $this->translateLinks($links);
+    }
+
+    /**
+     * تطبيق الترجمة على روابط الـ Sidebar
+     * 
+     * @param array $links
+     * @return array
+     */
+    private function translateLinks($links)
+    {
+        $translatedLinks = [];
+        
+        foreach ($links as $link) {
+            $translatedLink = $link;
+            
+            // ترجمة اسم الرابط الرئيسي
+            if (isset($link['name'])) {
+                $translatedLink['name'] = $this->translateName($link['name']);
+            }
+            
+            // ترجمة الروابط الفرعية (children) إذا كانت موجودة
+            if (isset($link['type']) && $link['type'] === 'dropdown' && isset($link['children'])) {
+                $translatedChildren = [];
+                foreach ($link['children'] as $child) {
+                    $translatedChild = $child;
+                    if (isset($child['name'])) {
+                        $translatedChild['name'] = $this->translateName($child['name']);
+                    }
+                    $translatedChildren[] = $translatedChild;
+                }
+                $translatedLink['children'] = $translatedChildren;
+            }
+            
+            $translatedLinks[] = $translatedLink;
+        }
+        
+        return $translatedLinks;
+    }
+
+    /**
+     * ترجمة اسم الرابط باستخدام ملف الترجمة
+     * 
+     * @param string $name
+     * @return string
+     */
+    private function translateName($name)
+    {
+        // خريطة الأسماء العربية إلى مفاتيح الترجمة
+        $nameMap = [
+            'لوحة التحكم' => 'dashboard',
+            'المستخدمين' => 'users',
+            'المشرفين' => 'admins',
+            'الأدوار' => 'roles',
+            'الصلاحيات' => 'permissions',
+            'طلبات الاشتراكات' => 'subscription_requests',
+            'الباقات الحالية' => 'current_subscriptions',
+            'تقارير مقدمي الخدمات' => 'service_providers_reports',
+            'تقارير الحملات' => 'campaigns_reports',
+            'تقارير الرسائل' => 'messages_reports',
+            'تقارير الاشتراكات' => 'subscriptions_reports',
+            'الإشعارات والتنبيهات' => 'notifications',
+            'محتوى الصفحات' => 'page_content',
+            'سجلات التدقيق' => 'audit_logs',
+            'الإعدادات' => 'settings',
+            'الدعم والتذاكر' => 'support_tickets',
+            'تسجيل الخروج' => 'logout',
+            'المديونين' => 'debtors',
+            'حالة التحصيل' => 'collections',
+            'التحليلات الذكية' => 'analytics',
+            'تحليلات حالة التحصيل' => 'collection_status_analytics',
+            'تحليلات الدخل' => 'income_analytics',
+            'الاشتراكات' => 'owner_subscriptions',
+            'تقرير حالات الديون' => 'debt_status_report',
+            'تقرير الرسائل' => 'messages_report',
+            'أداء الحملات' => 'campaigns_performance',
+            'استخدام الاشتراك' => 'subscription_usage',
+            'سجل العمليات' => 'operations_log',
+        ];
+        
+        // البحث عن المفتاح في الخريطة
+        $key = $nameMap[$name] ?? null;
+        
+        if ($key) {
+            // استخدام دالة الترجمة
+            return __('sidebar.' . $key);
+        }
+        
+        // إذا لم يتم العثور على ترجمة، إرجاع الاسم الأصلي
+        return $name;
     }
 }

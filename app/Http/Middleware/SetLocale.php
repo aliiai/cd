@@ -11,8 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * SetLocale Middleware
  * 
- * هذا الـ Middleware يقوم بتعيين اللغة الحالية بناءً على Session
- * ويتم استدعاؤه في كل طلب لضمان تطبيق اللغة الصحيحة
+ * هذا الـ Middleware يقوم بتعيين لغة التطبيق بناءً على اللغة المحفوظة في الـ Session.
+ * إذا لم تكن هناك لغة محفوظة، يستخدم اللغة الافتراضية من config/app.php
  */
 class SetLocale
 {
@@ -23,35 +23,18 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // الحصول على اللغة من Session، أو استخدام اللغة الافتراضية
-        $locale = Session::get('locale');
+        // الحصول على اللغة من الـ Session
+        $locale = Session::get('locale', config('app.locale', 'ar'));
         
-        // إذا لم تكن اللغة موجودة في Session، استخدام اللغة الافتراضية
-        if (!$locale) {
-            $locale = config('app.locale', 'en');
+        // التحقق من أن اللغة المدخلة صحيحة (ar أو en)
+        $allowedLocales = ['ar', 'en'];
+        if (!in_array($locale, $allowedLocales)) {
+            $locale = config('app.locale', 'ar');
         }
         
-        // التحقق من أن اللغة مدعومة (ar أو en فقط في هذه المرحلة)
-        $supportedLocales = ['ar', 'en'];
-        if (!in_array($locale, $supportedLocales)) {
-            $locale = config('app.locale', 'en'); // استخدام اللغة الافتراضية إذا كانت اللغة غير مدعومة
-        }
-        
-        // تعيين اللغة للتطبيق - يجب أن يكون قبل أي استخدام لـ __()
+        // تعيين لغة التطبيق
         App::setLocale($locale);
         
-        // التأكد من أن اللغة تم تعيينها بشكل صحيح في config
-        config(['app.locale' => $locale]);
-        
-        // تمرير الطلب إلى الـ Middleware التالي
-        $response = $next($request);
-        
-        // التأكد من أن اللغة محفوظة في Session
-        if (!Session::has('locale') || Session::get('locale') !== $locale) {
-            Session::put('locale', $locale);
-        }
-        
-        return $response;
+        return $next($request);
     }
 }
-

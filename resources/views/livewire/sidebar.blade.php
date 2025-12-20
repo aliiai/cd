@@ -1,5 +1,5 @@
 <div style="height: 100vh;"
-    class="bg-white dark:bg-gray-800 h-full text-gray-800 dark:text-gray-200 transition-all duration-300 ease-in-out shadow-sm border-l border-gray-200 dark:border-gray-700 flex flex-col {{ $isOpen ? 'w-64' : 'w-20' }}"
+    class="bg-white dark:bg-gray-800 h-full text-gray-800 dark:text-gray-200 transition-all duration-300 ease-in-out shadow-sm {{ app()->getLocale() === 'ar' ? 'border-l' : 'border-r' }} border-gray-200 dark:border-gray-700 flex flex-col {{ $isOpen ? 'w-80' : 'w-20' }}"
 >
     <!-- Sidebar Header with Logo -->
     <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between bg-white dark:bg-gray-800">
@@ -7,21 +7,20 @@
         @if($isOpen)
         <div class="flex items-center space-x-2 space-x-reverse">
             <!-- Logo Icon -->
-            <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+            <!-- <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
             </div>
             <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100">
                 {{ config('app.name', 'Laravel') }}
-            </h2>
+            </h2> -->
+            <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-24">
         </div>
         @else
         <!-- Logo Icon Only (عندما يكون Sidebar مطوياً) -->
         <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center mx-auto">
-            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
+        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-42">
         </div>
         @endif
         
@@ -44,18 +43,21 @@
 
     <!-- Navigation Links -->
     <nav class="flex-1 p-4 overflow-y-auto" x-data="{ openDropdowns: {} }">
-        <ul class="space-y-1">
+        <ul class="space-y-2">
             @foreach($links as $link)
                 @php
+                    // التحقق من نوع العنصر (section أو link)
+                    $isSection = isset($link['type']) && $link['type'] === 'section';
+                    
                     // التحقق من أن الرابط نشط (active) - فقط إذا كان يحتوي على route
                     $isActive = false;
-                    if (isset($link['route'])) {
+                    if (!$isSection && isset($link['route'])) {
                         $isActive = request()->routeIs($link['route']) || request()->routeIs($link['route'] . '.*');
                     }
                     
                     // التحقق من أن أي رابط فرعي نشط (للـ Dropdown)
                     $hasActiveChild = false;
-                    if (isset($link['type']) && $link['type'] === 'dropdown' && isset($link['children'])) {
+                    if (!$isSection && isset($link['type']) && $link['type'] === 'dropdown' && isset($link['children'])) {
                         foreach ($link['children'] as $child) {
                             if (isset($child['route']) && (request()->routeIs($child['route']) || request()->routeIs($child['route'] . '.*'))) {
                                 $hasActiveChild = true;
@@ -65,6 +67,17 @@
                         }
                     }
                 @endphp
+                
+                @if($isSection)
+                    <!-- Section Title -->
+                    @if($isOpen)
+                    <li class="mt-4 mb-2 first:mt-0">
+                        <h3 class="px-3 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            {{ $link['title'] }}
+                        </h3>
+                    </li>
+                    @endif
+                @else
                 <li>
                     @if(isset($link['type']) && $link['type'] === 'dropdown' && isset($link['children']))
                         <!-- Dropdown Menu Item -->
@@ -86,7 +99,7 @@
                                     </svg>
                                     <!-- Link Text (يظهر فقط عندما يكون مفتوح) -->
                                     @if($isOpen)
-                                    <span class="mr-3 font-medium">
+                                    <span class="mr-3 font-medium whitespace-nowrap">
                                         {{ $link['name'] }}
                                     </span>
                                     @endif
@@ -136,7 +149,7 @@
                                             >
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $child['icon'] }}" />
                                             </svg>
-                                            <span class="mr-2">{{ $child['name'] }}</span>
+                                            <span class="mr-2 whitespace-nowrap">{{ $child['name'] }}</span>
                                         </a>
                                     </li>
                                 @endforeach
@@ -161,12 +174,13 @@
                             </svg>
                             <!-- Link Text (يظهر فقط عندما يكون مفتوح) -->
                             @if($isOpen)
-                            <span class="mr-3 font-medium">
+                            <span class="mr-3 font-medium whitespace-nowrap">
                                 {{ $link['name'] }}
                             </span>
                             @endif
                         </a>
                     @endif
+                @endif
                 </li>
             @endforeach
         </ul>
@@ -180,7 +194,7 @@
             <button 
                 type="submit" 
                 class="w-full flex items-center justify-center px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/30 hover:text-red-600 dark:hover:text-red-400 transition-all duration-200 group"
-                title="تسجيل الخروج"
+                title="{{ __('sidebar.logout') }}"
             >
                 <svg 
                     class="w-5 h-5 flex-shrink-0 transition-transform duration-200" 
@@ -191,7 +205,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                 </svg>
                 @if($isOpen)
-                <span class="mr-2">تسجيل الخروج</span>
+                <span class="mr-2">{{ __('sidebar.logout') }}</span>
                 @endif
             </button>
         </form>

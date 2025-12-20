@@ -1,61 +1,73 @@
 @if($admins->count() > 0)
-    <div class="overflow-x-auto rounded-lg shadow-lg border border-gray-200">
-        <table class="w-full divide-y divide-gray-200">
-            <thead class="bg-gradient-to-r from-gray-700 to-gray-600">
+    <div class="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
+        <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead class="bg-gradient-to-r from-primary-600 via-primary-500 to-secondary-600">
                 <tr>
-                    <th class="px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">الاسم</th>
-                    <th class="px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">البريد الإلكتروني</th>
-                    <th class="px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">الدور</th>
-                    <th class="px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">عدد الصلاحيات</th>
-                    <th class="px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">الحالة</th>
-                    <th class="px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">تاريخ الإنشاء</th>
-                    <th class="px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">الإجراءات</th>
+                    <th class="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider">الاسم</th>
+                    <th class="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider">البريد الإلكتروني</th>
+                    <th class="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider">الدور</th>
+                    <th class="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider">عدد الصلاحيات</th>
+                    <th class="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider">الحالة</th>
+                    <th class="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider">تاريخ الإنشاء</th>
+                    <th class="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider">الإجراءات</th>
                 </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200" id="adminsTableBody">
+            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700" id="adminsTableBody">
                 @foreach($admins as $admin)
-                    <tr class="hover:bg-primary-50 transition-all duration-200 hover:shadow-md">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            {{ $admin->name }}
+                    <tr class="hover:bg-primary-50 dark:hover:bg-gray-700 transition-all duration-200 hover:shadow-md">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 w-10 h-10">
+                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white font-semibold text-sm">
+                                        {{ substr($admin->name, 0, 1) }}
+                                    </div>
+                                </div>
+                                <div class="mr-3">
+                                    <div class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $admin->name }}</div>
+                                </div>
+                            </div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                             {{ $admin->email }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                            @if($admin->hasRole('super_admin'))
-                                <span class="px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm bg-secondary-100 text-secondary-800">
-                                    Super Admin
-                                </span>
-                            @elseif($admin->hasRole('admin'))
-                                <span class="px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm bg-primary-100 text-primary-800">
-                                    Admin
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            @php
+                                $role = $admin->roles->first();
+                            @endphp
+                            @if($role)
+                                <span class="px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-300 border border-primary-200 dark:border-primary-800">
+                                    {{ ucfirst(str_replace('_', ' ', $role->name)) }}
                                 </span>
                             @else
                                 <span class="text-gray-400">-</span>
                             @endif
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                            {{ $admin->permissions->count() }}
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
+                            @php
+                                $role = $admin->roles->first();
+                                $permissionsCount = $role ? $role->permissions->count() : 0;
+                            @endphp
+                            {{ $permissionsCount }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <td class="px-6 py-4 whitespace-nowrap">
                             @if($admin->is_active)
-                                <span class="px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm bg-green-100 text-green-800">
+                                <span class="px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-800">
                                     نشط
                                 </span>
                             @else
-                                <span class="px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm bg-red-100 text-red-800">
+                                <span class="px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-800">
                                     موقوف
                                 </span>
                             @endif
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                             {{ $admin->created_at->format('Y-m-d') }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex items-center space-x-3 space-x-reverse gap-2">
                                 @can('edit admins')
                                     <a href="{{ route('admin.admins.edit', $admin) }}" 
-                                       class="inline-flex items-center px-3 py-1.5 bg-primary-100 text-primary-700 rounded-lg hover:bg-primary-200 transition-colors duration-200 shadow-sm hover:shadow-md"
+                                       class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-lg hover:from-primary-600 hover:to-primary-700 transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
                                        title="تعديل">
                                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -112,15 +124,21 @@
         </table>
     </div>
 @else
-    <div class="text-center py-12">
-        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-        </svg>
-        <p class="mt-4 text-gray-500 text-lg">لا يوجد مشرفين حالياً.</p>
+    <div class="text-center py-16">
+        <div class="inline-flex items-center justify-center w-20 h-20 bg-gray-100 dark:bg-gray-700 rounded-full mb-4">
+            <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+            </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">لا يوجد مشرفين</h3>
+        <p class="text-gray-500 dark:text-gray-400 mb-4">ابدأ بإنشاء مشرف جديد</p>
         @can('create admins')
             <a href="{{ route('admin.admins.create') }}" 
-               class="mt-4 inline-block bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
-                إنشاء مشرف جديد
+               class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white rounded-lg transition-all duration-200 shadow-md hover:shadow-lg font-semibold">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                مشرف جديد
             </a>
         @endcan
     </div>

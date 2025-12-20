@@ -46,12 +46,18 @@ class SubscriptionRequestController extends Controller
      * 
      * @param Request $httpRequest
      * @param SubscriptionRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
     public function approve(Request $httpRequest, SubscriptionRequest $request)
     {
         // التحقق من أن الطلب في حالة معلقة
         if ($request->status !== 'pending') {
+            if ($httpRequest->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'لا يمكن الموافقة على هذا الطلب.'
+                ], 400);
+            }
             return back()->with('error', 'لا يمكن الموافقة على هذا الطلب.');
         }
 
@@ -93,6 +99,13 @@ class SubscriptionRequestController extends Controller
         // إرسال إشعار للمالك
         $request->user->notify(new SubscriptionRequestStatusNotification($request->refresh()));
 
+        if ($httpRequest->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'تم قبول طلب الاشتراك بنجاح.'
+            ]);
+        }
+
         return back()->with('success', 'تم قبول طلب الاشتراك بنجاح.');
     }
 
@@ -101,12 +114,18 @@ class SubscriptionRequestController extends Controller
      * 
      * @param Request $httpRequest
      * @param SubscriptionRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
     public function reject(Request $httpRequest, SubscriptionRequest $request)
     {
         // التحقق من أن الطلب في حالة معلقة
         if ($request->status !== 'pending') {
+            if ($httpRequest->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'لا يمكن رفض هذا الطلب.'
+                ], 400);
+            }
             return back()->with('error', 'لا يمكن رفض هذا الطلب.');
         }
 
@@ -125,6 +144,13 @@ class SubscriptionRequestController extends Controller
 
         // إرسال إشعار للمالك
         $request->user->notify(new SubscriptionRequestStatusNotification($request->refresh()));
+
+        if ($httpRequest->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'تم رفض طلب الاشتراك.'
+            ]);
+        }
 
         return back()->with('success', 'تم رفض طلب الاشتراك.');
     }

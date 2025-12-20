@@ -26,10 +26,14 @@ use App\Http\Controllers\Owner\SubscriptionController as OwnerSubscriptionContro
 use App\Http\Controllers\Owner\ReportController as OwnerReportController;
 use App\Http\Controllers\Owner\NotificationController as OwnerNotificationController;
 use App\Http\Controllers\Owner\TicketController as OwnerTicketController;
+use App\Http\Controllers\LanguageController;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Language Switch Route
+Route::get('/lang/{locale}', [LanguageController::class, 'switch'])->name('lang.switch');
 
 // Admin Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
@@ -38,7 +42,15 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
     Route::get('/users/{user}', [AdminUserController::class, 'show'])->name('users.show');
     Route::post('/users/{user}/toggle-status', [AdminUserController::class, 'toggleStatus'])->name('users.toggle-status');
-    Route::get('/roles', [AdminRoleController::class, 'index'])->name('roles.index');
+    // Roles Management Routes
+    Route::prefix('roles')->name('roles.')->group(function () {
+        Route::get('/', [AdminRoleController::class, 'index'])->name('index');
+        Route::get('/create', [AdminRoleController::class, 'create'])->name('create');
+        Route::post('/', [AdminRoleController::class, 'store'])->name('store');
+        Route::get('/{role}/edit', [AdminRoleController::class, 'edit'])->name('edit');
+        Route::put('/{role}', [AdminRoleController::class, 'update'])->name('update');
+        Route::delete('/{role}', [AdminRoleController::class, 'destroy'])->name('destroy');
+    });
     Route::get('/services', [AdminServiceController::class, 'index'])->name('services.index');
     Route::get('/logs', [AdminLogController::class, 'index'])->name('logs.index');
     // AI Reports Routes

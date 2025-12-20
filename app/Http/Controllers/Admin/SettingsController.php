@@ -20,6 +20,12 @@ class SettingsController extends Controller
      */
     public function index()
     {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = auth()->user();
+        if (!$user->hasRole('super_admin') && !$user->can('view system settings')) {
+            abort(403, 'غير مصرح لك بعرض الإعدادات.');
+        }
+
         $user = auth()->user();
         
         // جلب الجلسات النشطة
@@ -40,6 +46,12 @@ class SettingsController extends Controller
      */
     public function updateProfile(Request $request)
     {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = auth()->user();
+        if (!$user->hasRole('super_admin') && !$user->can('change system settings')) {
+            abort(403, 'غير مصرح لك بتغيير الإعدادات.');
+        }
+
         $user = auth()->user();
         
         // تحديث المعلومات الشخصية مع إضافة phone
@@ -86,6 +98,11 @@ class SettingsController extends Controller
      */
     public function updatePassword(Request $request, UpdateUserPassword $updater)
     {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = auth()->user();
+        if (!$user->hasRole('super_admin') && !$user->can('change system settings')) {
+            abort(403, 'غير مصرح لك بتغيير الإعدادات.');
+        }
         $user = auth()->user();
         
         $updater->update($user, $request->all());
@@ -99,6 +116,11 @@ class SettingsController extends Controller
      */
     public function updatePreferences(Request $request)
     {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = auth()->user();
+        if (!$user->hasRole('super_admin') && !$user->can('change system settings')) {
+            abort(403, 'غير مصرح لك بتغيير الإعدادات.');
+        }
         $user = auth()->user();
         
         $validated = $request->validate([

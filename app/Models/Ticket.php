@@ -103,12 +103,12 @@ class Ticket extends Model
     public function getTypeColorAttribute(): string
     {
         return match($this->type) {
-            'technical' => 'bg-red-100 text-red-800',
-            'subscription' => 'bg-purple-100 text-purple-800',
-            'messages' => 'bg-blue-100 text-blue-800',
-            'general' => 'bg-gray-100 text-gray-800',
-            'suggestion' => 'bg-green-100 text-green-800',
-            default => 'bg-gray-100 text-gray-800',
+            'technical' => 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-800',
+            'subscription' => 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 border border-purple-200 dark:border-purple-800',
+            'messages' => 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800',
+            'general' => 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border border-gray-200 dark:border-gray-600',
+            'suggestion' => 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-800',
+            default => 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border border-gray-200 dark:border-gray-600',
         };
     }
 
@@ -136,11 +136,11 @@ class Ticket extends Model
     public function getStatusColorAttribute(): string
     {
         return match($this->status) {
-            'open' => 'bg-blue-100 text-blue-800',
-            'in_progress' => 'bg-yellow-100 text-yellow-800',
-            'waiting_user' => 'bg-orange-100 text-orange-800',
-            'closed' => 'bg-gray-100 text-gray-800',
-            default => 'bg-gray-100 text-gray-800',
+            'open' => 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800',
+            'in_progress' => 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-800',
+            'waiting_user' => 'bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 border border-orange-200 dark:border-orange-800',
+            'closed' => 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border border-gray-200 dark:border-gray-600',
+            default => 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border border-gray-200 dark:border-gray-600',
         };
     }
 

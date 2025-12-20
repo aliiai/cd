@@ -14,19 +14,17 @@
                     العودة
                 </a>
             </div>
-            <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">إضافة مشرف جديد</h1>
-            <p class="text-lg text-gray-600 dark:text-gray-400">إنشاء حساب مشرف جديد واختيار الدور المناسب</p>
+            <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">تعديل المشرف: {{ $admin->name }}</h1>
+            <p class="text-lg text-gray-600 dark:text-gray-400">تعديل بيانات المشرف والدور المخصص له</p>
         </div>
 
         <!-- Form -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div class="bg-gradient-to-r from-primary-600 via-primary-500 to-secondary-600 px-6 py-4">
-                <h2 class="text-lg font-bold text-white">بيانات المشرف</h2>
-            </div>
-            <div class="p-6">
-                <form action="{{ route('admin.admins.store') }}" method="POST">
-                    @csrf
-                    
+            <form action="{{ route('admin.admins.update', $admin) }}" method="POST">
+                @csrf
+                @method('PUT')
+                
+                <div class="p-6 space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Name -->
                         <div>
@@ -36,9 +34,9 @@
                             <input type="text" 
                                    id="name" 
                                    name="name" 
-                                   value="{{ old('name') }}"
+                                   value="{{ old('name', $admin->name) }}"
                                    required
-                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-gray-100 @error('name') border-red-500 @enderror">
+                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-gray-100">
                             @error('name')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -52,9 +50,9 @@
                             <input type="email" 
                                    id="email" 
                                    name="email" 
-                                   value="{{ old('email') }}"
+                                   value="{{ old('email', $admin->email) }}"
                                    required
-                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-gray-100 @error('email') border-red-500 @enderror">
+                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-gray-100">
                             @error('email')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -63,14 +61,13 @@
                         <!-- Password -->
                         <div>
                             <label for="password" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                                كلمة المرور <span class="text-red-500">*</span>
+                                كلمة المرور (اتركه فارغاً للاحتفاظ بالكلمة الحالية)
                             </label>
                             <input type="password" 
                                    id="password" 
                                    name="password" 
-                                   required
                                    minlength="8"
-                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-gray-100 @error('password') border-red-500 @enderror">
+                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-gray-100">
                             @error('password')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -80,12 +77,11 @@
                         <!-- Password Confirmation -->
                         <div>
                             <label for="password_confirmation" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                                تأكيد كلمة المرور <span class="text-red-500">*</span>
+                                تأكيد كلمة المرور
                             </label>
                             <input type="password" 
                                    id="password_confirmation" 
                                    name="password_confirmation" 
-                                   required
                                    minlength="8"
                                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-gray-100">
                         </div>
@@ -98,10 +94,10 @@
                             <select id="role" 
                                     name="role" 
                                     required
-                                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-gray-100 @error('role') border-red-500 @enderror">
+                                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-gray-100">
                                 <option value="">اختر الدور</option>
                                 @foreach($roles as $role)
-                                    <option value="{{ $role->name }}" {{ old('role') == $role->name ? 'selected' : '' }}>
+                                    <option value="{{ $role->name }}" {{ old('role', $admin->roles->first()?->name) == $role->name ? 'selected' : '' }}>
                                         {{ ucfirst(str_replace('_', ' ', $role->name)) }}
                                     </option>
                                 @endforeach
@@ -122,28 +118,26 @@
                                        id="is_active" 
                                        name="is_active" 
                                        value="1"
-                                       {{ old('is_active', true) ? 'checked' : '' }}
+                                       {{ old('is_active', $admin->is_active) ? 'checked' : '' }}
                                        class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500">
                                 <label for="is_active" class="mr-2 text-sm text-gray-700 dark:text-gray-300">نشط</label>
                             </div>
                         </div>
                     </div>
+                </div>
 
-
-                </form>
-            </div>
-            <!-- Actions -->
-            <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700/50 border-t border-gray-200 dark:border-gray-600 flex items-center justify-end gap-4">
-                <a href="{{ route('admin.admins.index') }}" 
-                   class="px-6 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors duration-200 font-semibold">
-                    إلغاء
-                </a>
-                <button type="submit" 
-                        form="createAdminForm"
-                        class="px-6 py-2 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold">
-                    إنشاء المشرف
-                </button>
-            </div>
+                <!-- Actions -->
+                <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700/50 border-t border-gray-200 dark:border-gray-600 flex items-center justify-end gap-4">
+                    <a href="{{ route('admin.admins.index') }}" 
+                       class="px-6 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors duration-200 font-semibold">
+                        إلغاء
+                    </a>
+                    <button type="submit" 
+                            class="px-6 py-2 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold">
+                        حفظ التغييرات
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

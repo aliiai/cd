@@ -6,8 +6,8 @@
         
         {{-- ========== Header Section ========== --}}
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">إدارة المستخدمين</h1>
-            <p class="text-sm text-gray-600 dark:text-gray-400">إدارة جميع المستخدمين في النظام</p>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">{{ __('common.users_management') }}</h1>
+            <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('common.users_management_description') }}</p>
         </div>
 
         {{-- ========== Success/Error Messages ========== --}}
@@ -44,14 +44,14 @@
                                 <svg class="w-4 h-4 ml-2 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                 </svg>
-                                البحث
+                                {{ __('common.search') }}
                             </div>
                         </label>
                         <input type="text" 
                                id="search" 
                                name="search" 
                                value="{{ request('search') }}"
-                               placeholder="ابحث بالاسم أو البريد الإلكتروني..."
+                               placeholder="{{ __('common.search_by_name_or_email') }}"
                                class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors">
                     </div>
                     
@@ -62,15 +62,15 @@
                                 <svg class="w-4 h-4 ml-2 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
                                 </svg>
-                                حالة الحساب
+                                {{ __('common.account_status') }}
                             </div>
                         </label>
                         <select id="status" 
                                 name="status" 
                                 class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400 appearance-none cursor-pointer transition-colors">
-                            <option value="all" {{ request('status') == 'all' || !request('status') ? 'selected' : '' }}>لجميع الحالات</option>
-                            <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>نشط</option>
-                            <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>موقوف</option>
+                            <option value="all" {{ request('status') == 'all' || !request('status') ? 'selected' : '' }}>{{ __('common.all_statuses') }}</option>
+                            <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>{{ __('common.active') }}</option>
+                            <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>{{ __('common.suspended') }}</option>
                         </select>
                     </div>
                     
@@ -81,15 +81,15 @@
                                 <svg class="w-4 h-4 ml-2 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"></path>
                                 </svg>
-                                ترتيب حسب
+                                {{ __('common.sort_by') }}
                             </div>
                         </label>
                         <select id="sort_by" 
                                 name="sort_by" 
                                 class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400 appearance-none cursor-pointer transition-colors">
-                            <option value="created_at" {{ request('sort_by') == 'created_at' || !request('sort_by') ? 'selected' : '' }}>تاريخ التسجيل</option>
-                            <option value="name" {{ request('sort_by') == 'name' ? 'selected' : '' }}>الاسم</option>
-                            <option value="email" {{ request('sort_by') == 'email' ? 'selected' : '' }}>البريد الإلكتروني</option>
+                            <option value="created_at" {{ request('sort_by') == 'created_at' || !request('sort_by') ? 'selected' : '' }}>{{ __('common.registration_date') }}</option>
+                            <option value="name" {{ request('sort_by') == 'name' ? 'selected' : '' }}>{{ __('common.name') }}</option>
+                            <option value="email" {{ request('sort_by') == 'email' ? 'selected' : '' }}>{{ __('common.email') }}</option>
                         </select>
                     </div>
                 </form>
@@ -165,7 +165,7 @@
         params.append('sort_dir', 'desc');
         
         // Show loading
-        document.getElementById('usersTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div><p class="mt-4 text-gray-500 dark:text-gray-400">جاري التحميل...</p></div>';
+        document.getElementById('usersTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div><p class="mt-4 text-gray-500 dark:text-gray-400">{{ __('common.loading') }}</p></div>';
         
         fetch(`{{ route('admin.users.index') }}?${params.toString()}`, {
             method: 'GET',
@@ -184,7 +184,7 @@
         })
         .catch(error => {
             console.error('Error:', error);
-            document.getElementById('usersTableContainer').innerHTML = '<div class="text-center py-12 text-red-500 dark:text-red-400">حدث خطأ أثناء تحميل البيانات</div>';
+            document.getElementById('usersTableContainer').innerHTML = '<div class="text-center py-12 text-red-500 dark:text-red-400">{{ __('common.error_loading_data') }}</div>';
         });
     }
 
@@ -215,7 +215,7 @@
             e.preventDefault();
             const url = e.target.closest('a').href;
             
-            document.getElementById('usersTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div><p class="mt-4 text-gray-500 dark:text-gray-400">جاري التحميل...</p></div>';
+            document.getElementById('usersTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div><p class="mt-4 text-gray-500 dark:text-gray-400">{{ __('common.loading') }}</p></div>';
             
             fetch(url, {
                 method: 'GET',
@@ -232,7 +232,7 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                document.getElementById('usersTableContainer').innerHTML = '<div class="text-center py-12 text-red-500 dark:text-red-400">حدث خطأ أثناء تحميل البيانات</div>';
+                document.getElementById('usersTableContainer').innerHTML = '<div class="text-center py-12 text-red-500 dark:text-red-400">{{ __('common.error_loading_data') }}</div>';
             });
         }
     });
@@ -247,10 +247,10 @@
             const isToggleStatus = action.includes('toggle-status');
             const button = form.querySelector('button[type="submit"]');
             const userIsActive = button?.classList.contains('bg-red-100');
-            const actionText = userIsActive ? 'إيقاف' : 'تفعيل';
+            const actionText = userIsActive ? '{{ __('common.deactivate') }}' : '{{ __('common.activate') }}';
             
             swalConfirm({
-                text: `هل تريد ${actionText} هذا الحساب؟`,
+                text: userIsActive ? '{{ __('common.deactivate_confirmation') }}' : '{{ __('common.activate_confirmation') }}',
                 confirmButtonColor: userIsActive ? '#EF4444' : '#10B981',
             }).then((result) => {
                 if (result.isConfirmed) {

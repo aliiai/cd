@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>لوحة تحكم المدير - {{ config('app.name', 'Laravel') }}</title>
+    <title>{{ __('common.admin_panel') }} - {{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts - Arabic Support -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,7 +23,7 @@
 <body class="font-sans antialiased h-screen overflow-hidden bg-gray-50 dark:bg-gray-900" style="font-family: 'Cairo', sans-serif;">
     <div class="flex h-full">
         <!-- Sidebar -->
-        <aside class="flex-shrink-0 transition-all duration-300 h-full fixed right-0 top-0 z-30">
+        <aside class="flex-shrink-0 transition-all duration-300 h-full fixed {{ app()->getLocale() === 'ar' ? 'right-0' : 'left-0' }} top-0 z-30">
             @livewire('sidebar')
         </aside>
 
@@ -48,9 +48,16 @@
             const mainContent = document.getElementById('main-content');
             
             function updateMargin() {
-                const sidebarWidth = sidebar?.offsetWidth || 256;
+                const sidebarWidth = sidebar?.offsetWidth || 320;
+                const isRTL = document.documentElement.dir === 'rtl';
                 if (mainContent) {
-                    mainContent.style.marginRight = sidebarWidth + 'px';
+                    if (isRTL) {
+                        mainContent.style.marginRight = sidebarWidth + 'px';
+                        mainContent.style.marginLeft = '0';
+                    } else {
+                        mainContent.style.marginLeft = sidebarWidth + 'px';
+                        mainContent.style.marginRight = '0';
+                    }
                 }
             }
             
@@ -76,20 +83,21 @@
         
         // دالة تأكيد مع Sweet Alert
         window.swalConfirm = function(options) {
+            const isRTL = document.documentElement.dir === 'rtl';
             const defaultOptions = {
-                title: 'هل أنت متأكد؟',
-                text: 'هل تريد المتابعة؟',
+                title: '{{ __('common.are_you_sure') }}',
+                text: '{{ __('common.do_you_want_to_continue') }}',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#5C70E0',
                 cancelButtonColor: '#6B7280',
-                confirmButtonText: 'نعم، متأكد',
-                cancelButtonText: 'إلغاء',
-                reverseButtons: true,
+                confirmButtonText: '{{ __('common.confirm_button_text') }}',
+                cancelButtonText: '{{ __('common.cancel_button_text') }}',
+                reverseButtons: isRTL,
                 customClass: {
-                    popup: 'rtl',
-                    title: 'text-right',
-                    content: 'text-right',
+                    popup: isRTL ? 'rtl' : 'ltr',
+                    title: isRTL ? 'text-right' : 'text-left',
+                    content: isRTL ? 'text-right' : 'text-left',
                 }
             };
             
@@ -97,49 +105,52 @@
         };
         
         // دالة رسالة نجاح
-        window.swalSuccess = function(message, title = 'تم بنجاح!') {
+        window.swalSuccess = function(message, title = '{{ __('common.success_message') }}') {
+            const isRTL = document.documentElement.dir === 'rtl';
             return Swal.fire({
                 title: title,
                 text: message,
                 icon: 'success',
                 confirmButtonColor: '#10B981',
-                confirmButtonText: 'حسناً',
+                confirmButtonText: '{{ __('common.ok') }}',
                 customClass: {
-                    popup: 'rtl',
-                    title: 'text-right',
-                    content: 'text-right',
+                    popup: isRTL ? 'rtl' : 'ltr',
+                    title: isRTL ? 'text-right' : 'text-left',
+                    content: isRTL ? 'text-right' : 'text-left',
                 }
             });
         };
         
         // دالة رسالة خطأ
-        window.swalError = function(message, title = 'خطأ!') {
+        window.swalError = function(message, title = '{{ __('common.error_message') }}') {
+            const isRTL = document.documentElement.dir === 'rtl';
             return Swal.fire({
                 title: title,
                 text: message,
                 icon: 'error',
                 confirmButtonColor: '#EF4444',
-                confirmButtonText: 'حسناً',
+                confirmButtonText: '{{ __('common.ok') }}',
                 customClass: {
-                    popup: 'rtl',
-                    title: 'text-right',
-                    content: 'text-right',
+                    popup: isRTL ? 'rtl' : 'ltr',
+                    title: isRTL ? 'text-right' : 'text-left',
+                    content: isRTL ? 'text-right' : 'text-left',
                 }
             });
         };
         
         // دالة رسالة معلومات
-        window.swalInfo = function(message, title = 'تنبيه') {
+        window.swalInfo = function(message, title = '{{ __('common.info_message') }}') {
+            const isRTL = document.documentElement.dir === 'rtl';
             return Swal.fire({
                 title: title,
                 text: message,
                 icon: 'info',
                 confirmButtonColor: '#5C70E0',
-                confirmButtonText: 'حسناً',
+                confirmButtonText: '{{ __('common.ok') }}',
                 customClass: {
-                    popup: 'rtl',
-                    title: 'text-right',
-                    content: 'text-right',
+                    popup: isRTL ? 'rtl' : 'ltr',
+                    title: isRTL ? 'text-right' : 'text-left',
+                    content: isRTL ? 'text-right' : 'text-left',
                 }
             });
         };
@@ -172,10 +183,10 @@
                     const action = form.action;
                     const button = form.querySelector('button[type="submit"]');
                     const isActive = button?.classList.contains('bg-red-100') || button?.classList.contains('bg-red-600');
-                    const actionText = isActive ? 'إيقاف' : 'تفعيل';
+                    const actionText = isActive ? '{{ __('common.deactivate') }}' : '{{ __('common.activate') }}';
                     
                     swalConfirm({
-                        text: `هل تريد ${actionText} هذا الحساب؟`,
+                        text: isActive ? '{{ __('common.deactivate_confirmation') }}' : '{{ __('common.activate_confirmation') }}',
                         confirmButtonColor: isActive ? '#EF4444' : '#10B981',
                     }).then((result) => {
                         if (result.isConfirmed) {
@@ -195,16 +206,16 @@
                             })
                             .then(data => {
                                 if (data.success) {
-                                    swalSuccess(data.message || `تم ${actionText} الحساب بنجاح`).then(() => {
+                                    swalSuccess(data.message || (isActive ? '{{ __('common.deactivate_success') }}' : '{{ __('common.activate_success') }}')).then(() => {
                                         window.location.reload();
                                     });
                                 } else {
-                                    swalError(data.message || 'حدث خطأ أثناء تنفيذ العملية');
+                                    swalError(data.message || '{{ __('common.something_went_wrong') }}');
                                 }
                             })
                             .catch(error => {
                                 console.error('Error:', error);
-                                swalError('حدث خطأ أثناء تنفيذ العملية');
+                                swalError('{{ __('common.something_went_wrong') }}');
                             });
                         }
                     });
@@ -214,11 +225,11 @@
                 if (form.classList.contains('delete-form')) {
                     e.preventDefault();
                     const action = form.action;
-                    const deleteText = form.dataset.deleteText || 'حذف';
-                    const itemName = form.dataset.itemName || 'هذا العنصر';
+                    const deleteText = form.dataset.deleteText || '{{ __('common.delete') }}';
+                    const itemName = form.dataset.itemName || '{{ __('common.item') }}';
                     
                     swalConfirm({
-                        text: `هل أنت متأكد من ${deleteText} ${itemName}؟`,
+                        text: '{{ __('common.delete_item_confirmation') }}'.replace(':item', itemName),
                         confirmButtonColor: '#EF4444',
                         icon: 'warning',
                     }).then((result) => {
@@ -241,16 +252,16 @@
                             })
                             .then(data => {
                                 if (data.success) {
-                                    swalSuccess(data.message || `تم ${deleteText} بنجاح`).then(() => {
+                                    swalSuccess(data.message || '{{ __('common.delete_success') }}').then(() => {
                                         window.location.reload();
                                     });
                                 } else {
-                                    swalError(data.message || 'حدث خطأ أثناء تنفيذ العملية');
+                                    swalError(data.message || '{{ __('common.something_went_wrong') }}');
                                 }
                             })
                             .catch(error => {
                                 console.error('Error:', error);
-                                swalError('حدث خطأ أثناء تنفيذ العملية');
+                                swalError('{{ __('common.something_went_wrong') }}');
                             });
                         }
                     });
@@ -262,7 +273,7 @@
                     const action = form.action;
                     
                     swalConfirm({
-                        text: 'هل أنت متأكد من إغلاق هذه الشكوى؟',
+                        text: '{{ __('common.close_ticket_confirmation') }}',
                         confirmButtonColor: '#EF4444',
                         icon: 'warning',
                     }).then((result) => {
@@ -283,16 +294,16 @@
                             })
                             .then(data => {
                                 if (data.success) {
-                                    swalSuccess(data.message || 'تم إغلاق الشكوى بنجاح').then(() => {
+                                    swalSuccess(data.message || '{{ __('common.close_ticket_success') }}').then(() => {
                                         window.location.reload();
                                     });
                                 } else {
-                                    swalError(data.message || 'حدث خطأ أثناء تنفيذ العملية');
+                                    swalError(data.message || '{{ __('common.something_went_wrong') }}');
                                 }
                             })
                             .catch(error => {
                                 console.error('Error:', error);
-                                swalError('حدث خطأ أثناء تنفيذ العملية');
+                                swalError('{{ __('common.something_went_wrong') }}');
                             });
                         }
                     });

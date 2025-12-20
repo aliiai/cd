@@ -1,36 +1,52 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="py-12">
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-primary-50 to-secondary-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12">
     <div class="w-full mx-auto sm:px-6 lg:px-8">
         <!-- Header -->
-        <div class="mb-6">
-            <h1 class="text-3xl font-bold text-gray-900">تقارير مقدمي الخدمة</h1>
-            <p class="text-gray-600 mt-2">مراقبة وتحليل أداء مقدمي الخدمة</p>
+        <div class="mb-8">
+            <a href="{{ route('admin.ai-reports.index') }}" 
+               class="inline-flex items-center text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300 text-sm mb-4 transition-colors">
+                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+                العودة إلى التقارير
+            </a>
+            <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">تقارير مقدمي الخدمة</h1>
+            <p class="text-lg text-gray-600 dark:text-gray-400">مراقبة وتحليل أداء مقدمي الخدمة</p>
         </div>
 
         <!-- Search and Filters -->
-        <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
             <form id="searchForm" method="GET" action="{{ route('admin.ai-reports.service-providers') }}" class="flex flex-wrap gap-4">
                 <!-- Search -->
                 <div class="flex-1 min-w-[200px]">
-                    <input 
-                        type="text" 
-                        id="searchInput"
-                        name="search" 
-                        value="{{ request('search') }}"
-                        placeholder="البحث بالاسم أو البريد الإلكتروني..."
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                        autocomplete="off"
-                    >
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">البحث</label>
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            id="searchInput"
+                            name="search" 
+                            value="{{ request('search') }}"
+                            placeholder="البحث بالاسم أو البريد الإلكتروني..."
+                            class="w-full px-4 py-2.5 pl-12 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400"
+                            autocomplete="off"
+                        >
+                        <div class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Sort By -->
                 <div class="min-w-[150px]">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">ترتيب حسب</label>
                     <select 
                         id="sortByInput"
                         name="sort_by" 
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                        class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-gray-100"
                     >
                         <option value="name" {{ request('sort_by') == 'name' ? 'selected' : '' }}>الاسم</option>
                         <option value="ai_usage" {{ request('sort_by') == 'ai_usage' ? 'selected' : '' }}>استهلاك AI</option>
@@ -40,10 +56,11 @@
 
                 <!-- Sort Order -->
                 <div class="min-w-[120px]">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">الاتجاه</label>
                     <select 
                         id="sortOrderInput"
                         name="sort_order" 
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                        class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-gray-100"
                     >
                         <option value="asc" {{ request('sort_order') == 'asc' ? 'selected' : '' }}>تصاعدي</option>
                         <option value="desc" {{ request('sort_order') == 'desc' ? 'selected' : '' }}>تنازلي</option>
@@ -51,50 +68,55 @@
                 </div>
 
                 <!-- Reset Button -->
-                <a 
-                    href="{{ route('admin.ai-reports.service-providers') }}" 
-                    class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-200"
-                >
-                    إعادة تعيين
-                </a>
+                <div class="flex items-end">
+                    <a 
+                        href="{{ route('admin.ai-reports.service-providers') }}" 
+                        class="px-6 py-2.5 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200 font-medium"
+                    >
+                        إعادة تعيين
+                    </a>
+                </div>
             </form>
         </div>
 
         <!-- Loading Indicator -->
-        <div id="loadingIndicator" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 z-50 flex items-center justify-center">
-            <div class="bg-white rounded-lg p-6 flex items-center space-x-3">
-                <svg class="animate-spin h-5 w-5 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <div id="loadingIndicator" class="hidden fixed inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center">
+            <div class="bg-white dark:bg-gray-800 rounded-xl p-8 flex items-center space-x-3 shadow-2xl">
+                <svg class="animate-spin h-6 w-6 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                <span class="text-gray-700">جاري البحث...</span>
+                <span class="text-gray-700 dark:text-gray-300 font-medium">جاري البحث...</span>
             </div>
         </div>
 
         <!-- Table -->
-        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div class="bg-gradient-to-r from-primary-600 to-primary-700 dark:from-primary-700 dark:to-primary-800 px-6 py-4">
+                <h2 class="text-xl font-bold text-white">قائمة مقدمي الخدمة</h2>
+            </div>
             <div class="overflow-x-auto" id="tableContainer">
-                <table class="w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
+                <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-700/50">
                         <tr>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">مقدم الخدمة</th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الحالة</th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الباقة الحالية</th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">عدد المديونين</th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الرسائل المرسلة</th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">نسبة التحصيل</th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">AI Usage</th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">إجراءات</th>
+                            <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">مقدم الخدمة</th>
+                            <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">الحالة</th>
+                            <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">الباقة الحالية</th>
+                            <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">عدد المديونين</th>
+                            <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">الرسائل المرسلة</th>
+                            <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">نسبة التحصيل</th>
+                            <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">AI Usage</th>
+                            <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">إجراءات</th>
                         </tr>
                     </thead>
-                    <tbody id="tableBody" class="bg-white divide-y divide-gray-200">
+                    <tbody id="tableBody" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         @include('admin.ai-reports.partials.providers-table')
                     </tbody>
                 </table>
             </div>
 
             <!-- Pagination -->
-            <div id="paginationContainer" class="px-6 py-4 border-t border-gray-200">
+            <div id="paginationContainer" class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/30">
                 {{ $providers->links() }}
             </div>
         </div>
@@ -112,24 +134,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadingIndicator = document.getElementById('loadingIndicator');
     
     let searchTimeout;
-    const searchDelay = 500; // تأخير 500ms قبل البحث
+    const searchDelay = 500;
 
-    // دالة لإرسال طلب AJAX
     function performSearch() {
         const search = searchInput.value;
         const sortBy = sortByInput.value;
         const sortOrder = sortOrderInput.value;
 
-        // إظهار مؤشر التحميل
         loadingIndicator.classList.remove('hidden');
 
-        // بناء URL مع المعاملات
         const url = new URL('{{ route('admin.ai-reports.service-providers') }}', window.location.origin);
         if (search) url.searchParams.set('search', search);
         url.searchParams.set('sort_by', sortBy);
         url.searchParams.set('sort_order', sortOrder);
 
-        // إرسال طلب AJAX
         fetch(url.toString(), {
             method: 'GET',
             headers: {
@@ -145,41 +163,32 @@ document.addEventListener('DOMContentLoaded', function() {
             return response.json();
         })
         .then(data => {
-            // تحديث الجدول
             tableBody.innerHTML = data.html;
-            // تحديث Pagination
             if (data.pagination) {
                 paginationContainer.innerHTML = data.pagination;
             }
-            // إخفاء مؤشر التحميل
             loadingIndicator.classList.add('hidden');
         })
         .catch(error => {
             console.error('Error:', error);
             loadingIndicator.classList.add('hidden');
-            // إظهار رسالة خطأ للمستخدم
             tableBody.innerHTML = '<tr><td colspan="8" class="px-6 py-4 text-center text-red-500">حدث خطأ أثناء البحث. يرجى المحاولة مرة أخرى.</td></tr>';
         });
     }
 
-    // البحث عند الكتابة في حقل البحث
     searchInput.addEventListener('input', function() {
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(performSearch, searchDelay);
     });
 
-    // البحث عند تغيير الترتيب
     sortByInput.addEventListener('change', performSearch);
     sortOrderInput.addEventListener('change', performSearch);
 
-    // دالة لتحميل صفحة معينة من pagination
     function loadPage(url) {
         if (!url || url === '#' || url === 'javascript:void(0)') return;
 
-        // إظهار مؤشر التحميل
         loadingIndicator.classList.remove('hidden');
 
-        // إرسال طلب AJAX
         fetch(url, {
             method: 'GET',
             headers: {
@@ -195,13 +204,10 @@ document.addEventListener('DOMContentLoaded', function() {
             return response.json();
         })
         .then(data => {
-            // تحديث الجدول
             tableBody.innerHTML = data.html;
-            // تحديث Pagination
             if (data.pagination) {
                 paginationContainer.innerHTML = data.pagination;
             }
-            // تحديث قيمة البحث والترتيب من الـ URL
             const urlObj = new URL(url, window.location.origin);
             if (urlObj.searchParams.has('search')) {
                 searchInput.value = urlObj.searchParams.get('search') || '';
@@ -212,29 +218,21 @@ document.addEventListener('DOMContentLoaded', function() {
             if (urlObj.searchParams.has('sort_order')) {
                 sortOrderInput.value = urlObj.searchParams.get('sort_order') || 'asc';
             }
-            // تحديث URL في المتصفح بدون إعادة تحميل
             window.history.pushState({}, '', url);
-            // التمرير لأعلى الجدول
             document.getElementById('tableContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
-            // إخفاء مؤشر التحميل
             loadingIndicator.classList.add('hidden');
         })
         .catch(error => {
             console.error('Error:', error);
             loadingIndicator.classList.add('hidden');
-            // إظهار رسالة خطأ للمستخدم
             tableBody.innerHTML = '<tr><td colspan="8" class="px-6 py-4 text-center text-red-500">حدث خطأ أثناء تحميل الصفحة. يرجى المحاولة مرة أخرى.</td></tr>';
         });
     }
 
-    // معالجة النقر على pagination links
     document.addEventListener('click', function(e) {
-        // التحقق من أن النقر كان على pagination link
         const paginationLink = e.target.closest('a[href*="page="]');
         if (paginationLink && paginationContainer.contains(paginationLink)) {
             e.preventDefault();
-            
-            // الحصول على URL من الرابط
             const url = paginationLink.getAttribute('href');
             if (url && url !== '#' && url !== 'javascript:void(0)') {
                 loadPage(url);
@@ -242,13 +240,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // معالجة زر الرجوع/الأمام في المتصفح
     window.addEventListener('popstate', function(e) {
-        // إعادة تحميل الصفحة عند استخدام زر الرجوع
         window.location.reload();
     });
 });
 </script>
 @endpush
 @endsection
-

@@ -24,6 +24,11 @@ class TicketController extends Controller
      */
     public function index(Request $request)
     {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = auth()->user();
+        if (!$user->hasRole('super_admin') && !$user->can('view support tickets')) {
+            abort(403, 'غير مصرح لك بعرض التذاكر.');
+        }
         $query = Ticket::with(['messages' => function($q) {
             $q->latest()->limit(1);
         }, 'user']);
@@ -78,6 +83,11 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = auth()->user();
+        if (!$user->hasRole('super_admin') && !$user->can('view support tickets')) {
+            abort(403, 'غير مصرح لك بعرض التذاكر.');
+        }
         $ticket->load(['messages' => function($query) {
             $query->orderBy('created_at', 'asc');
         }, 'messages.user', 'user']);
@@ -94,6 +104,12 @@ class TicketController extends Controller
      */
     public function reply(Request $request, Ticket $ticket)
     {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = auth()->user();
+        if (!$user->hasRole('super_admin') && !$user->can('manage support tickets')) {
+            abort(403, 'غير مصرح لك بإدارة التذاكر.');
+        }
+
         // التحقق من أن الشكوى غير مغلقة
         if ($ticket->status === 'closed') {
             return back()->with('error', 'لا يمكن الرد على شكوى مغلقة.');
@@ -141,6 +157,11 @@ class TicketController extends Controller
      */
     public function updateStatus(Request $request, Ticket $ticket)
     {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = auth()->user();
+        if (!$user->hasRole('super_admin') && !$user->can('manage support tickets')) {
+            abort(403, 'غير مصرح لك بإدارة التذاكر.');
+        }
         $validated = $request->validate([
             'status' => 'required|in:open,in_progress,waiting_user,closed',
         ]);

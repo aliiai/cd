@@ -25,14 +25,17 @@ class AdminController extends Controller
      */
     public function index(Request $request)
     {
-        // التحقق من الصلاحية
-        if (!Auth::user()->can('view admins')) {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = Auth::user();
+        if (!$user->hasRole('super_admin') && !$user->can('view admins')) {
             abort(403, 'غير مصرح لك بعرض المشرفين.');
         }
 
-        // جلب جميع المستخدمين الذين لديهم دور admin أو super_admin
-        $query = User::role(['admin', 'super_admin'])
-            ->with('roles', 'permissions');
+        // جلب جميع المستخدمين الذين لديهم دور admin أو super_admin أو أي دور مخصص
+        $query = User::whereHas('roles', function($q) {
+                $q->where('name', '!=', 'owner');
+            })
+            ->with('roles');
         
         // البحث
         if ($request->has('search') && $request->search) {
@@ -65,7 +68,7 @@ class AdminController extends Controller
         $admins = $query->paginate(10);
         
         // جلب الأدوار المتاحة
-        $roles = Role::whereIn('name', ['admin', 'super_admin'])->get();
+        $roles = Role::where('name', '!=', 'owner')->orderBy('name', 'asc')->get();
         
         // إذا كان الطلب AJAX
         if ($request->ajax()) {
@@ -85,19 +88,16 @@ class AdminController extends Controller
      */
     public function create()
     {
-        // التحقق من الصلاحية
-        if (!Auth::user()->can('create admins')) {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = Auth::user();
+        if (!$user->hasRole('super_admin') && !$user->can('create admins')) {
             abort(403, 'غير مصرح لك بإنشاء مشرف جديد.');
         }
 
-        $roles = Role::whereIn('name', ['admin', 'super_admin'])->get();
-        $permissions = Permission::all()->groupBy(function($permission) {
-            // تجميع الصلاحيات حسب الفئة
-            $parts = explode(' ', $permission->name);
-            return $parts[0]; // أول كلمة (manage, view, create, etc.)
-        });
+        // جلب جميع الأدوار (بما في ذلك الأدوار المخصصة)
+        $roles = Role::where('name', '!=', 'owner')->orderBy('name', 'asc')->get();
         
-        return view('admin.admins.create', compact('roles', 'permissions'));
+        return view('admin.admins.create', compact('roles'));
     }
 
     /**
@@ -108,8 +108,9 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        // التحقق من الصلاحية
-        if (!Auth::user()->can('create admins')) {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = Auth::user();
+        if (!$user->hasRole('super_admin') && !$user->can('create admins')) {
             abort(403, 'غير مصرح لك بإنشاء مشرف جديد.');
         }
 
@@ -117,9 +118,7 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|in:admin,super_admin',
-            'permissions' => 'nullable|array',
-            'permissions.*' => 'exists:permissions,name',
+            'role' => 'required|exists:roles,name',
             'is_active' => 'boolean',
         ]);
 
@@ -131,13 +130,8 @@ class AdminController extends Controller
             'is_active' => $validated['is_active'] ?? true,
         ]);
 
-        // تعيين الدور
+        // تعيين الدور (الصلاحيات ستأتي تلقائياً من الدور)
         $admin->assignRole($validated['role']);
-
-        // تعيين الصلاحيات
-        if (isset($validated['permissions']) && !empty($validated['permissions'])) {
-            $admin->givePermissionTo($validated['permissions']);
-        }
 
         // إرسال إشعار
         try {
@@ -158,30 +152,28 @@ class AdminController extends Controller
      */
     public function edit(User $admin)
     {
-        // التحقق من الصلاحية
-        if (!Auth::user()->can('edit admins')) {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = Auth::user();
+        if (!$user->hasRole('super_admin') && !$user->can('edit admins')) {
             abort(403, 'غير مصرح لك بتعديل المشرفين.');
         }
 
-        // التحقق من أن المستخدم مشرف
-        if (!$admin->hasAnyRole(['admin', 'super_admin'])) {
+        // التحقق من أن المستخدم مشرف (ليس owner)
+        if ($admin->hasRole('owner')) {
             abort(404, 'المستخدم المحدد ليس مشرفاً.');
         }
 
-        // حماية Super Admin من التعديل من قبل غير Super Admin
-        if ($admin->hasRole('super_admin') && !Auth::user()->hasRole('super_admin')) {
+        // حماية Super Admin من التعديل من قبل غير Super Admin (Super Admin يمكنه تعديل نفسه والآخرين)
+        if ($admin->hasRole('super_admin') && !$user->hasRole('super_admin')) {
             abort(403, 'لا يمكنك تعديل Super Admin.');
         }
 
-        $roles = Role::whereIn('name', ['admin', 'super_admin'])->get();
-        $permissions = Permission::all()->groupBy(function($permission) {
-            $parts = explode(' ', $permission->name);
-            return $parts[0];
-        });
+        // جلب جميع الأدوار (بما في ذلك الأدوار المخصصة)
+        $roles = Role::where('name', '!=', 'owner')->orderBy('name', 'asc')->get();
         
-        $admin->load('roles', 'permissions');
+        $admin->load('roles');
         
-        return view('admin.admins.edit', compact('admin', 'roles', 'permissions'));
+        return view('admin.admins.edit', compact('admin', 'roles'));
     }
 
     /**
@@ -193,18 +185,19 @@ class AdminController extends Controller
      */
     public function update(Request $request, User $admin)
     {
-        // التحقق من الصلاحية
-        if (!Auth::user()->can('edit admins')) {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = Auth::user();
+        if (!$user->hasRole('super_admin') && !$user->can('edit admins')) {
             abort(403, 'غير مصرح لك بتعديل المشرفين.');
         }
 
-        // التحقق من أن المستخدم مشرف
-        if (!$admin->hasAnyRole(['admin', 'super_admin'])) {
+        // التحقق من أن المستخدم مشرف (ليس owner)
+        if ($admin->hasRole('owner')) {
             abort(404, 'المستخدم المحدد ليس مشرفاً.');
         }
 
-        // حماية Super Admin
-        if ($admin->hasRole('super_admin') && !Auth::user()->hasRole('super_admin')) {
+        // حماية Super Admin (Super Admin يمكنه تعديل نفسه والآخرين)
+        if ($admin->hasRole('super_admin') && !$user->hasRole('super_admin')) {
             abort(403, 'لا يمكنك تعديل Super Admin.');
         }
 
@@ -212,9 +205,7 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $admin->id,
             'password' => 'nullable|string|min:8|confirmed',
-            'role' => 'required|in:admin,super_admin',
-            'permissions' => 'nullable|array',
-            'permissions.*' => 'exists:permissions,name',
+            'role' => 'required|exists:roles,name',
             'is_active' => 'boolean',
         ]);
 
@@ -230,15 +221,8 @@ class AdminController extends Controller
             $admin->update(['password' => Hash::make($validated['password'])]);
         }
 
-        // تحديث الدور
+        // تحديث الدور (الصلاحيات ستأتي تلقائياً من الدور)
         $admin->syncRoles([$validated['role']]);
-
-        // تحديث الصلاحيات
-        if (isset($validated['permissions'])) {
-            $admin->syncPermissions($validated['permissions']);
-        } else {
-            $admin->permissions()->detach();
-        }
 
         // إرسال إشعار
         try {
@@ -260,8 +244,9 @@ class AdminController extends Controller
      */
     public function destroy(Request $request, User $admin)
     {
-        // التحقق من الصلاحية
-        if (!Auth::user()->can('delete admins')) {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = Auth::user();
+        if (!$user->hasRole('super_admin') && !$user->can('delete admins')) {
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
@@ -282,8 +267,8 @@ class AdminController extends Controller
             abort(404, 'المستخدم المحدد ليس مشرفاً.');
         }
 
-        // حماية Super Admin من الحذف
-        if ($admin->hasRole('super_admin')) {
+        // حماية Super Admin من الحذف (Super Admin يمكنه حذف الآخرين لكن لا يمكنه حذف نفسه)
+        if ($admin->hasRole('super_admin') && !$user->hasRole('super_admin')) {
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
@@ -326,8 +311,9 @@ class AdminController extends Controller
      */
     public function toggleStatus(Request $request, User $admin)
     {
-        // التحقق من الصلاحية
-        if (!Auth::user()->can('edit admins')) {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = Auth::user();
+        if (!$user->hasRole('super_admin') && !$user->can('edit admins')) {
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
@@ -348,8 +334,8 @@ class AdminController extends Controller
             abort(404, 'المستخدم المحدد ليس مشرفاً.');
         }
 
-        // حماية Super Admin
-        if ($admin->hasRole('super_admin') && !Auth::user()->hasRole('super_admin')) {
+        // حماية Super Admin (Super Admin يمكنه تعطيل الآخرين لكن لا يمكنه تعطيل نفسه)
+        if ($admin->hasRole('super_admin') && !$user->hasRole('super_admin')) {
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,

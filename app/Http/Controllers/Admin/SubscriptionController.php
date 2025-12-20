@@ -23,6 +23,12 @@ class SubscriptionController extends Controller
      */
     public function index()
     {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = auth()->user();
+        if (!$user->hasRole('super_admin') && !$user->can('view subscriptions')) {
+            abort(403, 'غير مصرح لك بعرض الاشتراكات.');
+        }
+
         $subscriptions = Subscription::latest()->get();
         return view('admin.subscriptions.index', compact('subscriptions'));
     }
@@ -34,6 +40,17 @@ class SubscriptionController extends Controller
      */
     public function create()
     {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = auth()->user();
+        if (!$user->hasRole('super_admin')) {
+            if (!$user->can('view subscriptions')) {
+                abort(403, 'غير مصرح لك بعرض الاشتراكات.');
+            }
+            if (!$user->can('create subscriptions')) {
+                abort(403, 'غير مصرح لك بإنشاء الاشتراكات.');
+            }
+        }
+
         return view('admin.subscriptions.create');
     }
 
@@ -45,17 +62,39 @@ class SubscriptionController extends Controller
      */
     public function store(Request $request)
     {
-        // التحقق من صحة البيانات
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'duration_type' => 'required|in:month,year,lifetime',
-            'max_debtors' => 'required|integer|min:0',
-            'max_messages' => 'required|integer|min:0',
-            'ai_enabled' => 'boolean',
-            'is_active' => 'boolean',
-        ]);
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = auth()->user();
+        if (!$user->hasRole('super_admin')) {
+            if (!$user->can('view subscriptions')) {
+                abort(403, 'غير مصرح لك بعرض الاشتراكات.');
+            }
+            if (!$user->can('create subscriptions')) {
+                abort(403, 'غير مصرح لك بإنشاء الاشتراكات.');
+            }
+        }
+
+        try {
+            // التحقق من صحة البيانات
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'price' => 'required|numeric|min:0',
+                'duration_type' => 'required|in:month,year,lifetime',
+                'max_debtors' => 'required|integer|min:0',
+                'max_messages' => 'required|integer|min:0',
+                'ai_enabled' => 'boolean',
+                'is_active' => 'boolean',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $e->errors(),
+                    'message' => 'يرجى تصحيح الأخطاء في النموذج'
+                ], 422);
+            }
+            throw $e;
+        }
 
         // معالجة checkbox - إذا لم يتم إرساله، يكون false
         $validated['ai_enabled'] = $request->has('ai_enabled') ? (bool)$request->input('ai_enabled') : false;
@@ -70,6 +109,13 @@ class SubscriptionController extends Controller
             $admin->notify(new SubscriptionCreatedNotification($subscription));
         }
 
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'تم إنشاء الباقة بنجاح.'
+            ]);
+        }
+
         return redirect()->route('admin.subscriptions.index')
             ->with('success', 'تم إنشاء الباقة بنجاح.');
     }
@@ -82,6 +128,12 @@ class SubscriptionController extends Controller
      */
     public function show(Subscription $subscription)
     {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = auth()->user();
+        if (!$user->hasRole('super_admin') && !$user->can('view subscriptions')) {
+            abort(403, 'غير مصرح لك بعرض الاشتراكات.');
+        }
+
         return view('admin.subscriptions.show', compact('subscription'));
     }
 
@@ -93,6 +145,17 @@ class SubscriptionController extends Controller
      */
     public function edit(Subscription $subscription)
     {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = auth()->user();
+        if (!$user->hasRole('super_admin')) {
+            if (!$user->can('view subscriptions')) {
+                abort(403, 'غير مصرح لك بعرض الاشتراكات.');
+            }
+            if (!$user->can('edit subscriptions')) {
+                abort(403, 'غير مصرح لك بتعديل الاشتراكات.');
+            }
+        }
+
         return view('admin.subscriptions.edit', compact('subscription'));
     }
 
@@ -105,6 +168,17 @@ class SubscriptionController extends Controller
      */
     public function update(Request $request, Subscription $subscription)
     {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = auth()->user();
+        if (!$user->hasRole('super_admin')) {
+            if (!$user->can('view subscriptions')) {
+                abort(403, 'غير مصرح لك بعرض الاشتراكات.');
+            }
+            if (!$user->can('edit subscriptions')) {
+                abort(403, 'غير مصرح لك بتعديل الاشتراكات.');
+            }
+        }
+
         // التحقق من صحة البيانات
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -143,15 +217,45 @@ class SubscriptionController extends Controller
      */
     public function destroy(Request $request, Subscription $subscription)
     {
+        // التحقق من الصلاحية (Super Admin لديه جميع الصلاحيات)
+        $user = auth()->user();
+        if (!$user->hasRole('super_admin')) {
+            if (!$user->can('view subscriptions')) {
+                abort(403, 'غير مصرح لك بعرض الاشتراكات.');
+            }
+            if (!$user->can('delete subscriptions')) {
+                if ($request->ajax()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'غير مصرح لك بحذف الاشتراكات.'
+                    ], 403);
+                }
+                abort(403, 'غير مصرح لك بحذف الاشتراكات.');
+            }
+        }
+
         // التحقق من وجود طلبات مرتبطة بالباقة
-        if ($subscription->requests()->count() > 0) {
+        $requestsCount = $subscription->requests()->count();
+        $userSubscriptionsCount = $subscription->userSubscriptions()->count();
+        
+        if ($requestsCount > 0 || $userSubscriptionsCount > 0) {
+            $messages = [];
+            if ($requestsCount > 0) {
+                $messages[] = "{$requestsCount} طلب اشتراك";
+            }
+            if ($userSubscriptionsCount > 0) {
+                $messages[] = "{$userSubscriptionsCount} اشتراك نشط";
+            }
+            
+            $message = 'لا يمكن حذف هذه الباقة لأنها مرتبطة بـ: ' . implode(' و ', $messages) . '.';
+            
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'لا يمكن حذف هذه الباقة لأنها مرتبطة بطلبات اشتراك.'
+                    'message' => $message
                 ], 400);
             }
-            return back()->with('error', 'لا يمكن حذف هذه الباقة لأنها مرتبطة بطلبات اشتراك.');
+            return back()->with('error', $message);
         }
 
         $subscription->delete();

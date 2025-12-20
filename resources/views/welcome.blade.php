@@ -71,17 +71,17 @@
                 <!-- Content -->
                 <div class="text-center lg:text-right">
                     <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-gray-100 mb-6 leading-tight">
-                        منصة <span class="text-primary-600 dark:text-primary-400">ذكية</span> لتحصيل الديون
+                        منصة <span class="text-primary-600 dark:text-primary-400">ذكية</span> عشان تحصيل الديون
                     </h1>
                     <p class="text-xl text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
-                        أتمتة عمليات التحصيل باستخدام الذكاء الاصطناعي وقنوات التواصل الرقمية. حلول احترافية لتسريع استرداد المستحقات.
+                        نؤتمت عمليات التحصيل باستخدام الذكاء الاصطناعي وقنوات التواصل الرقمية. حلول احترافية عشان نسّرع استرداد المستحقات.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                         <a href="{{ route('register') }}" class="px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1">
-                            ابدأ الآن مجاناً
+                            ابدأ الحين مجاناً
                         </a>
                         <a href="#features" class="px-8 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-lg font-semibold rounded-lg shadow-md hover:shadow-lg border border-gray-200 dark:border-gray-700 transition-all duration-200">
-                            اكتشف المميزات
+                            شوف المميزات
                         </a>
                     </div>
                 </div>
@@ -128,7 +128,7 @@
                         </svg>
                     </div>
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">سرعة فائقة</h3>
-                    <p class="text-gray-600 dark:text-gray-400">إرسال آلاف الرسائل في دقائق معدودة</p>
+                    <p class="text-gray-600 dark:text-gray-400">نرسل آلاف الرسائل في دقائق معدودة</p>
                 </div>
                 <div class="text-center p-6 rounded-xl bg-gray-50 dark:bg-gray-700/50 hover:shadow-lg transition-shadow duration-200">
                     <div class="w-16 h-16 bg-secondary-100 dark:bg-secondary-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -137,7 +137,7 @@
                         </svg>
                     </div>
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">ذكاء اصطناعي</h3>
-                    <p class="text-gray-600 dark:text-gray-400">توليد رسائل ذكية ومخصصة تلقائياً</p>
+                    <p class="text-gray-600 dark:text-gray-400">نولّد رسائل ذكية ومخصصة تلقائياً</p>
                 </div>
                 <div class="text-center p-6 rounded-xl bg-gray-50 dark:bg-gray-700/50 hover:shadow-lg transition-shadow duration-200">
                     <div class="w-16 h-16 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -170,7 +170,7 @@
                         </svg>
                     </div>
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">إرسال متعدد القنوات</h3>
-                    <p class="text-gray-600 dark:text-gray-400">إرسال رسائل SMS و Email من مكان واحد مع تتبع الحالة</p>
+                    <p class="text-gray-600 dark:text-gray-400">نرسل رسائل SMS و Email من مكان واحد مع تتبع الحالة</p>
                 </div>
 
                 <!-- Feature 2 -->
@@ -181,7 +181,7 @@
                         </svg>
                     </div>
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">تقارير شاملة</h3>
-                    <p class="text-gray-600 dark:text-gray-400">تحليلات مفصلة عن أداء التحصيل والرسائل المرسلة</p>
+                    <p class="text-gray-600 dark:text-gray-400">تحليلات مفصلة عن أداء التحصيل والرسائل اللي مرسلة</p>
                 </div>
 
                 <!-- Feature 3 -->
@@ -192,7 +192,7 @@
                         </svg>
                     </div>
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">روابط دفع مدمجة</h3>
-                    <p class="text-gray-600 dark:text-gray-400">إضافة روابط الدفع مباشرة في الرسائل لتسريع السداد</p>
+                    <p class="text-gray-600 dark:text-gray-400">نضيف روابط الدفع مباشرة في الرسائل عشان نسّرع السداد</p>
                 </div>
 
                 <!-- Feature 4 -->
@@ -203,7 +203,7 @@
                         </svg>
                     </div>
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">إدارة المديونين</h3>
-                    <p class="text-gray-600 dark:text-gray-400">نظام متكامل لإدارة بيانات المديونين وحالات الديون</p>
+                    <p class="text-gray-600 dark:text-gray-400">نظام متكامل عشان ندير بيانات المديونين وحالات الديون</p>
                 </div>
 
                 <!-- Feature 5 -->
@@ -214,7 +214,7 @@
                         </svg>
                     </div>
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">جدولة تلقائية</h3>
-                    <p class="text-gray-600 dark:text-gray-400">جدولة الرسائل مسبقاً وإرسالها في الوقت المناسب</p>
+                    <p class="text-gray-600 dark:text-gray-400">نجدول الرسائل مسبقاً ونرسلها في الوقت المناسب</p>
                 </div>
 
                 <!-- Feature 6 -->
@@ -225,7 +225,7 @@
                         </svg>
                     </div>
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">سجل كامل</h3>
-                    <p class="text-gray-600 dark:text-gray-400">توثيق شامل لجميع العمليات والرسائل المرسلة</p>
+                    <p class="text-gray-600 dark:text-gray-400">توثيق شامل لجميع العمليات والرسائل اللي مرسلة</p>
                 </div>
             </div>
         </div>
@@ -237,14 +237,14 @@
             <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">خدماتنا</h2>
                 <p class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-                    مجموعة شاملة من الخدمات المصممة لتحسين عملية التحصيل
+                    مجموعة شاملة من الخدمات المصممة عشان نحسّن عملية التحصيل
                 </p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- Service 1 -->
                 <div class="bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/20 rounded-xl p-8 border-r-4 border-primary-500">
                     <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">إرسال الرسائل</h3>
-                    <p class="text-gray-700 dark:text-gray-300 mb-4">إرسال رسائل SMS و Email بسهولة مع تتبع حالة الإرسال والاستلام</p>
+                    <p class="text-gray-700 dark:text-gray-300 mb-4">نرسل رسائل SMS و Email بسهولة مع تتبع حالة الإرسال والاستلام</p>
                     <ul class="space-y-2 text-gray-600 dark:text-gray-400">
                         <li class="flex items-center">
                             <svg class="w-5 h-5 text-primary-600 dark:text-primary-400 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -270,7 +270,7 @@
                 <!-- Service 2 -->
                 <div class="bg-gradient-to-br from-secondary-50 to-secondary-100 dark:from-secondary-900/20 dark:to-secondary-800/20 rounded-xl p-8 border-r-4 border-secondary-500">
                     <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">إدارة الحملات</h3>
-                    <p class="text-gray-700 dark:text-gray-300 mb-4">إنشاء وإدارة حملات تحصيل متعددة مع إمكانية التخصيص الكامل</p>
+                    <p class="text-gray-700 dark:text-gray-300 mb-4">ننشئ وندير حملات تحصيل متعددة مع إمكانية التخصيص الكامل</p>
                     <ul class="space-y-2 text-gray-600 dark:text-gray-400">
                         <li class="flex items-center">
                             <svg class="w-5 h-5 text-secondary-600 dark:text-secondary-400 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -296,7 +296,7 @@
                 <!-- Service 3 -->
                 <div class="bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/20 rounded-xl p-8 border-r-4 border-primary-500">
                     <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">التقارير والتحليلات</h3>
-                    <p class="text-gray-700 dark:text-gray-300 mb-4">تقارير مفصلة ولوحات تحكم شاملة لمتابعة الأداء</p>
+                    <p class="text-gray-700 dark:text-gray-300 mb-4">تقارير مفصلة ولوحات تحكم شاملة عشان نتتبع الأداء</p>
                     <ul class="space-y-2 text-gray-600 dark:text-gray-400">
                         <li class="flex items-center">
                             <svg class="w-5 h-5 text-primary-600 dark:text-primary-400 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -356,7 +356,7 @@
                 <div>
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-6">الذكاء الاصطناعي في خدمتك</h2>
                     <p class="text-lg text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
-                        نستخدم أحدث تقنيات الذكاء الاصطناعي لتوليد رسائل ذكية ومخصصة تلقائياً. كل رسالة تُصمم خصيصاً بناءً على:
+                        نستخدم أحدث تقنيات الذكاء الاصطناعي عشان نولّد رسائل ذكية ومخصصة تلقائياً. كل رسالة تُصمم خصيصاً بناءً على:
                     </p>
                     <ul class="space-y-4 mb-8">
                         <li class="flex items-start">
@@ -365,7 +365,7 @@
                             </svg>
                             <div>
                                 <h3 class="font-semibold text-gray-900 dark:text-gray-100 mb-1">اسم المديون</h3>
-                                <p class="text-gray-600 dark:text-gray-400">تخصيص الرسالة باسم المديون لزيادة التأثير</p>
+                                <p class="text-gray-600 dark:text-gray-400">نخصص الرسالة باسم المديون عشان نزيد التأثير</p>
                             </div>
                         </li>
                         <li class="flex items-start">
@@ -374,7 +374,7 @@
                             </svg>
                             <div>
                                 <h3 class="font-semibold text-gray-900 dark:text-gray-100 mb-1">مبلغ الدين</h3>
-                                <p class="text-gray-600 dark:text-gray-400">تضمين المبلغ بشكل واضح ومهني</p>
+                                <p class="text-gray-600 dark:text-gray-400">نضمن المبلغ بشكل واضح ومهني</p>
                             </div>
                         </li>
                         <li class="flex items-start">
@@ -383,7 +383,7 @@
                             </svg>
                             <div>
                                 <h3 class="font-semibold text-gray-900 dark:text-gray-100 mb-1">تاريخ الاستحقاق</h3>
-                                <p class="text-gray-600 dark:text-gray-400">تذكير بموعد الاستحقاق ودرجة التأخير</p>
+                                <p class="text-gray-600 dark:text-gray-400">نذكّر بموعد الاستحقاق ودرجة التأخير</p>
                             </div>
                         </li>
                         <li class="flex items-start">
@@ -397,7 +397,7 @@
                         </li>
                     </ul>
                     <a href="{{ route('register') }}" class="inline-block px-8 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200">
-                        جرب الذكاء الاصطناعي الآن
+                        جرب الذكاء الاصطناعي الحين
                     </a>
                 </div>
                 <!-- Illustration -->
@@ -412,13 +412,13 @@
                                 </div>
                                 <div>
                                     <h3 class="font-semibold text-gray-900 dark:text-gray-100">رسالة ذكية</h3>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400">مولدة بالذكاء الاصطناعي</p>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">مولّدة بالذكاء الاصطناعي</p>
                                 </div>
                             </div>
                             <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                                 <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
                                     "السلام عليكم ورحمة الله وبركاته،<br>
-                                    نود تذكيركم بأن لديكم مبلغ مستحق بقيمة <strong>5,000 ر.س</strong> بتاريخ <strong>2024-01-15</strong>.<br>
+                                    نود تذكيركم بأن عندكم مبلغ مستحق بقيمة <strong>5,000 ر.س</strong> بتاريخ <strong>2024-01-15</strong>.<br>
                                     نرجو منكم تسوية المبلغ في أقرب وقت ممكن..."
                                 </p>
                             </div>
@@ -435,7 +435,7 @@
             <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">تواصل معنا</h2>
                 <p class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-                    نحن هنا للإجابة على استفساراتك ومساعدتك في البدء
+                    نحن هنا عشان نجيب على استفساراتك ونساعدك في البدء
                 </p>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -510,16 +510,16 @@
     <!-- ========== خاتمة ========== -->
     <section class="py-20 bg-gradient-to-br from-primary-600 to-secondary-600 text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-3xl md:text-4xl font-bold mb-6">ابدأ رحلتك معنا اليوم</h2>
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">ابدأ رحلتك معنا الحين</h2>
             <p class="text-xl mb-8 text-primary-100 max-w-2xl mx-auto">
-                انضم إلى مئات الشركات التي تستخدم منصتنا لتحسين عملية التحصيل وزيادة الإيرادات
+                انضم لمئات الشركات اللي تستخدم منصتنا عشان نحسّن عملية التحصيل ونساعد في زيادة الإيرادات
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
                 <a href="{{ route('register') }}" class="px-8 py-4 bg-white text-primary-600 text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1">
                     إنشاء حساب مجاني
                 </a>
                 <a href="#features" class="px-8 py-4 bg-primary-700 hover:bg-primary-800 text-white text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 border-2 border-white/20">
-                    تعرف على المزيد
+                    تعرّف على المزيد
                 </a>
             </div>
         </div>
