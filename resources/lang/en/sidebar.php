@@ -29,6 +29,14 @@ return [
     'support_tickets' => 'Support & Tickets',
     'logout' => 'Logout',
 
+    // Admin Sidebar Sections
+    'main_navigation' => 'Main Navigation',
+    'user_management' => 'User Management',
+    'subscription_management' => 'Subscription Management',
+    'reporting_analytics' => 'Reporting & Analytics',
+    'system_operations' => 'System Operations',
+    'support_settings' => 'Support & Settings',
+
     // Owner Sidebar
     'debtors' => 'Debtors',
     'collections' => 'Collection Status',
@@ -42,6 +50,10 @@ return [
     'campaigns_performance' => 'Campaigns Performance',
     'subscription_usage' => 'Subscription Usage',
     'operations_log' => 'Operations Log',
+    
+    // Owner Sidebar Sections
+    'client_management' => 'Client Management',
+    'analytics_section' => 'Analytics',
 ];
 
 

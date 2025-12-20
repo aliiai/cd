@@ -161,7 +161,7 @@
                     >
                         <!-- Profile Photo or Initial -->
                         @if(Auth::user()->profile_photo_path)
-                            <img src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" class="h-9 w-9 rounded-full border-2 border-gray-300 dark:border-gray-600 group-hover:border-primary-400 dark:group-hover:border-primary-500 transition-colors duration-200 shadow-sm">
+                            <img src="{{ asset('storage/' . Auth::user()->profile_photo_path) }}" alt="{{ Auth::user()->name }}" class="h-9 w-9 rounded-full border-2 border-gray-300 dark:border-gray-600 group-hover:border-primary-400 dark:group-hover:border-primary-500 transition-colors duration-200 shadow-sm object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                         @else
                             <div class="h-9 w-9 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 dark:from-primary-500 dark:to-primary-700 flex items-center justify-center border-2 border-gray-300 dark:border-gray-600 group-hover:border-primary-400 dark:group-hover:border-primary-500 transition-all duration-200 shadow-sm group-hover:shadow-md">
                                 <span class="text-sm font-bold text-white">{{ substr(Auth::user()->name, 0, 1) }}</span>

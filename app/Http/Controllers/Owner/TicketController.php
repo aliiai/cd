@@ -81,16 +81,27 @@ class TicketController extends Controller
      * حفظ شكوى جديدة
      * 
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'subject' => 'required|string|max:255',
-            'type' => 'required|in:technical,subscription,messages,general,suggestion',
-            'description' => 'required|string|min:10',
-            'attachment' => 'nullable|image|max:2048',
-        ]);
+        try {
+            $validated = $request->validate([
+                'subject' => 'required|string|max:255',
+                'type' => 'required|in:technical,subscription,messages,general,suggestion',
+                'description' => 'required|string|min:10',
+                'attachment' => 'nullable|image|max:2048',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'يرجى التحقق من البيانات المدخلة',
+                    'errors' => $e->errors(),
+                ], 422);
+            }
+            throw $e;
+        }
 
         // رفع المرفق إن وجد
         if ($request->hasFile('attachment')) {
@@ -118,6 +129,15 @@ class TicketController extends Controller
             }
         } catch (\Exception $e) {
             \Log::error('Failed to send ticket notification: ' . $e->getMessage());
+        }
+
+        // إذا كان الطلب AJAX
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'تم إنشاء الشكوى بنجاح. رقم الشكوى: ' . $ticket->ticket_number,
+                'ticket_id' => $ticket->id,
+            ]);
         }
 
         return redirect()->route('owner.tickets.show', $ticket)

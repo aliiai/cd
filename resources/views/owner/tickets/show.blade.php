@@ -11,11 +11,11 @@
                 <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
-                العودة للقائمة
+                {{ __('tickets.back_to_list') }}
             </a>
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">الشكوى #{{ $ticket->ticket_number }}</h1>
+                    <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">{{ __('tickets.ticket_number', ['number' => $ticket->ticket_number]) }}</h1>
                     <p class="text-lg text-gray-600 dark:text-gray-400">{{ $ticket->subject }}</p>
                 </div>
                 <span class="px-4 py-2.5 text-sm font-semibold rounded-full shadow-md {{ $ticket->status_color }}">
@@ -50,31 +50,31 @@
                     <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    معلومات الشكوى
+                    {{ __('tickets.ticket_info') }}
                 </h2>
             </div>
             <div class="p-6">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/20 rounded-lg p-4 border border-primary-200 dark:border-primary-800">
-                        <p class="text-xs font-medium text-primary-600 dark:text-primary-400 mb-2">النوع</p>
+                        <p class="text-xs font-medium text-primary-600 dark:text-primary-400 mb-2">{{ __('tickets.type') }}</p>
                         <span class="px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm border {{ $ticket->type_color }}">
                             {{ $ticket->type_text }}
                         </span>
                     </div>
                     <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/20 rounded-lg p-4 border border-emerald-200 dark:border-emerald-800">
-                        <p class="text-xs font-medium text-emerald-600 dark:text-emerald-400 mb-2">الحالة</p>
+                        <p class="text-xs font-medium text-emerald-600 dark:text-emerald-400 mb-2">{{ __('tickets.status') }}</p>
                         <span class="px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm border {{ $ticket->status_color }}">
                             {{ $ticket->status_text }}
                         </span>
                     </div>
                     <div class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
-                        <p class="text-xs font-medium text-blue-600 dark:text-blue-400 mb-2">تاريخ الإنشاء</p>
+                        <p class="text-xs font-medium text-blue-600 dark:text-blue-400 mb-2">{{ __('tickets.created_at') }}</p>
                         <p class="text-sm font-semibold text-blue-900 dark:text-blue-100">{{ $ticket->created_at->format('Y-m-d H:i') }}</p>
                     </div>
                 </div>
                 @if($ticket->attachment)
                     <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-                        <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">المرفق</p>
+                        <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">{{ __('tickets.attachment_label') }}</p>
                         <a href="{{ asset('storage/' . $ticket->attachment) }}" target="_blank" class="inline-block group">
                             <img src="{{ asset('storage/' . $ticket->attachment) }}" alt="Attachment" class="max-w-xs rounded-lg shadow-md hover:shadow-xl transition-shadow duration-200 group-hover:scale-105 transform transition-transform">
                         </a>
@@ -90,7 +90,7 @@
                     <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                     </svg>
-                    المحادثة
+                    {{ __('tickets.conversation') }}
                 </h2>
             </div>
             <div class="p-6">
@@ -106,7 +106,7 @@
                                             </span>
                                         </div>
                                         <span class="text-xs font-semibold {{ $message->is_admin ? 'text-gray-700 dark:text-gray-300' : 'text-white' }}">
-                                            {{ $message->is_admin ? 'الأدمن' : $message->user->name }}
+                                            {{ $message->is_admin ? __('tickets.admin') : $message->user->name }}
                                         </span>
                                     </div>
                                     <span class="text-xs {{ $message->is_admin ? 'text-gray-500 dark:text-gray-400' : 'text-white/80' }}">{{ $message->created_at->format('Y-m-d H:i') }}</span>
@@ -129,13 +129,13 @@
                     <form action="{{ route('owner.tickets.reply', $ticket) }}" method="POST" enctype="multipart/form-data" class="border-t border-gray-200 dark:border-gray-700 pt-6">
                         @csrf
                         <div class="mb-4">
-                            <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">اكتب ردك</label>
+                            <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('tickets.write_reply') }}</label>
                             <textarea name="message" 
                                       id="message"
                                       rows="4"
                                       required
                                       class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors resize-none"
-                                      placeholder="اكتب ردك هنا..."></textarea>
+                                      placeholder="{{ __('tickets.reply_placeholder') }}"></textarea>
                         </div>
                         <div class="mb-4">
                             <label for="attachment" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">مرفق (اختياري)</label>
@@ -152,7 +152,7 @@
                                 <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                                 </svg>
-                                إرسال الرد
+                                {{ __('tickets.send_reply') }}
                             </button>
                         </div>
                     </form>
@@ -162,7 +162,7 @@
                             <svg class="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <p class="text-gray-500 dark:text-gray-400 font-medium">هذه الشكوى مغلقة ولا يمكن إضافة ردود جديدة.</p>
+                            <p class="text-gray-500 dark:text-gray-400 font-medium">{{ __('tickets.ticket_closed_message') }}</p>
                         </div>
                     </div>
                 @endif
@@ -177,15 +177,15 @@
                         @csrf
                         <div class="flex items-center justify-between">
                             <div>
-                                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1">إغلاق الشكوى</h3>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">يمكنك إغلاق الشكوى إذا تم حل المشكلة</p>
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1">{{ __('tickets.close_ticket') }}</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('tickets.close_ticket_description') }}</p>
                             </div>
                             <button type="submit" 
                                     class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                                 <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                 </svg>
-                                إغلاق الشكوى
+                                {{ __('tickets.close_ticket') }}
                             </button>
                         </div>
                     </form>

@@ -29,6 +29,14 @@ return [
     'support_tickets' => 'الدعم والتذاكر',
     'logout' => 'تسجيل الخروج',
 
+    // Admin Sidebar Sections
+    'main_navigation' => 'الرئيسية',
+    'user_management' => 'إدارة المستخدمين',
+    'subscription_management' => 'إدارة الاشتراكات',
+    'reporting_analytics' => 'التقارير والتحليلات',
+    'system_operations' => 'عمليات النظام',
+    'support_settings' => 'الدعم والإعدادات',
+
     // Owner Sidebar
     'debtors' => 'المديونين',
     'collections' => 'حالة التحصيل',
@@ -42,6 +50,10 @@ return [
     'campaigns_performance' => 'أداء الحملات',
     'subscription_usage' => 'استخدام الاشتراك',
     'operations_log' => 'سجل العمليات',
+    
+    // Owner Sidebar Sections
+    'client_management' => 'إدارة العملاء',
+    'analytics_section' => 'التحليلات',
 ];
 
 

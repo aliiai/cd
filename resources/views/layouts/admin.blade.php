@@ -7,6 +7,31 @@
 
     <title>{{ __('common.admin_panel') }} - {{ config('app.name', 'Laravel') }}</title>
 
+    <!-- Dark Mode Script - Must be before any CSS to prevent flash -->
+    <script>
+        (function() {
+            const stored = localStorage.getItem('dark_mode_preference');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            let shouldBeDark = false;
+            
+            if (stored === 'dark') {
+                shouldBeDark = true;
+            } else if (stored === 'light') {
+                shouldBeDark = false;
+            } else {
+                // system preference
+                shouldBeDark = prefersDark;
+            }
+            
+            if (shouldBeDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+
     <!-- Fonts - Arabic Support -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

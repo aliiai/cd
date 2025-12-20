@@ -86,6 +86,11 @@ class Sidebar extends Component
         foreach ($links as $link) {
             $translatedLink = $link;
             
+            // ترجمة عنوان القسم إذا كان موجوداً
+            if (isset($link['type']) && $link['type'] === 'section' && isset($link['title'])) {
+                $translatedLink['title'] = $this->translateName($link['title']);
+            }
+            
             // ترجمة اسم الرابط الرئيسي
             if (isset($link['name'])) {
                 $translatedLink['name'] = $this->translateName($link['name']);
@@ -120,6 +125,7 @@ class Sidebar extends Component
     {
         // خريطة الأسماء العربية إلى مفاتيح الترجمة
         $nameMap = [
+            // Admin Sidebar
             'لوحة التحكم' => 'dashboard',
             'المستخدمين' => 'users',
             'المشرفين' => 'admins',
@@ -137,17 +143,30 @@ class Sidebar extends Component
             'الإعدادات' => 'settings',
             'الدعم والتذاكر' => 'support_tickets',
             'تسجيل الخروج' => 'logout',
+            // Owner Sidebar
             'المديونين' => 'debtors',
             'حالة التحصيل' => 'collections',
             'التحليلات الذكية' => 'analytics',
             'تحليلات حالة التحصيل' => 'collection_status_analytics',
             'تحليلات الدخل' => 'income_analytics',
             'الاشتراكات' => 'owner_subscriptions',
+            'التقارير' => 'owner_reports',
             'تقرير حالات الديون' => 'debt_status_report',
             'تقرير الرسائل' => 'messages_report',
             'أداء الحملات' => 'campaigns_performance',
             'استخدام الاشتراك' => 'subscription_usage',
             'سجل العمليات' => 'operations_log',
+            // Section Titles - Admin
+            'الرئيسية' => 'main_navigation',
+            'إدارة المستخدمين' => 'user_management',
+            'الصلاحيات والأدوار' => 'roles_permissions',
+            'الاشتراكات' => 'subscription_management',
+            'التقارير' => 'reporting_analytics',
+            'النظام' => 'system_operations',
+            // Section Titles - Owner
+            'إدارة العملاء' => 'client_management',
+            'التحليلات' => 'analytics_section',
+            'الدعم والإعدادات' => 'support_settings',
         ];
         
         // البحث عن المفتاح في الخريطة

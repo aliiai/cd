@@ -7,15 +7,15 @@
         <div class="mb-8">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                    <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">إدارة المديونين</h1>
-                    <p class="text-lg text-gray-600 dark:text-gray-400">إدارة جميع المديونين وعرض حالتهم</p>
+                    <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">{{ __('owner.debtors_title') }}</h1>
+                    <p class="text-lg text-gray-600 dark:text-gray-400">{{ __('owner.debtors_description') }}</p>
                 </div>
                 <button onclick="openDebtorModal()" 
                         class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-700 dark:from-primary-500 dark:to-primary-600 hover:from-primary-700 hover:to-primary-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5">
                     <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                     </svg>
-                    إضافة مديون جديد
+                    {{ __('owner.add_debtor') }}
                 </button>
             </div>
         </div>
@@ -51,16 +51,16 @@
                         <svg class="w-5 h-5 text-primary-600 dark:text-primary-400 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                         </svg>
-                        معلومات الاشتراك والاستهلاك
+                        {{ __('owner.subscription_usage_info') }}
                     </h3>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">الباقة الحالية</p>
+                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">{{ __('owner.current_package') }}</p>
                         <p class="text-xl font-bold text-gray-900 dark:text-gray-100">{{ $subscriptionInfo['subscription_name'] }}</p>
                     </div>
                     <div>
-                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">عدد المديونين</p>
+                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">{{ __('owner.debtors_count') }}</p>
                         <div class="flex items-center space-x-3 space-x-reverse">
                             <div class="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-3">
                                 <div 
@@ -74,7 +74,7 @@
                         </div>
                         @if($subscriptionInfo['debtors_remaining'] !== null)
                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                                المتبقي: <span class="font-semibold {{ $subscriptionInfo['debtors_remaining'] <= 2 ? 'text-red-600 dark:text-red-400' : 'text-gray-700 dark:text-gray-300' }}">{{ $subscriptionInfo['debtors_remaining'] }}</span> مديون
+                                {{ __('owner.remaining') }}: <span class="font-semibold {{ $subscriptionInfo['debtors_remaining'] <= 2 ? 'text-red-600 dark:text-red-400' : 'text-gray-700 dark:text-gray-300' }}">{{ $subscriptionInfo['debtors_remaining'] }}</span> {{ __('owner.debtor') }}
                             </p>
                         @endif
                     </div>
@@ -85,7 +85,7 @@
                             <svg class="w-5 h-5 text-yellow-600 dark:text-yellow-400 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                             </svg>
-                            <p class="text-sm font-medium text-yellow-800 dark:text-yellow-300">تحذير: لديك {{ $subscriptionInfo['debtors_remaining'] }} مديون متبقي فقط. يرجى ترقية اشتراكك لإضافة المزيد.</p>
+                            <p class="text-sm font-medium text-yellow-800 dark:text-yellow-300">{{ __('owner.warning_remaining_debtors', ['count' => $subscriptionInfo['debtors_remaining']]) }}</p>
                         </div>
                     </div>
                 @elseif($subscriptionInfo['debtors_remaining'] !== null && $subscriptionInfo['debtors_remaining'] == 0)
@@ -94,7 +94,7 @@
                             <svg class="w-5 h-5 text-red-600 dark:text-red-400 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
-                            <p class="text-sm font-medium text-red-800 dark:text-red-300">لقد وصلت للحد الأقصى المسموح للمديونين! يرجى ترقية اشتراكك لإضافة المزيد.</p>
+                            <p class="text-sm font-medium text-red-800 dark:text-red-300">{{ __('owner.max_debtors_reached') }}</p>
                         </div>
                     </div>
                 @endif
@@ -106,7 +106,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                     </svg>
                     <p class="text-sm font-medium text-yellow-800 dark:text-yellow-300">
-                        لا يوجد اشتراك نشط. يرجى الاشتراك في إحدى الباقات لإضافة المديونين.
+                        {{ __('owner.no_active_subscription_debtors') }}
                     </p>
                 </div>
             </div>
@@ -119,13 +119,13 @@
                     <svg class="w-5 h-5 text-primary-600 dark:text-primary-400 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
                     </svg>
-                    الفلاتر والبحث
+                    {{ __('owner.filters_and_search') }}
                 </h2>
             </div>
             <form id="filterForm" class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <!-- Search -->
                 <div class="md:col-span-2">
-                    <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">البحث</label>
+                    <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('owner.search') }}</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                             <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -136,38 +136,38 @@
                                id="search" 
                                name="search" 
                                value="{{ request('search') }}"
-                               placeholder="ابحث بالاسم، البريد الإلكتروني، أو رقم الهاتف..."
+                               placeholder="{{ __('owner.search_placeholder_debtors') }}"
                                class="w-full pl-4 pr-10 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400">
                     </div>
                 </div>
                 
                 <!-- Status Filter -->
                 <div>
-                    <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">حالة الدين</label>
+                    <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('owner.debt_status') }}</label>
                     <select id="status" 
                             name="status" 
                             class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
-                        <option value="all" {{ request('status') == 'all' || !request('status') ? 'selected' : '' }}>جميع الحالات</option>
-                        <option value="new" {{ request('status') == 'new' ? 'selected' : '' }}>جديد</option>
-                        <option value="contacted" {{ request('status') == 'contacted' ? 'selected' : '' }}>تم التواصل</option>
-                        <option value="promise_to_pay" {{ request('status') == 'promise_to_pay' ? 'selected' : '' }}>وعد بالدفع</option>
-                        <option value="paid" {{ request('status') == 'paid' ? 'selected' : '' }}>مدفوع</option>
-                        <option value="overdue" {{ request('status') == 'overdue' ? 'selected' : '' }}>متأخر</option>
-                        <option value="failed" {{ request('status') == 'failed' ? 'selected' : '' }}>فشل</option>
+                        <option value="all" {{ request('status') == 'all' || !request('status') ? 'selected' : '' }}>{{ __('owner.all_statuses') }}</option>
+                        <option value="new" {{ request('status') == 'new' ? 'selected' : '' }}>{{ __('owner.new') }}</option>
+                        <option value="contacted" {{ request('status') == 'contacted' ? 'selected' : '' }}>{{ __('owner.contacted') }}</option>
+                        <option value="promise_to_pay" {{ request('status') == 'promise_to_pay' ? 'selected' : '' }}>{{ __('owner.promise_to_pay') }}</option>
+                        <option value="paid" {{ request('status') == 'paid' ? 'selected' : '' }}>{{ __('owner.paid') }}</option>
+                        <option value="overdue" {{ request('status') == 'overdue' ? 'selected' : '' }}>{{ __('owner.overdue') }}</option>
+                        <option value="failed" {{ request('status') == 'failed' ? 'selected' : '' }}>{{ __('owner.failed') }}</option>
                     </select>
                 </div>
                 
                 <!-- Sort By -->
                 <div>
-                    <label for="sort_by" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">ترتيب حسب</label>
+                    <label for="sort_by" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('owner.sort_by') }}</label>
                     <select id="sort_by" 
                             name="sort_by" 
                             class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
-                        <option value="created_at" {{ request('sort_by') == 'created_at' || !request('sort_by') ? 'selected' : '' }}>تاريخ الإضافة</option>
-                        <option value="name" {{ request('sort_by') == 'name' ? 'selected' : '' }}>الاسم</option>
-                        <option value="debt_amount" {{ request('sort_by') == 'debt_amount' ? 'selected' : '' }}>قيمة الدين</option>
-                        <option value="due_date" {{ request('sort_by') == 'due_date' ? 'selected' : '' }}>تاريخ الاستحقاق</option>
-                        <option value="status" {{ request('sort_by') == 'status' ? 'selected' : '' }}>الحالة</option>
+                        <option value="created_at" {{ request('sort_by') == 'created_at' || !request('sort_by') ? 'selected' : '' }}>{{ __('owner.created_date') }}</option>
+                        <option value="name" {{ request('sort_by') == 'name' ? 'selected' : '' }}>{{ __('common.name') }}</option>
+                        <option value="debt_amount" {{ request('sort_by') == 'debt_amount' ? 'selected' : '' }}>{{ __('owner.debt_amount_sort') }}</option>
+                        <option value="due_date" {{ request('sort_by') == 'due_date' ? 'selected' : '' }}>{{ __('owner.due_date') }}</option>
+                        <option value="status" {{ request('sort_by') == 'status' ? 'selected' : '' }}>{{ __('common.status') }}</option>
                     </select>
                 </div>
             </form>
@@ -195,7 +195,7 @@
         <div class="p-6">
             <!-- Modal Header -->
             <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
-                <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100" id="modalTitle">إضافة مديون جديد</h3>
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100" id="modalTitle">{{ __('owner.add_new_debtor') }}</h3>
                 <button onclick="closeDebtorModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -212,7 +212,7 @@
                     <!-- Name -->
                     <div class="md:col-span-2">
                         <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            الاسم الكامل <span class="text-red-500">*</span>
+                            {{ __('owner.full_name') }} <span class="text-red-500">*</span>
                         </label>
                         <input type="text" 
                                name="name" 
@@ -227,7 +227,7 @@
                     <!-- Phone -->
                     <div>
                         <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            رقم الهاتف <span class="text-red-500">*</span>
+                            {{ __('owner.phone_number_label') }} <span class="text-red-500">*</span>
                         </label>
                         <input type="text" 
                                name="phone" 
@@ -242,7 +242,7 @@
                     <!-- Email -->
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            البريد الإلكتروني
+                            {{ __('owner.email_address_label') }}
                         </label>
                         <input type="email" 
                                name="email" 
@@ -273,7 +273,7 @@
                     <!-- Due Date -->
                     <div>
                         <label for="due_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            تاريخ الاستحقاق <span class="text-red-500">*</span>
+                            {{ __('owner.due_date_label') }} <span class="text-red-500">*</span>
                         </label>
                         <input type="date" 
                                name="due_date" 
@@ -288,7 +288,7 @@
                     <!-- Payment Link -->
                     <div class="md:col-span-2">
                         <label for="payment_link" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            رابط الدفع
+                            {{ __('owner.payment_link') }}
                         </label>
                         <input type="url" 
                                name="payment_link" 
@@ -303,18 +303,18 @@
                     <!-- Status -->
                     <div>
                         <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            حالة الدين <span class="text-red-500">*</span>
+                            {{ __('owner.debt_status_label') }} <span class="text-red-500">*</span>
                         </label>
                         <select name="status" 
                                 id="status" 
                                 required
                                 class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
-                            <option value="new">جديد</option>
-                            <option value="contacted">تم التواصل</option>
-                            <option value="promise_to_pay">وعد بالدفع</option>
-                            <option value="paid">مدفوع</option>
-                            <option value="overdue">متأخر</option>
-                            <option value="failed">فشل</option>
+                            <option value="new">{{ __('owner.new') }}</option>
+                            <option value="contacted">{{ __('owner.contacted') }}</option>
+                            <option value="promise_to_pay">{{ __('owner.promise_to_pay') }}</option>
+                            <option value="paid">{{ __('owner.paid') }}</option>
+                            <option value="overdue">{{ __('owner.overdue') }}</option>
+                            <option value="failed">{{ __('owner.failed') }}</option>
                         </select>
                         @error('status')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -324,7 +324,7 @@
                     <!-- Notes -->
                     <div class="md:col-span-2">
                         <label for="notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            ملاحظات
+                            {{ __('owner.notes_label') }}
                         </label>
                         <textarea name="notes" 
                                   id="notes" 
@@ -341,11 +341,11 @@
                     <button type="button" 
                             onclick="closeDebtorModal()"
                             class="px-6 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200">
-                        إلغاء
+                        {{ __('owner.cancel') }}
                     </button>
                     <button type="submit" 
                             class="px-6 py-2.5 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 transition-all duration-200">
-                        حفظ
+                        {{ __('owner.save') }}
                     </button>
                 </div>
             </form>
@@ -362,7 +362,7 @@
         
         if (debtorId) {
             // Edit Mode
-            modalTitle.textContent = 'تعديل بيانات المديون';
+            modalTitle.textContent = '{{ __('owner.edit_debtor_data') }}';
             form.action = '{{ route("owner.debtors.update", ":id") }}'.replace(':id', debtorId);
             document.getElementById('formMethod').value = 'PUT';
             
@@ -377,7 +377,7 @@
             document.getElementById('status').value = status;
         } else {
             // Add Mode
-            modalTitle.textContent = 'إضافة مديون جديد';
+            modalTitle.textContent = '{{ __('owner.add_new_debtor') }}';
             form.action = '{{ route("owner.debtors.store") }}';
             document.getElementById('formMethod').value = 'POST';
             
@@ -429,13 +429,13 @@
                 if (maxDebtors > 0) {
                     if (debtorsRemaining === 0) {
                         e.preventDefault();
-                        swalError('لقد وصلت للحد الأقصى المسموح للمديونين! الحد المسموح: ' + maxDebtors + ' مديون، الحالي: ' + currentDebtors + '. يرجى ترقية اشتراكك لإضافة المزيد من المديونين.', 'حد المديونين');
+                        swalError('{{ __('owner.max_debtors_error', ['max' => ':max', 'current' => ':current']) }}'.replace(':max', maxDebtors).replace(':current', currentDebtors), '{{ __('owner.debtors_title') }}');
                         return false;
                     }
                 }
             @else
                 e.preventDefault();
-                swalError('لا يوجد اشتراك نشط. يرجى الاشتراك في إحدى الباقات أولاً.', 'لا يوجد اشتراك');
+                swalError('{{ __('owner.no_subscription_error') }}', '{{ __('owner.subscriptions_title') }}');
                 return false;
             @endif
         }
@@ -463,7 +463,7 @@
         params.append('ajax', '1');
         
         // Show loading state
-        document.getElementById('debtorsTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div><p class="mt-2 text-gray-500">جاري التحميل...</p></div>';
+        document.getElementById('debtorsTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div><p class="mt-2 text-gray-500">{{ __('owner.loading') }}</p></div>';
         document.getElementById('paginationContainer').innerHTML = '';
         
         // Make AJAX request
@@ -487,7 +487,7 @@
         })
         .catch(error => {
             console.error('Error:', error);
-            document.getElementById('debtorsTableContainer').innerHTML = '<div class="text-center py-12 text-red-600">حدث خطأ أثناء تحميل البيانات. يرجى المحاولة مرة أخرى.</div>';
+            document.getElementById('debtorsTableContainer').innerHTML = '<div class="text-center py-12 text-red-600">{{ __('owner.error_loading_data') }}</div>';
         });
     }
 
@@ -516,7 +516,7 @@
             const url = e.target.closest('a').href;
             
             // Show loading state
-            document.getElementById('debtorsTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div><p class="mt-2 text-gray-500">جاري التحميل...</p></div>';
+            document.getElementById('debtorsTableContainer').innerHTML = '<div class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div><p class="mt-2 text-gray-500">{{ __('owner.loading') }}</p></div>';
             document.getElementById('paginationContainer').innerHTML = '';
             
             // Make AJAX request
@@ -542,7 +542,7 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                document.getElementById('debtorsTableContainer').innerHTML = '<div class="text-center py-12 text-red-600">حدث خطأ أثناء تحميل البيانات. يرجى المحاولة مرة أخرى.</div>';
+                document.getElementById('debtorsTableContainer').innerHTML = '<div class="text-center py-12 text-red-600">{{ __('owner.error_loading_data') }}</div>';
             });
         }
     });
