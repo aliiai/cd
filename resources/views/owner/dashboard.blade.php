@@ -29,7 +29,10 @@
             'maxMessages' => $maxMessages,
             'todayMessages' => $todayMessages,
             'todayDebtors' => $todayDebtors,
-            'todayCollected' => $todayCollected
+            'todayCollected' => $todayCollected,
+            'autoMessagesCount' => $autoMessagesCount ?? 0,
+            'autoMessagesToday' => $autoMessagesToday ?? 0,
+            'autoMessagesPercentage' => $autoMessagesPercentage ?? 0
         ])
 
         {{-- ========== 3. الرسوم البيانية ========== --}}

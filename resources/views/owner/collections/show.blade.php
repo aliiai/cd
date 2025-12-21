@@ -97,20 +97,24 @@
                             <div class="pb-4 border-b border-gray-200 dark:border-gray-700">
                                 <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">نوع الإرسال</label>
                                 <div class="mt-2">
-                                    @if($campaign->send_type === 'now')
-                                        <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                                    <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold {{ $campaign->send_type_color }}">
+                                        @if($campaign->send_type === 'auto')
+                                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                            </svg>
+                                        @elseif($campaign->send_type === 'now')
                                             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                                             </svg>
-                                            إرسال فوري
-                                        </span>
-                                    @else
-                                        <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-800">
+                                        @else
                                             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                             </svg>
-                                            مجدول
-                                        </span>
+                                        @endif
+                                        {{ $campaign->send_type_text }}
+                                    </span>
+                                    @if($campaign->send_type === 'auto')
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">تم إنشاء هذه الحملة تلقائياً في تاريخ استحقاق الدفع</p>
                                     @endif
                                 </div>
                             </div>

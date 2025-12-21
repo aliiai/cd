@@ -74,6 +74,24 @@ class DashboardController extends Controller
             ->where('collection_campaign_clients.status', 'sent')
             ->count();
         
+        // إحصائيات الإرسال التلقائي
+        $autoMessagesCount = DB::table('collection_campaign_clients')
+            ->join('collection_campaigns', 'collection_campaign_clients.campaign_id', '=', 'collection_campaigns.id')
+            ->where('collection_campaigns.owner_id', $ownerId)
+            ->where('collection_campaigns.send_type', 'auto')
+            ->where('collection_campaign_clients.status', 'sent')
+            ->count();
+        
+        $autoMessagesToday = DB::table('collection_campaign_clients')
+            ->join('collection_campaigns', 'collection_campaign_clients.campaign_id', '=', 'collection_campaigns.id')
+            ->where('collection_campaigns.owner_id', $ownerId)
+            ->where('collection_campaigns.send_type', 'auto')
+            ->where('collection_campaign_clients.status', 'sent')
+            ->whereDate('collection_campaign_clients.sent_at', today())
+            ->count();
+        
+        $autoMessagesPercentage = $totalMessages > 0 ? ($autoMessagesCount / $totalMessages) * 100 : 0;
+        
         // استخدام الذكاء الاصطناعي (عدد الحملات التي استخدمت AI)
         // يمكن اعتبار أن الحملات التي تحتوي على template أو message مولد بواسطة AI
         $aiUsageCount = CollectionCampaign::where('owner_id', $ownerId)
@@ -130,6 +148,9 @@ class DashboardController extends Controller
             'aiUsageCount',
             'aiUsagePercentage',
             'maxMessages',
+            'autoMessagesCount',
+            'autoMessagesToday',
+            'autoMessagesPercentage',
             'collectionTrendData',
             'statusDistributionData',
             'channelUsageData',

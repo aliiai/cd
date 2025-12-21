@@ -25,16 +25,32 @@ class CollectionController extends Controller
      * 
      * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
         // جلب جميع المديونين للمالك الحالي
         $debtors = Debtor::where('owner_id', Auth::id())->get();
         
-        // جلب جميع الحملات السابقة للمالك الحالي مع pagination
-        $campaigns = CollectionCampaign::where('owner_id', Auth::id())
-            ->with('debtors')
-            ->latest()
-            ->paginate(10);
+        // بناء استعلام الحملات
+        $query = CollectionCampaign::where('owner_id', Auth::id())
+            ->with('debtors');
+        
+        // فلترة حسب نوع الإرسال
+        if ($request->filled('send_type') && $request->send_type !== 'all') {
+            $query->where('send_type', $request->send_type);
+        }
+        
+        // فلترة حسب القناة
+        if ($request->filled('channel') && $request->channel !== 'all') {
+            $query->where('channel', $request->channel);
+        }
+        
+        // فلترة حسب الحالة
+        if ($request->filled('status') && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
+        
+        // جلب الحملات مع pagination
+        $campaigns = $query->latest()->paginate(10)->appends($request->query());
         
         // معلومات الاشتراك والاستهلاك
         $user = Auth::user();

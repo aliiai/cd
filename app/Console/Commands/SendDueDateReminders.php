@@ -45,13 +45,13 @@ class SendDueDateReminders extends Command
         $totalFailed = 0;
         
         // 1. جلب الديون العادية المستحقة اليوم (غير مقسمة على دفعات)
-        $regularDebts = Debtor::where('has_installments', false)
-            ->where('due_date', $today)
-            ->where('status', '!=', 'paid')
+        $regularDebts = Debtor::where('clients.has_installments', false)
+            ->where('clients.due_date', $today)
+            ->where('clients.status', '!=', 'paid')
             ->whereDoesntHave('campaigns', function($query) use ($today) {
-                $query->where('status', 'sent')
-                    ->whereDate('created_at', $today)
-                    ->where('send_type', 'auto');
+                $query->where('collection_campaigns.status', 'sent')
+                    ->whereDate('collection_campaigns.created_at', $today)
+                    ->where('collection_campaigns.send_type', 'auto');
             })
             ->with(['owner', 'installments'])
             ->get();

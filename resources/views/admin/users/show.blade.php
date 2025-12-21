@@ -46,9 +46,13 @@
                             <!-- Profile Photo -->
                             <div class="relative mb-4">
                                 @if($user->profile_photo_path)
-                                    <img src="{{ $user->profile_photo_url }}" 
+                                    <img src="{{ asset('storage/' . $user->profile_photo_path) }}" 
                                          alt="{{ $user->name }}" 
-                                         class="h-24 w-24 rounded-full border-4 border-white dark:border-gray-800 shadow-xl object-cover">
+                                         class="h-24 w-24 rounded-full border-4 border-white dark:border-gray-800 shadow-xl object-cover"
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <div class="h-24 w-24 rounded-full bg-white dark:bg-gray-700 flex items-center justify-center border-4 border-white dark:border-gray-800 shadow-xl" style="display: none;">
+                                        <span class="text-3xl font-bold text-primary-600 dark:text-primary-400">{{ strtoupper(substr($user->name, 0, 1)) }}</span>
+                                    </div>
                                 @else
                                     <div class="h-24 w-24 rounded-full bg-white dark:bg-gray-700 flex items-center justify-center border-4 border-white dark:border-gray-800 shadow-xl">
                                         <span class="text-3xl font-bold text-primary-600 dark:text-primary-400">{{ strtoupper(substr($user->name, 0, 1)) }}</span>

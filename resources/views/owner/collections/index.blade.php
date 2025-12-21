@@ -117,13 +117,61 @@
         {{-- ========== Campaigns Table ========== --}}
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
             <div class="bg-gradient-to-r from-primary-500 to-secondary-500 px-6 py-4">
-                <h2 class="text-xl font-bold text-white flex items-center">
-                    <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
-                    </svg>
-                    الحملات السابقة
-                </h2>
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-bold text-white flex items-center">
+                        <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                        </svg>
+                        الحملات السابقة
+                    </h2>
+                </div>
             </div>
+            
+            {{-- Filters --}}
+            <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700/50 border-b border-gray-200 dark:border-gray-600">
+                <form method="GET" action="{{ route('owner.collections.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    {{-- Filter by Send Type --}}
+                    <div>
+                        <label for="send_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">نوع الإرسال</label>
+                        <select name="send_type" id="send_type" onchange="this.form.submit()" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                            <option value="all" {{ request('send_type') == 'all' || !request('send_type') ? 'selected' : '' }}>جميع الأنواع</option>
+                            <option value="now" {{ request('send_type') == 'now' ? 'selected' : '' }}>فوري</option>
+                            <option value="scheduled" {{ request('send_type') == 'scheduled' ? 'selected' : '' }}>مجدول</option>
+                            <option value="auto" {{ request('send_type') == 'auto' ? 'selected' : '' }}>تلقائي</option>
+                        </select>
+                    </div>
+                    
+                    {{-- Filter by Channel --}}
+                    <div>
+                        <label for="channel" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">قناة الإرسال</label>
+                        <select name="channel" id="channel" onchange="this.form.submit()" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                            <option value="all" {{ request('channel') == 'all' || !request('channel') ? 'selected' : '' }}>جميع القنوات</option>
+                            <option value="sms" {{ request('channel') == 'sms' ? 'selected' : '' }}>SMS</option>
+                            <option value="email" {{ request('channel') == 'email' ? 'selected' : '' }}>Email</option>
+                        </select>
+                    </div>
+                    
+                    {{-- Filter by Status --}}
+                    <div>
+                        <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">حالة الإرسال</label>
+                        <select name="status" id="status" onchange="this.form.submit()" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                            <option value="all" {{ request('status') == 'all' || !request('status') ? 'selected' : '' }}>جميع الحالات</option>
+                            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>قيد الانتظار</option>
+                            <option value="sent" {{ request('status') == 'sent' ? 'selected' : '' }}>تم الإرسال</option>
+                            <option value="scheduled" {{ request('status') == 'scheduled' ? 'selected' : '' }}>مجدول</option>
+                            <option value="failed" {{ request('status') == 'failed' ? 'selected' : '' }}>فشل</option>
+                        </select>
+                    </div>
+                    
+                    {{-- Clear Filters --}}
+                    <div class="flex items-end">
+                        <a href="{{ route('owner.collections.index') }}" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200 text-center">
+                            إعادة تعيين
+                        </a>
+                    </div>
+                </form>
+            </div>
+            
             <div class="p-6">
                 @if($campaigns->count() > 0)
                     <div class="overflow-x-auto rounded-lg">
@@ -131,6 +179,7 @@
                             <thead class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800">
                                 <tr>
                                     <th class="px-6 py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">رقم الحملة</th>
+                                    <th class="px-6 py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">نوع الإرسال</th>
                                     <th class="px-6 py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">عدد المستلمين</th>
                                     <th class="px-6 py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">قناة الإرسال</th>
                                     <th class="px-6 py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">حالة الإرسال</th>
@@ -148,6 +197,16 @@
                                                 </div>
                                                 <div class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $campaign->campaign_number }}</div>
                                             </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold {{ $campaign->send_type_color }}">
+                                                @if($campaign->send_type === 'auto')
+                                                    <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                    </svg>
+                                                @endif
+                                                {{ $campaign->send_type_text }}
+                                            </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-300 border border-primary-200 dark:border-primary-800">
