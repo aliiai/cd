@@ -112,6 +112,21 @@ class CollectionCampaign extends Model
             default => 'غير محدد',
         };
     }
+    
+    /**
+     * الحصول على نص نوع الإرسال
+     * 
+     * @return string
+     */
+    public function getSendTypeTextAttribute(): string
+    {
+        return match($this->send_type) {
+            'now' => 'فوري',
+            'scheduled' => 'مجدول',
+            'auto' => 'تلقائي',
+            default => 'غير محدد',
+        };
+    }
 
     /**
      * الحصول على لون Badge حسب الحالة
