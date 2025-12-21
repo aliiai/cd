@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Debtor Model
@@ -33,6 +34,10 @@ class Debtor extends Model
         'payment_link',
         'notes',
         'status',
+        'has_installments',
+        'total_installments',
+        'paid_amount',
+        'remaining_amount',
     ];
 
     /**
@@ -41,6 +46,9 @@ class Debtor extends Model
     protected $casts = [
         'debt_amount' => 'decimal:2',
         'due_date' => 'date',
+        'has_installments' => 'boolean',
+        'paid_amount' => 'decimal:2',
+        'remaining_amount' => 'decimal:2',
     ];
 
     /**
@@ -63,6 +71,16 @@ class Debtor extends Model
         return $this->belongsToMany(CollectionCampaign::class, 'collection_campaign_clients', 'client_id', 'campaign_id')
             ->withPivot('status', 'sent_at', 'error_message')
             ->withTimestamps();
+    }
+
+    /**
+     * العلاقة مع الدفعات (Has Many)
+     * 
+     * @return HasMany
+     */
+    public function installments(): HasMany
+    {
+        return $this->hasMany(DebtInstallment::class)->orderBy('installment_number');
     }
 
     /**
@@ -137,6 +155,143 @@ class Debtor extends Model
             'failed' => 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border border-gray-200 dark:border-gray-600',
             default => 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border border-gray-200 dark:border-gray-600',
         };
+    }
+
+    /**
+     * حساب المبلغ المتبقي
+     * 
+     * @return float
+     */
+    public function getRemainingAmountAttribute(): float
+    {
+        if ($this->has_installments) {
+            $unpaidInstallments = $this->installments()
+                ->where('status', '!=', 'paid')
+                ->where('status', '!=', 'cancelled')
+                ->get();
+            
+            $totalUnpaid = $unpaidInstallments->sum('amount');
+            $totalPaid = $unpaidInstallments->sum('paid_amount');
+            
+            return max(0, $totalUnpaid - $totalPaid);
+        }
+        
+        return max(0, $this->debt_amount - ($this->paid_amount ?? 0));
+    }
+
+    /**
+     * حساب نسبة السداد
+     * 
+     * @return float
+     */
+    public function getPaymentProgressAttribute(): float
+    {
+        if ($this->debt_amount == 0) {
+            return 100;
+        }
+        
+        $paid = $this->paid_amount ?? 0;
+        return min(100, ($paid / $this->debt_amount) * 100);
+    }
+
+    /**
+     * التحقق من وجود دفعات متأخرة
+     * 
+     * @return bool
+     */
+    public function hasOverdueInstallments(): bool
+    {
+        if (!$this->has_installments) {
+            return false;
+        }
+        
+        return $this->installments()
+            ->where('status', 'overdue')
+            ->exists();
+    }
+
+    /**
+     * الحصول على عدد الدفعات المدفوعة
+     * 
+     * @return int
+     */
+    public function getPaidInstallmentsCountAttribute(): int
+    {
+        if (!$this->has_installments) {
+            return 0;
+        }
+        
+        return $this->installments()
+            ->where('status', 'paid')
+            ->count();
+    }
+
+    /**
+     * الحصول على عدد الدفعات المتأخرة
+     * 
+     * @return int
+     */
+    public function getOverdueInstallmentsCountAttribute(): int
+    {
+        if (!$this->has_installments) {
+            return 0;
+        }
+        
+        return $this->installments()
+            ->where('status', 'overdue')
+            ->count();
+    }
+
+    /**
+     * تحديث حالة المديون بناءً على الدفعات
+     * 
+     * @return void
+     */
+    public function updateStatusFromInstallments(): void
+    {
+        if (!$this->has_installments) {
+            return;
+        }
+
+        $allPaid = $this->installments()
+            ->where('status', '!=', 'cancelled')
+            ->where('status', '!=', 'paid')
+            ->doesntExist();
+
+        if ($allPaid && $this->status !== 'paid') {
+            $this->status = 'paid';
+            $this->save();
+        }
+
+        // تحديث المبلغ المدفوع والمتبقي
+        $this->paid_amount = $this->installments()
+            ->where('status', '!=', 'cancelled')
+            ->sum('paid_amount');
+        
+        $this->remaining_amount = $this->remaining_amount;
+        $this->save();
+    }
+
+    /**
+     * الحصول على تاريخ الاستحقاق القادم
+     * إذا كان الدين على دفعات، يرجع تاريخ الدفعة القادمة
+     * وإلا يرجع تاريخ الاستحقاق الأصلي
+     * 
+     * @return \Carbon\Carbon|null
+     */
+    public function getNextDueDateAttribute()
+    {
+        if ($this->has_installments) {
+            $nextInstallment = $this->installments()
+                ->where('status', '!=', 'paid')
+                ->where('status', '!=', 'cancelled')
+                ->orderBy('due_date', 'asc')
+                ->first();
+            
+            return $nextInstallment ? $nextInstallment->due_date : $this->due_date;
+        }
+        
+        return $this->due_date;
     }
 }
 

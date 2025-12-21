@@ -118,7 +118,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 Route::prefix('owner')->name('owner.')->middleware(['auth', 'role:owner'])->group(function () {
     Route::get('/dashboard', [OwnerDashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/collection-data', [OwnerDashboardController::class, 'getCollectionData'])->name('dashboard.collection-data');
-    Route::resource('debtors', OwnerDebtorController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('debtors', OwnerDebtorController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
+    
+    // Installments Routes
+    Route::prefix('debtors/{debtor}/installments')->name('debtors.installments.')->group(function () {
+        Route::post('/{installment}/payment', [OwnerDebtorController::class, 'recordPayment'])->name('payment');
+        Route::post('/{installment}/postpone', [OwnerDebtorController::class, 'postponeInstallment'])->name('postpone');
+        Route::post('/{installment}/cancel', [OwnerDebtorController::class, 'cancelInstallment'])->name('cancel');
+    });
     Route::get('/collections', [OwnerCollectionController::class, 'index'])->name('collections.index');
     Route::post('/collections', [OwnerCollectionController::class, 'store'])->name('collections.store');
     Route::get('/collections/{campaign}', [OwnerCollectionController::class, 'show'])->name('collections.show');
@@ -162,4 +169,7 @@ Route::prefix('owner')->name('owner.')->middleware(['auth', 'role:owner'])->grou
         Route::post('/{ticket}/reply', [OwnerTicketController::class, 'reply'])->name('reply');
         Route::post('/{ticket}/close', [OwnerTicketController::class, 'close'])->name('close');
     });
+    
+    // Test SMS Route (للاختبار فقط)
+    Route::post('/test-sms', [\App\Http\Controllers\Owner\TestSmsController::class, 'test'])->name('test-sms');
 });

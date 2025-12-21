@@ -35,4 +35,12 @@ return [
         ],
     ],
 
+    '4jawaly' => [
+        'api_key' => env('FORJAWALY_API_KEY'),
+        'api_secret' => env('FORJAWALY_API_SECRET'),
+        'sender' => env('FORJAWALY_SENDER', 'CGAI'),
+        'url' => env('FORJAWALY_URL', 'https://api-sms.4jawaly.com/api/v1/'),
+        'enabled' => env('SMS_NOTIFICATIONS_ENABLED', true),
+    ],
+
 ];

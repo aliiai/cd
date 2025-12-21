@@ -190,8 +190,9 @@
 </div>
 
 <!-- Debtor Modal -->
-<div id="debtorModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 dark:bg-opacity-75 hidden overflow-y-auto h-full w-full z-50 backdrop-blur-sm" style="display: none; align-items: flex-start; justify-content: center;">
-    <div class="relative top-10 mx-auto p-0 border-0 w-full max-w-2xl shadow-2xl rounded-xl bg-white dark:bg-gray-800 m-4 overflow-hidden">
+<div id="debtorModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 dark:bg-opacity-75 hidden overflow-y-auto h-full w-full z-50 backdrop-blur-sm" 
+style="display: none; align-items: flex-start; justify-content: center;">
+    <div class="relative top-5 mx-auto p-0 border-0 w-full max-w-2xl shadow-2xl rounded-xl bg-white dark:bg-gray-800 m-4 overflow-hidden">
         <div class="p-6">
             <!-- Modal Header -->
             <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
@@ -242,11 +243,12 @@
                     <!-- Email -->
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            {{ __('owner.email_address_label') }}
+                            {{ __('owner.email_address_label') }} <span class="text-red-500">*</span>
                         </label>
                         <input type="email" 
                                name="email" 
                                id="email"
+                               required
                                class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400">
                         @error('email')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -270,34 +272,116 @@
                         @enderror
                     </div>
 
-                    <!-- Due Date -->
-                    <div>
-                        <label for="due_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            {{ __('owner.due_date_label') }} <span class="text-red-500">*</span>
+                    <!-- Payment Type: Radio Buttons -->
+                    <div class="md:col-span-2 border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                            طريقة الدفع <span class="text-red-500">*</span>
                         </label>
-                        <input type="date" 
-                               name="due_date" 
-                               id="due_date" 
-                               required
-                               class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
-                        @error('due_date')
-                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                        @enderror
+                        <div class="flex items-center space-x-6 space-x-reverse">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" 
+                                       name="payment_type" 
+                                       id="payment_type_single"
+                                       value="single"
+                                       checked
+                                       onchange="togglePaymentType()"
+                                       class="w-4 h-4 text-primary-600 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 border-gray-300">
+                                <span class="mr-2 text-sm font-medium text-gray-700 dark:text-gray-300">دفعة واحدة</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" 
+                                       name="payment_type" 
+                                       id="payment_type_installments"
+                                       value="installments"
+                                       onchange="togglePaymentType()"
+                                       class="w-4 h-4 text-primary-600 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 border-gray-300">
+                                <span class="mr-2 text-sm font-medium text-gray-700 dark:text-gray-300">دفعات</span>
+                            </label>
+                        </div>
                     </div>
 
-                    <!-- Payment Link -->
-                    <div class="md:col-span-2">
-                        <label for="payment_link" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            {{ __('owner.payment_link') }}
-                        </label>
-                        <input type="url" 
-                               name="payment_link" 
-                               id="payment_link"
-                               placeholder="https://..."
-                               class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400">
-                        @error('payment_link')
-                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                        @enderror
+                    <!-- Single Payment: Due Date (Shown by default) -->
+                    <div id="single_payment_section" class="md:col-span-2">
+                        <div>
+                            <label for="due_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                تاريخ الاستحقاق <span class="text-red-500">*</span>
+                            </label>
+                            <input type="date" 
+                                   name="due_date" 
+                                   id="due_date" 
+                                   required
+                                   min="{{ date('Y-m-d') }}"
+                                   class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                            @error('due_date')
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Installments Section (Hidden by default) -->
+                    <div id="installments_section" class="md:col-span-2 hidden space-y-4 mt-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <!-- Number of Installments -->
+                            <div>
+                                <label for="number_of_installments" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    عدد الدفعات <span class="text-red-500">*</span>
+                                </label>
+                                <input type="number" 
+                                       id="number_of_installments" 
+                                       name="number_of_installments" 
+                                       min="2" 
+                                       max="24"
+                                       onchange="updateInstallmentsPreview()"
+                                       class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                                @error('number_of_installments')
+                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Installment Frequency -->
+                            <div>
+                                <label for="installment_frequency" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    تكرار الدفعات <span class="text-red-500">*</span>
+                                </label>
+                                <select id="installment_frequency" 
+                                        name="installment_frequency" 
+                                        required
+                                        onchange="updateInstallmentsPreview()"
+                                        class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                                    <option value="monthly">شهري</option>
+                                    <option value="every_3_months">كل 3 شهور</option>
+                                    <option value="every_6_months">كل 6 شهور</option>
+                                    <option value="yearly">سنوي</option>
+                                </select>
+                                @error('installment_frequency')
+                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- First Installment Date -->
+                            <div>
+                                <label for="first_installment_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    تاريخ أول دفعة <span class="text-red-500">*</span>
+                                </label>
+                                <input type="date" 
+                                       id="first_installment_date" 
+                                       name="first_installment_date"
+                                       min="{{ date('Y-m-d') }}"
+                                       onchange="updateInstallmentsPreview()"
+                                       class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                                @error('first_installment_date')
+                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                        
+                        <!-- Installments Preview -->
+                        <div id="installments_preview" class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-600 mt-4">
+                            <h4 class="font-semibold text-gray-900 dark:text-gray-100 mb-3">معاينة الدفعات</h4>
+                            <div id="installments_list" class="space-y-2" style="max-height: 12rem; min-height: 60px; overflow-y: auto; overflow-x: hidden; display: block;">
+                                <p class="text-sm text-gray-500 dark:text-gray-400">يرجى تحديد عدد الدفعات وتاريخ أول دفعة لعرض المعاينة</p>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Status -->
@@ -309,13 +393,14 @@
                                 id="status" 
                                 required
                                 class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
-                            <option value="new">{{ __('owner.new') }}</option>
-                            <option value="contacted">{{ __('owner.contacted') }}</option>
-                            <option value="promise_to_pay">{{ __('owner.promise_to_pay') }}</option>
-                            <option value="paid">{{ __('owner.paid') }}</option>
-                            <option value="overdue">{{ __('owner.overdue') }}</option>
-                            <option value="failed">{{ __('owner.failed') }}</option>
+                            <option value="new">جديد (أخذ الدين للتو)</option>
+                            <option value="contacted">قديم (عليه الدين منذ فترة)</option>
+                            <option value="promise_to_pay">وعد بالدفع (أخذ الدين منذ فترة قصيرة ووعد)</option>
+                            <option value="failed">متعثر (متعثر عن الدفع)</option>
                         </select>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                            ملاحظة: الحالات "مدفوع" و "متأخر" يتم تحديثها تلقائياً بناءً على السداد وتاريخ الاستحقاق
+                        </p>
                         @error('status')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
@@ -375,6 +460,10 @@
             document.getElementById('payment_link').value = paymentLink;
             document.getElementById('notes').value = notes;
             document.getElementById('status').value = status;
+            
+            // Set payment type to single for edit mode (default)
+            document.getElementById('payment_type_single').checked = true;
+            togglePaymentType();
         } else {
             // Add Mode
             modalTitle.textContent = '{{ __('owner.add_new_debtor') }}';
@@ -383,6 +472,10 @@
             
             // Reset form
             form.reset();
+            
+            // Set default payment type to single
+            document.getElementById('payment_type_single').checked = true;
+            togglePaymentType();
         }
         
         // Show modal
@@ -411,6 +504,119 @@
     document.getElementById('debtorModal').addEventListener('click', function(e) {
         if (e.target === this) {
             closeDebtorModal();
+        }
+    });
+
+    // Toggle Payment Type (Single vs Installments)
+    function togglePaymentType() {
+        const paymentType = document.querySelector('input[name="payment_type"]:checked')?.value;
+        const singleSection = document.getElementById('single_payment_section');
+        const installmentsSection = document.getElementById('installments_section');
+        const dueDateField = document.getElementById('due_date');
+        const numberField = document.getElementById('number_of_installments');
+        const frequencyField = document.getElementById('installment_frequency');
+        const firstDateField = document.getElementById('first_installment_date');
+        
+        if (paymentType === 'installments') {
+            // Show installments section, hide single payment
+            singleSection.classList.add('hidden');
+            installmentsSection.classList.remove('hidden');
+            
+            // Make installments fields required
+            if (numberField) numberField.required = true;
+            if (frequencyField) frequencyField.required = true;
+            if (firstDateField) firstDateField.required = true;
+            
+            // Make due_date not required
+            if (dueDateField) dueDateField.required = false;
+            
+            // Update preview
+            updateInstallmentsPreview();
+        } else {
+            // Show single payment, hide installments
+            singleSection.classList.remove('hidden');
+            installmentsSection.classList.add('hidden');
+            
+            // Make due_date required
+            if (dueDateField) dueDateField.required = true;
+            
+            // Make installments fields not required
+            if (numberField) numberField.required = false;
+            if (frequencyField) frequencyField.required = false;
+            if (firstDateField) firstDateField.required = false;
+        }
+    }
+
+    // Update Installments Preview
+    function updateInstallmentsPreview() {
+        const paymentType = document.querySelector('input[name="payment_type"]:checked')?.value;
+        if (paymentType !== 'installments') return;
+
+        const numberOfInstallments = parseInt(document.getElementById('number_of_installments')?.value || 0);
+        const frequency = document.getElementById('installment_frequency')?.value || 'monthly';
+        const debtAmount = parseFloat(document.getElementById('debt_amount')?.value || 0);
+        const firstDate = document.getElementById('first_installment_date')?.value;
+
+        const previewList = document.getElementById('installments_list');
+        if (!previewList) return;
+        
+        if (numberOfInstallments < 2 || debtAmount <= 0 || !firstDate) {
+            previewList.innerHTML = '<p class="text-sm text-gray-500 dark:text-gray-400">يرجى تحديد عدد الدفعات ومبلغ الدين وتاريخ أول دفعة لعرض المعاينة</p>';
+            return;
+        }
+
+        const installmentAmount = debtAmount / numberOfInstallments;
+        const baseAmount = Math.floor(installmentAmount * 100) / 100;
+        const remainder = debtAmount - (baseAmount * numberOfInstallments);
+        
+        let startDate = new Date(firstDate);
+        if (isNaN(startDate.getTime())) {
+            previewList.innerHTML = '<p class="text-sm text-red-500 dark:text-red-400">تاريخ غير صحيح</p>';
+            return;
+        }
+
+        let html = '<div class="space-y-2">';
+        for (let i = 1; i <= numberOfInstallments; i++) {
+            const amount = i === numberOfInstallments ? (baseAmount + remainder).toFixed(2) : baseAmount.toFixed(2);
+            
+            let installmentDate = new Date(startDate);
+            if (i > 1) {
+                switch(frequency) {
+                    case 'monthly':
+                        installmentDate.setMonth(startDate.getMonth() + (i - 1));
+                        break;
+                    case 'every_3_months':
+                        installmentDate.setMonth(startDate.getMonth() + ((i - 1) * 3));
+                        break;
+                    case 'every_6_months':
+                        installmentDate.setMonth(startDate.getMonth() + ((i - 1) * 6));
+                        break;
+                    case 'yearly':
+                        installmentDate.setFullYear(startDate.getFullYear() + (i - 1));
+                        break;
+                }
+            }
+            
+            const dateStr = installmentDate.toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' });
+            
+            html += `
+                <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-sm border border-gray-200 dark:border-gray-600">
+                    <span class="text-gray-700 dark:text-gray-300 font-medium">الدفعة #${i}</span>
+                    <span class="text-primary-600 dark:text-primary-400 font-bold">${amount} ر.س</span>
+                    <span class="text-gray-600 dark:text-gray-400">${dateStr}</span>
+                </div>
+            `;
+        }
+        html += '</div>';
+        
+        previewList.innerHTML = html;
+    }
+
+    // Update preview when debt amount changes
+    document.addEventListener('DOMContentLoaded', function() {
+        const debtAmountField = document.getElementById('debt_amount');
+        if (debtAmountField) {
+            debtAmountField.addEventListener('input', updateInstallmentsPreview);
         }
     });
 

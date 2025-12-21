@@ -7,7 +7,9 @@
                     <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider">{{ __('owner.phone_number_label') }}</th>
                     <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider">{{ __('owner.email_address_label') }}</th>
                     <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider">{{ __('owner.debt_amount') }}</th>
-                    <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider">{{ __('owner.due_date') }}</th>
+                    <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider">
+                        {{ __('owner.next_due_date') }}
+                    </th>
                     <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider">{{ __('owner.debt_status') }}</th>
                     <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider">{{ __('common.actions') }}</th>
                 </tr>
@@ -30,7 +32,25 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
-                            {{ $debtor->due_date->format('Y-m-d') }}
+                            @if($debtor->has_installments && $debtor->relationLoaded('installments'))
+                                @php
+                                    $nextInstallment = $debtor->installments
+                                        ->where('status', '!=', 'paid')
+                                        ->where('status', '!=', 'cancelled')
+                                        ->sortBy('due_date')
+                                        ->first();
+                                @endphp
+                                @if($nextInstallment)
+                                    <div class="flex flex-col">
+                                        <span class="font-medium text-gray-900 dark:text-gray-100">{{ $nextInstallment->due_date->format('Y-m-d') }}</span>
+                                        <span class="text-xs text-primary-600 dark:text-primary-400">دفعة #{{ $nextInstallment->installment_number }}</span>
+                                    </div>
+                                @else
+                                    <span class="text-gray-400 dark:text-gray-500">-</span>
+                                @endif
+                            @else
+                                {{ $debtor->due_date->format('Y-m-d') }}
+                            @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm">
                             <span class="px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm {{ $debtor->status_color }}">
@@ -39,6 +59,15 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex items-center space-x-2 space-x-reverse">
+                                <a href="{{ route('owner.debtors.show', $debtor) }}" 
+                                   class="inline-flex items-center px-3 py-1.5 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-all duration-200 shadow-sm hover:shadow-md"
+                                   title="{{ __('owner.view_details') }}">
+                                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    </svg>
+                                    <span class="text-xs font-medium">{{ __('owner.view_details') }}</span>
+                                </a>
                                 <button onclick="openDebtorModal({{ $debtor->id }}, '{{ $debtor->name }}', '{{ $debtor->phone }}', '{{ $debtor->email }}', {{ $debtor->debt_amount }}, '{{ $debtor->due_date->format('Y-m-d') }}', '{{ $debtor->payment_link }}', '{{ addslashes($debtor->notes) }}', '{{ $debtor->status }}')" 
                                         class="inline-flex items-center px-3 py-1.5 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-lg hover:bg-primary-200 dark:hover:bg-primary-900/50 transition-all duration-200 shadow-sm hover:shadow-md"
                                         title="{{ __('common.edit') }}">

@@ -7,9 +7,11 @@ use App\Models\Debtor;
 use App\Models\CollectionCampaign;
 use App\Notifications\CampaignCreatedNotification;
 use App\Notifications\MessageSentNotification;
+use App\Services\FourJawalyService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Collection Controller for Owner
@@ -28,11 +30,11 @@ class CollectionController extends Controller
         // جلب جميع المديونين للمالك الحالي
         $debtors = Debtor::where('owner_id', Auth::id())->get();
         
-        // جلب جميع الحملات السابقة للمالك الحالي
+        // جلب جميع الحملات السابقة للمالك الحالي مع pagination
         $campaigns = CollectionCampaign::where('owner_id', Auth::id())
             ->with('debtors')
             ->latest()
-            ->get();
+            ->paginate(10);
         
         // معلومات الاشتراك والاستهلاك
         $user = Auth::user();
@@ -144,27 +146,183 @@ class CollectionController extends Controller
         // إرسال إشعار إنشاء حملة
         Auth::user()->notify(new CampaignCreatedNotification($campaign));
 
-        // في حالة الإرسال الفوري، تحديث حالة المديونين في pivot
+        // في حالة الإرسال الفوري، إرسال الرسائل فعلياً
         if ($status === 'sent') {
-            foreach ($validated['client_ids'] as $clientId) {
-                $campaign->debtors()->updateExistingPivot($clientId, [
-                    'status' => 'sent',
-                    'sent_at' => now(),
+            $sentCount = 0;
+            $failedCount = 0;
+
+            if ($validated['channel'] === 'sms') {
+                // إرسال SMS عبر 4jawaly
+                $smsService = new FourJawalyService();
+                
+                foreach ($debtors as $debtor) {
+                    try {
+                        // استبدال placeholders في الرسالة
+                        $message = $validated['message'];
+                        
+                        // استبدال {{name}} أو @{{name}} باسم المديون
+                        $message = str_replace(['{{name}}', '@{{name}}'], $debtor->name ?? 'العميل', $message);
+                        
+                        // استبدال {{amount}} أو @{{amount}} بمبلغ الدين
+                        $debtAmount = $debtor->has_installments 
+                            ? number_format($debtor->remaining_amount, 2)
+                            : number_format($debtor->debt_amount, 2);
+                        $message = str_replace(['{{amount}}', '@{{amount}}'], $debtAmount, $message);
+                        
+                        // استبدال {{link}} أو @{{link}} برابط الدفع إن وجد
+                        $paymentLink = $debtor->payment_link ?? 'غير متوفر';
+                        $message = str_replace(['{{link}}', '@{{link}}'], $paymentLink, $message);
+                        
+                        // تسجيل الرسالة المعدلة للتأكد من الاستبدال
+                        Log::debug('SMS message after placeholder replacement', [
+                            'debtor_id' => $debtor->id,
+                            'debtor_name' => $debtor->name,
+                            'debt_amount' => $debtAmount,
+                            'original_message' => $validated['message'],
+                            'final_message' => $message,
+                        ]);
+                        
+                        // إرسال SMS مع metadata للتسجيل
+                        $result = $smsService->sendSMS($debtor->phone, $message, [
+                            'event_type' => 'collection_campaign',
+                            'entity_type' => CollectionCampaign::class,
+                            'entity_id' => $campaign->id,
+                        ]);
+                        
+                        // تحديث حالة الإرسال في pivot table
+                        $errorMessage = null;
+                        if (!$result['success']) {
+                            // استخدام error بدلاً من message لأن message قد يكون مضللاً
+                            $errorMessage = $result['error'] ?? 
+                                          (isset($result['message']) && stripos($result['message'], 'فشل') !== false ? $result['message'] : null) ??
+                                          ($result['message'] ?? 'فشل الإرسال');
+                            
+                            // إذا كانت الرسالة تقول "نجح" أو "حفظ" لكن success = false، نستخدم رسالة افتراضية
+                            if (stripos($errorMessage, 'نجح') !== false || 
+                                stripos($errorMessage, 'حفظ') !== false || 
+                                stripos($errorMessage, 'success') !== false) {
+                                $errorMessage = 'فشل إرسال الرسالة - استجابة API غير واضحة';
+                            }
+                        }
+                        
+                        $campaign->debtors()->updateExistingPivot($debtor->id, [
+                            'status' => $result['success'] ? 'sent' : 'failed',
+                            'sent_at' => $result['success'] ? now() : null,
+                            'error_message' => $errorMessage,
+                        ]);
+                        
+                        // تحديث عداد الحملة
+                        if ($result['success']) {
+                            $sentCount++;
+                        } else {
+                            $failedCount++;
+                        }
+                    } catch (\Exception $e) {
+                        // في حالة الخطأ
+                        $campaign->debtors()->updateExistingPivot($debtor->id, [
+                            'status' => 'failed',
+                            'error_message' => $e->getMessage(),
+                        ]);
+                        $failedCount++;
+                        
+                        Log::error('Failed to send SMS to debtor: ' . $debtor->id, [
+                            'phone' => $debtor->phone,
+                            'error' => $e->getMessage()
+                        ]);
+                    }
+                }
+                
+                // تحديث إحصائيات الحملة
+                $campaign->update([
+                    'sent_count' => $sentCount,
+                    'failed_count' => $failedCount,
                 ]);
+            } else {
+                // Email - يمكن إضافة منطق إرسال Email لاحقاً
+                foreach ($validated['client_ids'] as $clientId) {
+                    $campaign->debtors()->updateExistingPivot($clientId, [
+                        'status' => 'sent',
+                        'sent_at' => now(),
+                    ]);
+                }
+                $sentCount = $debtors->count();
             }
             
             // إرسال إشعار إرسال الرسالة
             Auth::user()->notify(new MessageSentNotification(
                 $campaign,
-                $debtors->count(),
+                $sentCount,
                 $validated['channel']
             ));
+            
+            // تحديد رسالة النتيجة بناءً على حالة الإرسال
+            $totalCount = $sentCount + $failedCount;
+            
+            if ($failedCount > 0 && $sentCount > 0) {
+                // نجح بعض الرسائل وفشل البعض
+                $message = "تم إرسال {$sentCount} من أصل {$totalCount} رسالة بنجاح. فشل إرسال {$failedCount} رسالة.";
+                
+                // جمع أسباب الفشل من pivot table
+                $failedDebtors = $campaign->debtors()
+                    ->wherePivot('status', 'failed')
+                    ->get();
+                
+                $errorReasons = [];
+                foreach ($failedDebtors as $debtor) {
+                    $errorMsg = $debtor->pivot->error_message;
+                    if ($errorMsg && !in_array($errorMsg, $errorReasons)) {
+                        $errorReasons[] = $errorMsg;
+                    }
+                }
+                
+                if (!empty($errorReasons)) {
+                    $mainReason = $errorReasons[0];
+                    // تبسيط رسالة الخطأ
+                    if (stripos($mainReason, 'التوكن') !== false || stripos($mainReason, 'token') !== false) {
+                        $mainReason = 'بيانات API غير صحيحة أو منتهية الصلاحية';
+                    }
+                    $message .= " السبب: " . $mainReason;
+                }
+                
+                return redirect()->route('owner.collections.index')
+                    ->with('warning', $message);
+            } elseif ($failedCount > 0 && $sentCount === 0) {
+                // فشلت جميع الرسائل
+                $failedDebtors = $campaign->debtors()
+                    ->wherePivot('status', 'failed')
+                    ->get();
+                
+                $errorReasons = [];
+                foreach ($failedDebtors as $debtor) {
+                    $errorMsg = $debtor->pivot->error_message;
+                    if ($errorMsg && !in_array($errorMsg, $errorReasons)) {
+                        $errorReasons[] = $errorMsg;
+                    }
+                }
+                
+                $mainReason = !empty($errorReasons) ? $errorReasons[0] : 'فشل إرسال جميع الرسائل';
+                
+                // تبسيط رسالة الخطأ
+                if (stripos($mainReason, 'التوكن') !== false || stripos($mainReason, 'token') !== false || stripos($mainReason, 'منتهى') !== false) {
+                    $mainReason = 'بيانات API غير صحيحة أو منتهية الصلاحية. يرجى التحقق من إعدادات API في ملف .env';
+                }
+                
+                $message = "فشل إرسال جميع الرسائل ({$totalCount} رسالة). السبب: " . $mainReason;
+                
+                return redirect()->route('owner.collections.index')
+                    ->with('error', $message);
+            } else {
+                // نجحت جميع الرسائل
+                $message = "تم إرسال جميع الرسائل بنجاح ({$sentCount} رسالة).";
+                return redirect()->route('owner.collections.index')
+                    ->with('success', $message);
+            }
+        } else {
+            // تم الجدولة فقط
+            $message = 'تم جدولة الحملة بنجاح.';
+            return redirect()->route('owner.collections.index')
+                ->with('success', $message);
         }
-
-        $message = $status === 'sent' ? 'تم إرسال الحملة بنجاح.' : 'تم جدولة الحملة بنجاح.';
-        
-        return redirect()->route('owner.collections.index')
-            ->with('success', $message);
     }
 
     /**

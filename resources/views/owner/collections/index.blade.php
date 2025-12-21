@@ -38,6 +38,15 @@
             </div>
         @endif
 
+        @if(session('warning'))
+            <div class="mb-6 bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 border-l-4 border-yellow-500 dark:border-yellow-400 rounded-lg p-4 flex items-center shadow-md">
+                <svg class="w-6 h-6 text-yellow-600 dark:text-yellow-400 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <p class="text-yellow-800 dark:text-yellow-300 font-medium">{{ session('warning') }}</p>
+            </div>
+        @endif
+
         {{-- ========== Subscription Usage Info ========== --}}
         @if($subscriptionInfo)
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8 border border-gray-200 dark:border-gray-700">
@@ -189,6 +198,50 @@
                             </tbody>
                         </table>
                     </div>
+                    
+                    {{-- Pagination --}}
+                    @if($campaigns->hasPages())
+                        <div class="mt-6 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 pt-4">
+                            <div class="flex-1 flex justify-between sm:hidden">
+                                @if($campaigns->onFirstPage())
+                                    <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-700 cursor-not-allowed">
+                                        السابق
+                                    </span>
+                                @else
+                                    <a href="{{ $campaigns->previousPageUrl() }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                        السابق
+                                    </a>
+                                @endif
+                                
+                                @if($campaigns->hasMorePages())
+                                    <a href="{{ $campaigns->nextPageUrl() }}" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                        التالي
+                                    </a>
+                                @else
+                                    <span class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-700 cursor-not-allowed">
+                                        التالي
+                                    </span>
+                                @endif
+                            </div>
+                            
+                            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-700 dark:text-gray-300">
+                                        عرض
+                                        <span class="font-medium">{{ $campaigns->firstItem() }}</span>
+                                        إلى
+                                        <span class="font-medium">{{ $campaigns->lastItem() }}</span>
+                                        من
+                                        <span class="font-medium">{{ $campaigns->total() }}</span>
+                                        حملة
+                                    </p>
+                                </div>
+                                <div>
+                                    {{ $campaigns->links() }}
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                 @else
                     <div class="text-center py-12">
                         <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -252,21 +305,74 @@
                         </select>
                     </div>
 
-                    {{-- Clients Multi-Select --}}
-                    <div id="multipleClientsDiv" class="hidden">
-                        <label for="client_ids" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            اختر المديونين <span class="text-red-500">*</span>
-                        </label>
-                        <select name="client_ids[]" 
-                                id="client_ids" 
-                                multiple
-                                size="6"
-                                class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200">
-                            @foreach($debtors as $debtor)
-                                <option value="{{ $debtor->id }}">{{ $debtor->name }} - {{ $debtor->phone }} ({{ number_format($debtor->debt_amount, 2) }} ر.س)</option>
-                            @endforeach
-                        </select>
-                        <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">اضغط Ctrl (أو Cmd على Mac) لاختيار أكثر من مدين</p>
+                    {{-- Clients Multi-Select with Checkboxes --}}
+                    <div id="multipleClientsDiv" class="hidden mb-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                اختر المديونين <span class="text-red-500">*</span>
+                            </label>
+                            <div class="flex items-center gap-3">
+                                <span id="selectedCount" class="text-sm font-semibold text-primary-600 dark:text-primary-400">0 محدد</span>
+                                <button type="button" 
+                                        onclick="toggleSelectAll()" 
+                                        class="text-xs px-3 py-1.5 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-lg hover:bg-primary-200 dark:hover:bg-primary-900/50 transition-colors duration-200 font-medium">
+                                    <span id="selectAllText">تحديد الكل</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        {{-- Search Box --}}
+                        <div class="mb-3">
+                            <div class="relative">
+                                <input type="text" 
+                                       id="debtorSearch" 
+                                       placeholder="ابحث عن مديون..." 
+                                       onkeyup="filterDebtors()"
+                                       class="w-full px-4 py-2.5 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200">
+                                <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        {{-- Debtors List with Checkboxes --}}
+                        <div class="border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 shadow-sm overflow-hidden" style="max-height: 300px; overflow-y: auto;">
+                            <div id="debtorsList" class="divide-y divide-gray-200 dark:divide-gray-600">
+                                @foreach($debtors as $debtor)
+                                    <label class="flex items-center p-3 hover:bg-gray-50 dark:hover:bg-gray-600/50 cursor-pointer transition-colors duration-150 debtor-item" 
+                                           data-name="{{ strtolower($debtor->name) }}" 
+                                           data-phone="{{ $debtor->phone }}">
+                                        <input type="checkbox" 
+                                               name="client_ids[]" 
+                                               value="{{ $debtor->id }}" 
+                                               class="debtor-checkbox rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 w-5 h-5 ml-3 flex-shrink-0"
+                                               onchange="updateSelectedCount()">
+                                        <div class="flex-1 min-w-0">
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex-1 min-w-0">
+                                                    <p class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                                                        {{ $debtor->name }}
+                                                    </p>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                                                        {{ $debtor->phone }}
+                                                    </p>
+                                                </div>
+                                                <div class="ml-3 text-left">
+                                                    <p class="text-sm font-semibold text-primary-600 dark:text-primary-400">
+                                                        {{ number_format($debtor->debt_amount, 2) }} ر.س
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </label>
+                                @endforeach
+                            </div>
+                            @if($debtors->count() === 0)
+                                <div class="p-8 text-center">
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">لا يوجد مديونين متاحين</p>
+                                </div>
+                            @endif
+                        </div>
                     </div>
 
                     {{-- Single Client Select --}}
@@ -481,7 +587,6 @@
         singleDiv.classList.add('hidden');
         
         // إزالة required من جميع الحقول
-        document.getElementById('client_ids').removeAttribute('required');
         document.getElementById('single_client_id').removeAttribute('required');
         
         // إزالة أي hidden inputs سابقة
@@ -490,7 +595,7 @@
         
         if (selection === 'multiple') {
             multipleDiv.classList.remove('hidden');
-            document.getElementById('client_ids').setAttribute('required', 'required');
+            updateSelectedCount();
         } else if (selection === 'single') {
             singleDiv.classList.remove('hidden');
             document.getElementById('single_client_id').setAttribute('required', 'required');
@@ -506,6 +611,65 @@
                 @endforeach
             @endif
         }
+    }
+
+    // Update Selected Count
+    function updateSelectedCount() {
+        const checkboxes = document.querySelectorAll('.debtor-checkbox:checked');
+        const countSpan = document.getElementById('selectedCount');
+        const selectAllText = document.getElementById('selectAllText');
+        
+        if (countSpan) {
+            const selectedCount = checkboxes.length;
+            countSpan.textContent = selectedCount + ' محدد';
+            
+            if (selectedCount > 0) {
+                countSpan.classList.add('text-primary-600', 'dark:text-primary-400');
+                countSpan.classList.remove('text-gray-500', 'dark:text-gray-400');
+            } else {
+                countSpan.classList.add('text-gray-500', 'dark:text-gray-400');
+                countSpan.classList.remove('text-primary-600', 'dark:text-primary-400');
+            }
+        }
+        
+        // Update Select All button text
+        const allCheckboxes = document.querySelectorAll('.debtor-checkbox:not([style*="display: none"])');
+        const allChecked = allCheckboxes.length > 0 && Array.from(allCheckboxes).every(cb => cb.checked);
+        if (selectAllText) {
+            selectAllText.textContent = allChecked ? 'إلغاء التحديد' : 'تحديد الكل';
+        }
+    }
+
+    // Toggle Select All
+    function toggleSelectAll() {
+        const visibleCheckboxes = Array.from(document.querySelectorAll('.debtor-item:not([style*="display: none"]) .debtor-checkbox'));
+        const allChecked = visibleCheckboxes.length > 0 && visibleCheckboxes.every(cb => cb.checked);
+        
+        visibleCheckboxes.forEach(checkbox => {
+            checkbox.checked = !allChecked;
+        });
+        
+        updateSelectedCount();
+    }
+
+    // Filter Debtors
+    function filterDebtors() {
+        const searchTerm = document.getElementById('debtorSearch').value.toLowerCase();
+        const items = document.querySelectorAll('.debtor-item');
+        
+        items.forEach(item => {
+            const name = item.getAttribute('data-name') || '';
+            const phone = item.getAttribute('data-phone') || '';
+            const matches = name.includes(searchTerm) || phone.includes(searchTerm);
+            
+            if (matches) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+        
+        updateSelectedCount();
     }
 
     // Load Template
@@ -579,13 +743,13 @@
             }
             selectedClientsCount = allDebtorsCount;
         } else if (selection === 'multiple') {
-            const selectedClients = Array.from(document.getElementById('client_ids').selectedOptions);
-            if (selectedClients.length === 0) {
+            const selectedCheckboxes = Array.from(document.querySelectorAll('.debtor-checkbox:checked'));
+            if (selectedCheckboxes.length === 0) {
                 e.preventDefault();
                 swalError('يرجى اختيار مديون واحد على الأقل', 'تنبيه');
                 return false;
             }
-            selectedClientsCount = selectedClients.length;
+            selectedClientsCount = selectedCheckboxes.length;
         } else {
             e.preventDefault();
             swalError('يرجى اختيار طريقة اختيار المديونين', 'تنبيه');
