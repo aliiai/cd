@@ -6,6 +6,7 @@ use App\Models\Debtor;
 use App\Models\DebtInstallment;
 use App\Models\CollectionCampaign;
 use App\Services\FourJawalyService;
+use App\Services\PaymobService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -36,7 +37,7 @@ class SendDueDateReminders extends Command
     /**
      * Execute the console command.
      */
-    public function handle(FourJawalyService $smsService)
+    public function handle(FourJawalyService $smsService, PaymobService $paymobService)
     {
         $this->info('بدء عملية إرسال التذكيرات التلقائية...');
         
@@ -94,6 +95,9 @@ class SendDueDateReminders extends Command
                     continue;
                 }
             }
+            
+            // إنشاء رابط دفع تلقائياً إذا لم يكن موجوداً
+            $this->ensurePaymentLink($debtor, $paymobService);
             
             // إنشاء حملة تلقائية
             $campaign = $this->createAutoCampaign($debtor, 'regular');
@@ -157,6 +161,9 @@ class SendDueDateReminders extends Command
                 $this->info("تم إرسال رسالة تلقائية لهذا المديون اليوم. تخطي الدفعة ID: {$installment->id}");
                 continue;
             }
+            
+            // إنشاء رابط دفع تلقائياً إذا لم يكن موجوداً
+            $this->ensurePaymentLink($debtor, $paymobService);
             
             // إنشاء حملة تلقائية
             $campaign = $this->createAutoCampaign($debtor, 'installment');
@@ -267,7 +274,23 @@ class SendDueDateReminders extends Command
             }
             $message = str_replace(['{{amount}}', '@{{amount}}'], $debtAmount, $message);
             
-            // لا نستبدل {{link}} حالياً حسب طلب المستخدم
+            // استبدال {{link}} برابط الدفع
+            // استخدام رابط مختصر لتجنب تجاوز حد الرسائل (15 رسالة SMS)
+            $paymentLinkForSms = 'غير متوفر';
+            if ($debtor->payment_link) {
+                try {
+                    // إنشاء رابط مختصر باستخدام route خاص
+                    $paymentLinkForSms = route('owner.payment.short-link', ['debtor' => $debtor->id]);
+                } catch (\Exception $e) {
+                    // إذا فشل إنشاء route، استخدم الرابط الكامل (لكن سيتم رفضه من 4jawaly إذا كان طويلاً)
+                    Log::warning('Failed to generate short payment link', [
+                        'debtor_id' => $debtor->id,
+                        'error' => $e->getMessage()
+                    ]);
+                    $paymentLinkForSms = $debtor->payment_link;
+                }
+            }
+            $message = str_replace(['{{link}}', '@{{link}}'], $paymentLinkForSms, $message);
             
             // إرسال SMS
             $result = $smsService->sendSMS($debtor->phone, $message, [
@@ -324,6 +347,49 @@ class SendDueDateReminders extends Command
             ]);
             
             return ['success' => false, 'message' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * التأكد من وجود رابط دفع للمديون
+     * 
+     * @param Debtor $debtor
+     * @param PaymobService $paymobService
+     * @return void
+     */
+    private function ensurePaymentLink(Debtor $debtor, PaymobService $paymobService): void
+    {
+        if ($debtor->payment_link) {
+            return; // رابط الدفع موجود بالفعل
+        }
+
+        try {
+            $amount = $debtor->has_installments 
+                ? $debtor->remaining_amount 
+                : $debtor->debt_amount;
+            
+            if ($amount <= 0) {
+                return; // لا يوجد مبلغ مستحق
+            }
+
+            $result = $paymobService->generatePaymentLink(
+                amount: $amount,
+                debtorName: $debtor->name,
+                debtorEmail: $debtor->email ?? $debtor->owner->email,
+                debtorPhone: $debtor->phone,
+                debtorId: $debtor->id
+            );
+
+            if ($result && isset($result['payment_link'])) {
+                $debtor->update(['payment_link' => $result['payment_link']]);
+                $this->info("✓ تم إنشاء رابط دفع للمديون ID: {$debtor->id}");
+            }
+        } catch (\Exception $e) {
+            Log::warning('Failed to generate payment link for debtor in auto reminder', [
+                'debtor_id' => $debtor->id,
+                'error' => $e->getMessage(),
+            ]);
+            // لا نوقف العملية إذا فشل إنشاء رابط الدفع
         }
     }
 }

@@ -12,8 +12,17 @@
                 </svg>
                 العودة إلى التقارير
             </a>
-            <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">تقارير مقدمي الخدمة</h1>
-            <p class="text-lg text-gray-600 dark:text-gray-400">مراقبة وتحليل أداء مقدمي الخدمة</p>
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">تقارير مقدمي الخدمة</h1>
+                    <p class="text-lg text-gray-600 dark:text-gray-400">مراقبة وتحليل أداء مقدمي الخدمة</p>
+                </div>
+                <a href="{{ route('admin.ai-reports.service-providers.export', request()->query()) }}" 
+                   class="inline-flex items-center px-4 py-2 bg-primary-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-primary-700 active:bg-primary-900 focus:outline-none focus:border-primary-900 focus:ring focus:ring-primary-300 disabled:opacity-25 transition">
+                    <i class="fas fa-download ml-2"></i>
+                    تحميل PDF
+                </a>
+            </div>
         </div>
 
         <!-- Search and Filters -->
@@ -99,14 +108,14 @@
                 <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-50 dark:bg-gray-700/50">
                         <tr>
-                            <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">مقدم الخدمة</th>
-                            <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">الحالة</th>
-                            <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">الباقة الحالية</th>
-                            <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">عدد المديونين</th>
-                            <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">الرسائل المرسلة</th>
-                            <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">نسبة التحصيل</th>
-                            <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">AI Usage</th>
-                            <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">إجراءات</th>
+                            <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">مقدم الخدمة</th>
+                            <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">الحالة</th>
+                            <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">الباقة الحالية</th>
+                            <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">عدد المديونين</th>
+                            <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">الرسائل المرسلة</th>
+                            <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">نسبة التحصيل</th>
+                            <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">AI Usage</th>
+                            <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">إجراءات</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

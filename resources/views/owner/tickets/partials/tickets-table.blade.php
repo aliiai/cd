@@ -3,13 +3,13 @@
         <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead class="bg-gradient-to-r from-primary-500 to-secondary-500">
                 <tr>
-                    <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider">{{ __('tickets.ticket_number_header') }}</th>
-                    <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider">{{ __('tickets.subject') }}</th>
-                    <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider">{{ __('tickets.type_header') }}</th>
-                    <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider">{{ __('tickets.status_header') }}</th>
-                    <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider">{{ __('tickets.last_reply') }}</th>
-                    <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider">{{ __('tickets.created_date') }}</th>
-                    <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider">{{ __('common.actions') }}</th>
+                    <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider whitespace-nowrap">{{ __('tickets.ticket_number_header') }}</th>
+                    <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider whitespace-nowrap">{{ __('tickets.subject') }}</th>
+                    <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider whitespace-nowrap">{{ __('tickets.type_header') }}</th>
+                    <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider whitespace-nowrap">{{ __('tickets.status_header') }}</th>
+                    <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider whitespace-nowrap">{{ __('tickets.last_reply') }}</th>
+                    <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider whitespace-nowrap">{{ __('tickets.created_date') }}</th>
+                    <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider whitespace-nowrap">{{ __('common.actions') }}</th>
                 </tr>
             </thead>
             <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700" id="ticketsTableBody">

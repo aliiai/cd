@@ -2,17 +2,17 @@
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-slate-50 via-primary-50 to-secondary-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-    <div class="w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="w-full mx-auto px-2 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
         
         {{-- ========== Header Section ========== --}}
-        <div class="flex justify-between items-center mb-8">
-            <div>
-                <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">{{ __('tickets.title') }}</h1>
-                <p class="text-lg text-gray-600 dark:text-gray-400">{{ __('tickets.description') }}</p>
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6 md:mb-8">
+            <div class="flex-1 min-w-0">
+                <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-1 sm:mb-2">{{ __('tickets.title') }}</h1>
+                <p class="text-sm sm:text-base lg:text-lg text-gray-600 dark:text-gray-400">{{ __('tickets.description') }}</p>
             </div>
             <button onclick="openCreateTicketModal()" 
-               class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+               class="inline-flex items-center justify-center px-4 py-2.5 sm:px-5 sm:py-2.5 md:px-6 md:py-3 bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white text-sm sm:text-base font-semibold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 w-full sm:w-auto">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
                 {{ __('tickets.new_ticket') }}
@@ -21,26 +21,26 @@
 
         {{-- ========== Success/Error Messages ========== --}}
         @if(session('success'))
-            <div class="mb-6 bg-gradient-to-r from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/20 border-l-4 border-emerald-500 dark:border-emerald-400 rounded-lg p-4 flex items-center shadow-md">
-                <svg class="w-6 h-6 text-emerald-600 dark:text-emerald-400 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="mb-4 sm:mb-6 bg-gradient-to-r from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/20 border-l-4 border-emerald-500 dark:border-emerald-400 rounded-lg p-3 sm:p-4 flex items-center shadow-md">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-emerald-600 dark:text-emerald-400 ml-2 sm:ml-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <p class="text-emerald-800 dark:text-emerald-300 font-medium">{{ session('success') }}</p>
+                <p class="text-xs sm:text-sm md:text-base text-emerald-800 dark:text-emerald-300 font-medium">{{ session('success') }}</p>
             </div>
         @endif
 
         @if(session('error'))
-            <div class="mb-6 bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border-l-4 border-red-500 dark:border-red-400 rounded-lg p-4 flex items-center shadow-md">
-                <svg class="w-6 h-6 text-red-600 dark:text-red-400 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="mb-4 sm:mb-6 bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border-l-4 border-red-500 dark:border-red-400 rounded-lg p-3 sm:p-4 flex items-center shadow-md">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-red-600 dark:text-red-400 ml-2 sm:ml-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
-                <p class="text-red-800 dark:text-red-300 font-medium">{{ session('error') }}</p>
+                <p class="text-xs sm:text-sm md:text-base text-red-800 dark:text-red-300 font-medium">{{ session('error') }}</p>
             </div>
         @endif
 
         {{-- ========== Filters and Search ========== --}}
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8 border border-gray-200 dark:border-gray-700">
-            <form id="filterForm" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 md:p-6 mb-4 sm:mb-6 md:mb-8 border border-gray-200 dark:border-gray-700">
+            <form id="filterForm" class="grid grid-cols-1 md:grid-cols-4 gap-3 sm:gap-4">
                 {{-- Search --}}
                 <div class="md:col-span-2">
                     <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('common.search') }}</label>
@@ -91,14 +91,14 @@
         </div>
 
         {{-- ========== Tickets Table ========== --}}
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
-            <div class="p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+            <div class="p-3 sm:p-4 md:p-6">
                 <div id="ticketsTableContainer">
                     @include('owner.tickets.partials.tickets-table', ['tickets' => $tickets])
                 </div>
                 
                 {{-- Pagination --}}
-                <div id="paginationContainer" class="mt-6">
+                <div id="paginationContainer" class="mt-4 sm:mt-6">
                     {{ $tickets->appends(request()->query())->links() }}
                 </div>
             </div>
@@ -113,46 +113,46 @@
         <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity backdrop-blur-sm" onclick="closeCreateTicketModal()"></div>
 
         {{-- Modal panel --}}
-        <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-2xl text-right overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+        <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg sm:rounded-2xl text-right overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full w-full mx-2 sm:mx-0">
             {{-- Header --}}
-            <div class="bg-gradient-to-r from-primary-500 to-secondary-500 px-6 py-4">
+            <div class="bg-gradient-to-r from-primary-500 to-secondary-500 px-4 sm:px-5 md:px-6 py-3 sm:py-4">
                 <div class="flex items-center justify-between">
-                    <h3 class="text-xl font-bold text-white">{{ __('tickets.create_title') }}</h3>
-                    <button onclick="closeCreateTicketModal()" class="text-white hover:text-gray-200 transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <h3 class="text-base sm:text-lg md:text-xl font-bold text-white">{{ __('tickets.create_title') }}</h3>
+                    <button onclick="closeCreateTicketModal()" class="text-white hover:text-gray-200 transition-colors flex-shrink-0 ml-2">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
                 </div>
-                <p class="mt-1 text-sm text-white/90">{{ __('tickets.create_description') }}</p>
+                <p class="mt-1 text-xs sm:text-sm text-white/90">{{ __('tickets.create_description') }}</p>
             </div>
 
             {{-- Form --}}
-            <form id="createTicketForm" enctype="multipart/form-data" class="p-6">
+            <form id="createTicketForm" enctype="multipart/form-data" class="p-4 sm:p-5 md:p-6">
                 @csrf
                 
                 {{-- Subject --}}
-                <div class="mb-6">
-                    <label for="modal_subject" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <div class="mb-4 sm:mb-6">
+                    <label for="modal_subject" class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
                         {{ __('tickets.ticket_subject') }} <span class="text-red-500">*</span>
                     </label>
                     <input type="text" 
                            id="modal_subject" 
                            name="subject" 
                            required
-                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors">
-                    <div id="subject_error" class="mt-1 text-sm text-red-600 hidden"></div>
+                           class="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 text-sm sm:text-base text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors">
+                    <div id="subject_error" class="mt-1 text-xs sm:text-sm text-red-600 hidden"></div>
                 </div>
 
                 {{-- Type --}}
-                <div class="mb-6">
-                    <label for="modal_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <div class="mb-4 sm:mb-6">
+                    <label for="modal_type" class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
                         {{ __('tickets.ticket_type') }} <span class="text-red-500">*</span>
                     </label>
                     <select id="modal_type" 
                             name="type" 
                             required
-                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors">
+                            class="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 text-sm sm:text-base text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors">
                         <option value="">{{ __('tickets.select_type') }}</option>
                         <option value="technical">{{ __('tickets.technical') }}</option>
                         <option value="subscription">{{ __('tickets.subscription') }}</option>
@@ -160,48 +160,48 @@
                         <option value="general">{{ __('tickets.general') }}</option>
                         <option value="suggestion">{{ __('tickets.suggestion') }}</option>
                     </select>
-                    <div id="type_error" class="mt-1 text-sm text-red-600 hidden"></div>
+                    <div id="type_error" class="mt-1 text-xs sm:text-sm text-red-600 hidden"></div>
                 </div>
 
                 {{-- Description --}}
-                <div class="mb-6">
-                    <label for="modal_description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <div class="mb-4 sm:mb-6">
+                    <label for="modal_description" class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
                         {{ __('tickets.ticket_description') }} <span class="text-red-500">*</span>
                     </label>
                     <textarea id="modal_description" 
                               name="description" 
-                              rows="6"
+                              rows="5"
                               required
-                              class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors resize-none"
+                              class="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 text-sm sm:text-base text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors resize-none"
                               placeholder="{{ __('tickets.description_placeholder') }}"></textarea>
-                    <div id="description_error" class="mt-1 text-sm text-red-600 hidden"></div>
+                    <div id="description_error" class="mt-1 text-xs sm:text-sm text-red-600 hidden"></div>
                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">الحد الأدنى 10 أحرف</p>
                 </div>
 
                 {{-- Attachment --}}
-                <div class="mb-6">
-                    <label for="modal_attachment" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <div class="mb-4 sm:mb-6">
+                    <label for="modal_attachment" class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
                         {{ __('tickets.attachment') }}
                     </label>
                     <input type="file" 
                            id="modal_attachment" 
                            name="attachment" 
                            accept="image/*"
-                           class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm transition-colors">
-                    <div id="attachment_error" class="mt-1 text-sm text-red-600 hidden"></div>
+                           class="w-full px-3 py-2 sm:px-4 sm:py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 text-xs sm:text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors">
+                    <div id="attachment_error" class="mt-1 text-xs sm:text-sm text-red-600 hidden"></div>
                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ __('tickets.attachment_hint') }}</p>
                 </div>
 
                 {{-- Buttons --}}
-                <div class="flex items-center justify-end space-x-3 space-x-reverse pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2 sm:gap-3 sm:space-x-3 sm:space-x-reverse pt-4 border-t border-gray-200 dark:border-gray-700">
                     <button type="button" 
                             onclick="closeCreateTicketModal()"
-                            class="px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200 font-medium">
+                            class="w-full sm:w-auto px-4 py-2.5 sm:px-6 sm:py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-sm sm:text-base text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200 font-medium">
                         {{ __('common.cancel') }}
                     </button>
                     <button type="submit" 
                             id="submitTicketBtn"
-                            class="px-6 py-3 bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                            class="w-full sm:w-auto px-4 py-2.5 sm:px-6 sm:py-3 bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white text-sm sm:text-base font-semibold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                         <span id="submitTicketBtnText">{{ __('tickets.send_ticket') }}</span>
                         <span id="submitTicketBtnLoader" class="hidden inline-flex items-center">
                             <svg class="animate-spin -mr-1 ml-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

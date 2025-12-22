@@ -52,16 +52,16 @@
             responsive: true,
             maintainAspectRatio: false,
             cutout: '60%',
-            plugins: {
+                plugins: {
                 legend: {
                     display: true,
                     position: 'bottom',
                     labels: {
-                        padding: 15,
+                        padding: window.innerWidth >= 1024 ? 15 : 10,
                         usePointStyle: true,
                         pointStyle: 'circle',
                         font: {
-                            size: 12,
+                            size: window.innerWidth >= 1024 ? 12 : window.innerWidth >= 640 ? 11 : 10,
                             weight: '500',
                         },
                         color: chartColors.legendColor,
@@ -170,10 +170,11 @@
                         ticks: {
                             color: currentColors.tickColor,
                             font: {
-                                size: 13,
+                                size: window.innerWidth >= 1024 ? 13 : window.innerWidth >= 640 ? 12 : 11,
                                 weight: '500',
                             },
-                            padding: 10,
+                            padding: window.innerWidth >= 1024 ? 10 : 8,
+                            maxRotation: window.innerWidth < 640 ? 45 : 0,
                         }
                     },
                     y: {
@@ -186,10 +187,10 @@
                         ticks: {
                             color: currentColors.tickColor,
                             font: {
-                                size: 12,
+                                size: window.innerWidth >= 1024 ? 12 : window.innerWidth >= 640 ? 11 : 10,
                             },
                             stepSize: Math.ceil(yAxisMax / 10),
-                            padding: 10,
+                            padding: window.innerWidth >= 1024 ? 10 : 8,
                             callback: function(value) {
                                 return value;
                             }

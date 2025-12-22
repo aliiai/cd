@@ -1,20 +1,20 @@
 <!-- Header Component -->
-<header class="bg-gradient-to-r from-white via-gray-50 to-white dark:from-gray-800 dark:via-gray-850 dark:to-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-md backdrop-blur-sm">
-    <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-end items-center h-16">
+<header class="bg-gradient-to-r from-white via-gray-50 to-white dark:from-gray-800 dark:via-gray-850 dark:to-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-md backdrop-blur-sm sticky top-0 z-20">
+    <div class="max-w-full mx-auto px-2 sm:px-3 md:px-4 lg:px-8">
+        <div class="flex justify-between items-center h-14 sm:h-16 gap-2">
             <!-- Left Side - Hamburger Menu (في RTL سيكون على اليمين) -->
-            <!-- <div class="flex items-center">
+            <div class="flex items-center lg:hidden">
                 <button 
                     type="button"
                     class="p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
                     title="القائمة"
-                    onclick="document.querySelector('[wire\\:click=\"toggle\"]')?.click()"
+                    onclick="if(typeof window.openMobileSidebar === 'function') { window.openMobileSidebar(); } else { console.error('openMobileSidebar function not found'); }"
                 >
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </button>
-            </div> -->
+            </div>
 
             <!-- Center - Search Bar -->
             <!-- <div class="flex-1 max-w-xl mx-4">
@@ -36,21 +36,21 @@
             </div> -->
 
             <!-- Right Side - Icons (في RTL سيكون على اليسار) -->
-            <div class="flex items-center space-x-2 space-x-reverse">
-                <!-- Current Subscription (Owner Only) -->
+            <div class="flex items-center space-x-1 sm:space-x-2 space-x-reverse flex-1 lg:flex-initial justify-end">
+                <!-- Current Subscription (Owner Only) - Hidden on mobile -->
                 @if(Auth::user()->hasRole('owner'))
                     @php
                         $activeSubscription = Auth::user()->getActiveSubscription();
                     @endphp
                     @if($activeSubscription)
-                        <div class="flex items-center space-x-2 space-x-reverse px-4 py-2 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border border-green-200 dark:border-green-700 rounded-lg shadow-sm hover:shadow-md transition-all duration-200">
-                            <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="hidden md:flex items-center space-x-2 space-x-reverse px-3 py-1.5 sm:px-4 sm:py-2 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border border-green-200 dark:border-green-700 rounded-lg shadow-sm hover:shadow-md transition-all duration-200">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
-                            <span class="text-sm font-semibold text-green-800 dark:text-green-300">
+                            <span class="text-xs sm:text-sm font-semibold text-green-800 dark:text-green-300">
                                 {{ $activeSubscription->subscription->name }}
                             </span>
-                            <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 shadow-sm">
+                            <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 text-xs font-bold rounded-full bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 shadow-sm">
                                 {{ __('common.active') }}
                             </span>
                         </div>
@@ -62,10 +62,10 @@
                     <button 
                         type="button"
                         @click="open = !open"
-                        class="relative p-2.5 text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-all duration-200 hover:shadow-md group"
+                        class="relative p-2 sm:p-2.5 text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-all duration-200 hover:shadow-md group"
                         title="{{ __('common.change_language') }}"
                     >
-                        <svg class="w-5 h-5 transition-transform duration-200 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-200 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
                         </svg>
                     </button>
@@ -122,15 +122,15 @@
                 <button 
                     type="button"
                     id="darkModeToggle"
-                    class="relative p-2.5 text-gray-600 hover:text-amber-500 dark:text-gray-300 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 rounded-lg transition-all duration-200 hover:shadow-md group"
+                    class="relative p-2 sm:p-2.5 text-gray-600 hover:text-amber-500 dark:text-gray-300 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 rounded-lg transition-all duration-200 hover:shadow-md group"
                     title="{{ __('common.toggle_dark_mode') }}"
                 >
                     <!-- Sun Icon (Light Mode) -->
-                    <svg id="sunIcon" class="w-5 h-5 hidden dark:block transition-transform duration-200 group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg id="sunIcon" class="w-4 h-4 sm:w-5 sm:h-5 hidden dark:block transition-transform duration-200 group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
                     </svg>
                     <!-- Moon Icon (Dark Mode) -->
-                    <svg id="moonIcon" class="w-5 h-5 block dark:hidden transition-transform duration-200 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg id="moonIcon" class="w-4 h-4 sm:w-5 sm:h-5 block dark:hidden transition-transform duration-200 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
                     </svg>
                 </button>
@@ -141,10 +141,10 @@
                 <!-- Settings -->
                 <a 
                     href="{{ Auth::user()->hasRole('admin') ? route('admin.settings') : route('owner.settings') }}"
-                    class="relative p-2.5 text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-all duration-200 hover:shadow-md group"
+                    class="relative p-2 sm:p-2.5 text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-all duration-200 hover:shadow-md group"
                     title="{{ __('common.settings') }}"
                 >
-                    <svg class="w-5 h-5 transition-transform duration-200 group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-200 group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
@@ -155,20 +155,20 @@
                     <button 
                         type="button"
                         @click="open = !open"
-                        class="flex items-center space-x-2 space-x-reverse p-1.5 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20
+                        class="flex items-center space-x-1 sm:space-x-2 space-x-reverse p-1 sm:p-1.5 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20
                          rounded-lg transition-all duration-200 hover:shadow-md group"
                         title="{{ __('common.profile') }}"
                     >
                         <!-- Profile Photo or Initial -->
                         @if(Auth::user()->profile_photo_path)
-                            <img src="{{ asset('storage/' . Auth::user()->profile_photo_path) }}" alt="{{ Auth::user()->name }}" class="h-9 w-9 rounded-full border-2 border-gray-300 dark:border-gray-600 group-hover:border-primary-400 dark:group-hover:border-primary-500 transition-colors duration-200 shadow-sm object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <img src="{{ asset('storage/' . Auth::user()->profile_photo_path) }}" alt="{{ Auth::user()->name }}" class="h-7 w-7 sm:h-9 sm:w-9 rounded-full border-2 border-gray-300 dark:border-gray-600 group-hover:border-primary-400 dark:group-hover:border-primary-500 transition-colors duration-200 shadow-sm object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                         @else
-                            <div class="h-9 w-9 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 dark:from-primary-500 dark:to-primary-700 flex items-center justify-center border-2 border-gray-300 dark:border-gray-600 group-hover:border-primary-400 dark:group-hover:border-primary-500 transition-all duration-200 shadow-sm group-hover:shadow-md">
-                                <span class="text-sm font-bold text-white">{{ substr(Auth::user()->name, 0, 1) }}</span>
+                            <div class="h-7 w-7 sm:h-9 sm:w-9 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 dark:from-primary-500 dark:to-primary-700 flex items-center justify-center border-2 border-gray-300 dark:border-gray-600 group-hover:border-primary-400 dark:group-hover:border-primary-500 transition-all duration-200 shadow-sm group-hover:shadow-md">
+                                <span class="text-xs sm:text-sm font-bold text-white">{{ substr(Auth::user()->name, 0, 1) }}</span>
                             </div>
                         @endif
-                        <!-- Dropdown Arrow -->
-                        <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <!-- Dropdown Arrow - Hidden on mobile -->
+                        <svg class="hidden sm:block w-4 h-4 transition-transform duration-200 group-hover:translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>

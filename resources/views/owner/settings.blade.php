@@ -1,42 +1,42 @@
 @extends('layouts.owner')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-slate-50 via-primary-50 to-secondary-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-8">
-    <div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-primary-50 to-secondary-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-4 sm:py-6 md:py-8">
+    <div class="w-full mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
         {{-- Page Header --}}
-        <div class="mb-8">
-            <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">{{ __('settings.title') }}</h1>
-            <p class="text-lg text-gray-600 dark:text-gray-400">{{ __('settings.description') }}</p>
+        <div class="mb-4 sm:mb-6 md:mb-8">
+            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-1 sm:mb-2">{{ __('settings.title') }}</h1>
+            <p class="text-sm sm:text-base lg:text-lg text-gray-600 dark:text-gray-400">{{ __('settings.description') }}</p>
         </div>
 
         {{-- Success Message --}}
         @if(session('success'))
-        <div class="mb-6 p-4 bg-gradient-to-r from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/20 border-l-4 border-emerald-500 dark:border-emerald-400 rounded-lg flex items-center shadow-md">
-            <svg class="w-6 h-6 text-emerald-600 dark:text-emerald-400 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="mb-4 sm:mb-6 p-3 sm:p-4 bg-gradient-to-r from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/20 border-l-4 border-emerald-500 dark:border-emerald-400 rounded-lg flex items-center shadow-md">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-emerald-600 dark:text-emerald-400 ml-2 sm:ml-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            <p class="text-sm font-medium text-emerald-800 dark:text-emerald-300">{{ session('success') }}</p>
+            <p class="text-xs sm:text-sm font-medium text-emerald-800 dark:text-emerald-300">{{ session('success') }}</p>
         </div>
         @endif
 
         {{-- Tabs Navigation --}}
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 mb-6 overflow-hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 mb-4 sm:mb-6 overflow-hidden">
             <div class="border-b border-gray-200 dark:border-gray-700">
-                <nav class="flex space-x-8 space-x-reverse px-6" aria-label="Tabs">
-                    <button onclick="showTab('profile')" id="tab-profile" class="tab-button active py-4 px-1 border-b-2 border-primary-500 font-medium text-sm text-primary-600 dark:text-primary-400">
+                <nav class="flex space-x-4 sm:space-x-6 md:space-x-8 space-x-reverse px-3 sm:px-4 md:px-6 overflow-x-auto" aria-label="Tabs">
+                    <button onclick="showTab('profile')" id="tab-profile" class="tab-button active py-3 sm:py-4 px-1 border-b-2 border-primary-500 font-medium text-xs sm:text-sm text-primary-600 dark:text-primary-400 whitespace-nowrap">
                         {{ __('settings.profile_tab') }}
                     </button>
-                    <button onclick="showTab('password')" id="tab-password" class="tab-button py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600">
+                    <button onclick="showTab('password')" id="tab-password" class="tab-button py-3 sm:py-4 px-1 border-b-2 border-transparent font-medium text-xs sm:text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600 whitespace-nowrap">
                         {{ __('settings.password_tab') }}
                     </button>
-                    <button onclick="showTab('security')" id="tab-security" class="tab-button py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600">
+                    <button onclick="showTab('security')" id="tab-security" class="tab-button py-3 sm:py-4 px-1 border-b-2 border-transparent font-medium text-xs sm:text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600 whitespace-nowrap">
                         {{ __('settings.security_tab') }}
                     </button>
                 </nav>
             </div>
 
             {{-- Tab Content --}}
-            <div class="p-6">
+            <div class="p-4 sm:p-5 md:p-6">
                 {{-- Profile Information Tab --}}
                 <div id="tab-content-profile" class="tab-content">
                     <form method="POST" action="{{ route('owner.settings.profile') }}" enctype="multipart/form-data" x-data="{ photoPreview: '{{ $user->profile_photo_path ? asset('storage/' . $user->profile_photo_path) : '' }}' }">

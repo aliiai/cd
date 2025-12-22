@@ -11,6 +11,9 @@ use App\Models\UserSubscription;
 use App\Models\SubscriptionRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Services\BrowsershotPdfService;
+use App\Services\MpdfService;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 /**
  * AI Report Controller for Admin
@@ -299,6 +302,313 @@ class AiReportController extends Controller
             'subscriptions',
             'allSubscriptions'
         ));
+    }
+
+    /**
+     * تصدير تقرير مقدمي الخدمة إلى PDF
+     */
+    public function exportServiceProviders(Request $request)
+    {
+        $query = User::whereHas('roles', function($q) {
+            $q->where('name', 'owner');
+        })->with(['activeSubscription.subscription']);
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        $providers = $query->get();
+
+        // حساب الإحصائيات
+        foreach ($providers as $provider) {
+            $provider->debtors_count = Debtor::where('owner_id', $provider->id)->count();
+            $provider->messages_sent = CollectionCampaign::where('owner_id', $provider->id)
+                ->where('status', 'sent')
+                ->sum('sent_count');
+            $totalDebt = Debtor::where('owner_id', $provider->id)->sum('debt_amount');
+            $paidDebt = Debtor::where('owner_id', $provider->id)
+                ->where('status', 'paid')
+                ->sum('debt_amount');
+            $provider->collection_rate = $totalDebt > 0 ? ($paidDebt / $totalDebt) * 100 : 0;
+        }
+
+        $html = view('admin.ai-reports.exports.service-providers-pdf', [
+            'providers' => $providers,
+            'generated_at' => now()->format('Y-m-d H:i:s'),
+        ])->render();
+
+        try {
+            $bytes = app(BrowsershotPdfService::class)->htmlToPdfBytes($html, [
+                'format' => 'A4',
+                'orientation' => 'landscape',
+            ]);
+        } catch (\Exception $e) {
+            \Log::warning('Browsershot PDF generation failed, falling back to mPDF', [
+                'error' => $e->getMessage(),
+            ]);
+            try {
+                $bytes = app(MpdfService::class)->htmlToPdfBytes($html, [
+                    'format' => 'A4',
+                    'orientation' => 'L',
+                ]);
+            } catch (\Exception $e2) {
+                \Log::warning('mPDF generation failed, falling back to DomPDF', [
+                    'error' => $e2->getMessage(),
+                ]);
+                $pdf = Pdf::loadHTML($html)->setPaper('a4', 'landscape');
+                $bytes = $pdf->output();
+            }
+        }
+
+        $filename = 'تقرير_مقدمي_الخدمة_' . now()->format('Y-m-d') . '.pdf';
+
+        return response($bytes, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => "attachment; filename*=UTF-8''" . rawurlencode($filename),
+        ]);
+    }
+
+    /**
+     * تصدير تقرير الحملات إلى PDF
+     */
+    public function exportCampaigns(Request $request)
+    {
+        $query = CollectionCampaign::with(['owner', 'clients']);
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        if ($request->filled('channel')) {
+            $query->where('channel', $request->channel);
+        }
+        if ($request->filled('owner_id')) {
+            $query->where('owner_id', $request->owner_id);
+        }
+
+        $campaigns = $query->latest()->get();
+
+        $totalCampaigns = $campaigns->count();
+        $smsCount = $campaigns->where('channel', 'sms')->count();
+        $emailCount = $campaigns->where('channel', 'email')->count();
+        $sentCount = $campaigns->where('status', 'sent')->count();
+
+        $html = view('admin.ai-reports.exports.campaigns-pdf', [
+            'campaigns' => $campaigns,
+            'totalCampaigns' => $totalCampaigns,
+            'smsCount' => $smsCount,
+            'emailCount' => $emailCount,
+            'sentCount' => $sentCount,
+            'generated_at' => now()->format('Y-m-d H:i:s'),
+        ])->render();
+
+        try {
+            $bytes = app(BrowsershotPdfService::class)->htmlToPdfBytes($html, [
+                'format' => 'A4',
+                'orientation' => 'landscape',
+            ]);
+        } catch (\Exception $e) {
+            \Log::warning('Browsershot PDF generation failed, falling back to mPDF', [
+                'error' => $e->getMessage(),
+            ]);
+            try {
+                $bytes = app(MpdfService::class)->htmlToPdfBytes($html, [
+                    'format' => 'A4',
+                    'orientation' => 'L',
+                ]);
+            } catch (\Exception $e2) {
+                \Log::warning('mPDF generation failed, falling back to DomPDF', [
+                    'error' => $e2->getMessage(),
+                ]);
+                $pdf = Pdf::loadHTML($html)->setPaper('a4', 'landscape');
+                $bytes = $pdf->output();
+            }
+        }
+
+        $filename = 'تقرير_الحملات_' . now()->format('Y-m-d') . '.pdf';
+
+        return response($bytes, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => "attachment; filename*=UTF-8''" . rawurlencode($filename),
+        ]);
+    }
+
+    /**
+     * تصدير تقرير الرسائل إلى PDF
+     */
+    public function exportMessages(Request $request)
+    {
+        $query = DB::table('collection_campaign_clients')
+            ->join('collection_campaigns', 'collection_campaign_clients.campaign_id', '=', 'collection_campaigns.id')
+            ->join('clients', 'collection_campaign_clients.client_id', '=', 'clients.id')
+            ->join('users', 'collection_campaigns.owner_id', '=', 'users.id')
+            ->select(
+                'collection_campaign_clients.*',
+                'collection_campaigns.id as campaign_id',
+                'collection_campaigns.campaign_number',
+                'collection_campaigns.channel',
+                'collection_campaigns.message as message_content',
+                'collection_campaigns.created_at as campaign_created_at',
+                'clients.name as client_name',
+                'clients.phone as client_phone',
+                'clients.email as client_email',
+                'users.name as provider_name',
+                'users.email as provider_email'
+            );
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('users.name', 'like', "%{$search}%")
+                  ->orWhere('users.email', 'like', "%{$search}%")
+                  ->orWhere('clients.name', 'like', "%{$search}%")
+                  ->orWhere('clients.phone', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('channel')) {
+            $query->where('collection_campaigns.channel', $request->channel);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('collection_campaign_clients.status', $request->status);
+        }
+
+        $messages = $query->orderBy('collection_campaign_clients.created_at', 'desc')->get();
+
+        $totalMessages = $messages->count();
+        $smsCount = $messages->where('channel', 'sms')->count();
+        $emailCount = $messages->where('channel', 'email')->count();
+        $successCount = $messages->where('status', 'sent')->count();
+        $failedCount = $messages->where('status', 'failed')->count();
+        $successRate = $totalMessages > 0 ? ($successCount / $totalMessages) * 100 : 0;
+        $failedRate = $totalMessages > 0 ? ($failedCount / $totalMessages) * 100 : 0;
+
+        $html = view('admin.ai-reports.exports.messages-pdf', [
+            'messages' => $messages,
+            'totalMessages' => $totalMessages,
+            'smsCount' => $smsCount,
+            'emailCount' => $emailCount,
+            'successCount' => $successCount,
+            'failedCount' => $failedCount,
+            'successRate' => $successRate,
+            'failedRate' => $failedRate,
+            'generated_at' => now()->format('Y-m-d H:i:s'),
+        ])->render();
+
+        try {
+            $bytes = app(BrowsershotPdfService::class)->htmlToPdfBytes($html, [
+                'format' => 'A4',
+                'orientation' => 'landscape',
+            ]);
+        } catch (\Exception $e) {
+            \Log::warning('Browsershot PDF generation failed, falling back to mPDF', [
+                'error' => $e->getMessage(),
+            ]);
+            try {
+                $bytes = app(MpdfService::class)->htmlToPdfBytes($html, [
+                    'format' => 'A4',
+                    'orientation' => 'L',
+                ]);
+            } catch (\Exception $e2) {
+                \Log::warning('mPDF generation failed, falling back to DomPDF', [
+                    'error' => $e2->getMessage(),
+                ]);
+                $pdf = Pdf::loadHTML($html)->setPaper('a4', 'landscape');
+                $bytes = $pdf->output();
+            }
+        }
+
+        $filename = 'تقرير_الرسائل_' . now()->format('Y-m-d') . '.pdf';
+
+        return response($bytes, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => "attachment; filename*=UTF-8''" . rawurlencode($filename),
+        ]);
+    }
+
+    /**
+     * تصدير تقرير الاشتراكات إلى PDF
+     */
+    public function exportSubscriptions(Request $request)
+    {
+        $activeSubscriptions = UserSubscription::where('status', 'active')
+            ->where(function($q) {
+                $q->whereNull('expires_at')
+                  ->orWhere('expires_at', '>', now());
+            })
+            ->count();
+
+        $mostUsedSubscription = Subscription::withCount('userSubscriptions')
+            ->orderBy('user_subscriptions_count', 'desc')
+            ->first();
+
+        $totalSubscriptions = UserSubscription::count();
+        $renewedSubscriptions = UserSubscription::where('status', 'active')
+            ->whereNotNull('expires_at')
+            ->where('expires_at', '>', now())
+            ->count();
+        $renewalRate = $totalSubscriptions > 0 ? ($renewedSubscriptions / $totalSubscriptions) * 100 : 0;
+
+        $rejectedRequests = SubscriptionRequest::where('status', 'rejected')->count();
+
+        $query = UserSubscription::with(['user', 'subscription']);
+        if ($request->filled('subscription_id')) {
+            $query->where('subscription_id', $request->subscription_id);
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        if ($request->filled('date_from')) {
+            $query->where('started_at', '>=', $request->date_from);
+        }
+        if ($request->filled('date_to')) {
+            $query->where('started_at', '<=', $request->date_to);
+        }
+
+        $subscriptions = $query->latest('started_at')->get();
+
+        $html = view('admin.ai-reports.exports.subscriptions-pdf', [
+            'activeSubscriptions' => $activeSubscriptions,
+            'mostUsedSubscription' => $mostUsedSubscription,
+            'renewalRate' => $renewalRate,
+            'rejectedRequests' => $rejectedRequests,
+            'subscriptions' => $subscriptions,
+            'generated_at' => now()->format('Y-m-d H:i:s'),
+        ])->render();
+
+        try {
+            $bytes = app(BrowsershotPdfService::class)->htmlToPdfBytes($html, [
+                'format' => 'A4',
+                'orientation' => 'portrait',
+            ]);
+        } catch (\Exception $e) {
+            \Log::warning('Browsershot PDF generation failed, falling back to mPDF', [
+                'error' => $e->getMessage(),
+            ]);
+            try {
+                $bytes = app(MpdfService::class)->htmlToPdfBytes($html, [
+                    'format' => 'A4',
+                    'orientation' => 'P',
+                ]);
+            } catch (\Exception $e2) {
+                \Log::warning('mPDF generation failed, falling back to DomPDF', [
+                    'error' => $e2->getMessage(),
+                ]);
+                $pdf = Pdf::loadHTML($html)->setPaper('a4', 'portrait');
+                $bytes = $pdf->output();
+            }
+        }
+
+        $filename = 'تقرير_الاشتراكات_' . now()->format('Y-m-d') . '.pdf';
+
+        return response($bytes, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => "attachment; filename*=UTF-8''" . rawurlencode($filename),
+        ]);
     }
 }
 

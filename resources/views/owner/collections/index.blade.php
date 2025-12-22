@@ -5,131 +5,134 @@
     <div class="w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
         {{-- ========== Header Section ========== --}}
-        <div class="flex justify-between items-center mb-8">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 sm:mb-8">
             <div>
-                <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">حملات التحصيل</h1>
-                <p class="text-lg text-gray-600 dark:text-gray-400">إنشاء وإدارة حملات التحصيل للمديونين</p>
+                <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-1 sm:mb-2">حملات التحصيل</h1>
+                <p class="text-sm sm:text-base lg:text-lg text-gray-600 dark:text-gray-400">إنشاء وإدارة حملات التحصيل للمديونين</p>
             </div>
             <button onclick="openCampaignModal()" 
-                    class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    class="inline-flex items-center justify-center px-4 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white text-sm sm:text-base font-semibold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 w-full sm:w-auto">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
-                إنشاء حملة تحصيل
+                <span class="hidden sm:inline">إنشاء حملة تحصيل</span>
+                <span class="sm:hidden">إنشاء حملة</span>
             </button>
         </div>
 
         {{-- ========== Success/Error Messages ========== --}}
         @if(session('success'))
-            <div class="mb-6 bg-gradient-to-r from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/20 border-l-4 border-emerald-500 dark:border-emerald-400 rounded-lg p-4 flex items-center shadow-md">
-                <svg class="w-6 h-6 text-emerald-600 dark:text-emerald-400 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="mb-4 sm:mb-6 bg-gradient-to-r from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/20 border-l-4 border-emerald-500 dark:border-emerald-400 rounded-lg p-3 sm:p-4 flex items-center shadow-md">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-emerald-600 dark:text-emerald-400 ml-2 sm:ml-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <p class="text-emerald-800 dark:text-emerald-300 font-medium">{{ session('success') }}</p>
+                <p class="text-xs sm:text-sm md:text-base text-emerald-800 dark:text-emerald-300 font-medium">{{ session('success') }}</p>
             </div>
         @endif
 
         @if(session('error'))
-            <div class="mb-6 bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border-l-4 border-red-500 dark:border-red-400 rounded-lg p-4 flex items-center shadow-md">
-                <svg class="w-6 h-6 text-red-600 dark:text-red-400 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="mb-4 sm:mb-6 bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border-l-4 border-red-500 dark:border-red-400 rounded-lg p-3 sm:p-4 flex items-center shadow-md">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-red-600 dark:text-red-400 ml-2 sm:ml-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
-                <p class="text-red-800 dark:text-red-300 font-medium">{{ session('error') }}</p>
+                <p class="text-xs sm:text-sm md:text-base text-red-800 dark:text-red-300 font-medium">{{ session('error') }}</p>
             </div>
         @endif
 
         @if(session('warning'))
-            <div class="mb-6 bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 border-l-4 border-yellow-500 dark:border-yellow-400 rounded-lg p-4 flex items-center shadow-md">
-                <svg class="w-6 h-6 text-yellow-600 dark:text-yellow-400 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="mb-4 sm:mb-6 bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 border-l-4 border-yellow-500 dark:border-yellow-400 rounded-lg p-3 sm:p-4 flex items-center shadow-md">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-yellow-600 dark:text-yellow-400 ml-2 sm:ml-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
-                <p class="text-yellow-800 dark:text-yellow-300 font-medium">{{ session('warning') }}</p>
+                <p class="text-xs sm:text-sm md:text-base text-yellow-800 dark:text-yellow-300 font-medium">{{ session('warning') }}</p>
             </div>
         @endif
 
         {{-- ========== Subscription Usage Info ========== --}}
         @if($subscriptionInfo)
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8 border border-gray-200 dark:border-gray-700">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center">
-                        <svg class="w-6 h-6 ml-2 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 md:p-6 mb-4 sm:mb-6 md:mb-8 border border-gray-200 dark:border-gray-700">
+                <div class="flex items-center justify-between mb-3 sm:mb-4">
+                    <h3 class="text-base sm:text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 ml-2 text-primary-600 dark:text-primary-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                         </svg>
-                        معلومات الاشتراك والاستهلاك
+                        <span class="hidden sm:inline">معلومات الاشتراك والاستهلاك</span>
+                        <span class="sm:hidden">الاشتراك</span>
                     </h3>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                     <div>
-                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">الباقة الحالية</p>
-                        <p class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $subscriptionInfo['subscription_name'] }}</p>
+                        <p class="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400 mb-1 sm:mb-2">الباقة الحالية</p>
+                        <p class="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $subscriptionInfo['subscription_name'] }}</p>
                     </div>
                     <div>
-                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">استهلاك الرسائل</p>
-                        <div class="flex items-center space-x-3 space-x-reverse">
-                            <div class="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+                        <p class="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400 mb-1 sm:mb-2">استهلاك الرسائل</p>
+                        <div class="flex items-center space-x-2 sm:space-x-3 space-x-reverse">
+                            <div class="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2 sm:h-3 overflow-hidden">
                                 <div 
-                                    class="h-3 rounded-full transition-all duration-500 {{ $subscriptionInfo['messages_usage'] >= 90 ? 'bg-gradient-to-r from-red-500 to-red-600' : ($subscriptionInfo['messages_usage'] >= 70 ? 'bg-gradient-to-r from-yellow-500 to-yellow-600' : 'bg-gradient-to-r from-emerald-500 to-emerald-600') }}" 
+                                    class="h-2 sm:h-3 rounded-full transition-all duration-500 {{ $subscriptionInfo['messages_usage'] >= 90 ? 'bg-gradient-to-r from-red-500 to-red-600' : ($subscriptionInfo['messages_usage'] >= 70 ? 'bg-gradient-to-r from-yellow-500 to-yellow-600' : 'bg-gradient-to-r from-emerald-500 to-emerald-600') }}" 
                                     style="width: {{ min($subscriptionInfo['messages_usage'], 100) }}%"
                                 ></div>
                             </div>
-                            <span class="text-sm font-bold {{ $subscriptionInfo['messages_usage'] >= 90 ? 'text-red-600 dark:text-red-400' : ($subscriptionInfo['messages_usage'] >= 70 ? 'text-yellow-600 dark:text-yellow-400' : 'text-emerald-600 dark:text-emerald-400') }}">
+                            <span class="text-xs sm:text-sm font-bold {{ $subscriptionInfo['messages_usage'] >= 90 ? 'text-red-600 dark:text-red-400' : ($subscriptionInfo['messages_usage'] >= 70 ? 'text-yellow-600 dark:text-yellow-400' : 'text-emerald-600 dark:text-emerald-400') }}">
                                 {{ $subscriptionInfo['messages_sent'] }} / {{ $subscriptionInfo['max_messages'] }}
                             </span>
                         </div>
                         @if($subscriptionInfo['messages_remaining'] !== null)
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 sm:mt-2">
                                 المتبقي: <span class="font-semibold {{ $subscriptionInfo['messages_remaining'] <= 5 ? 'text-red-600 dark:text-red-400' : 'text-gray-700 dark:text-gray-300' }}">{{ $subscriptionInfo['messages_remaining'] }}</span> رسالة
                             </p>
                         @endif
                     </div>
                 </div>
                 @if($subscriptionInfo['messages_remaining'] !== null && $subscriptionInfo['messages_remaining'] <= 5 && $subscriptionInfo['messages_remaining'] > 0)
-                    <div class="mt-4 bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 border-l-4 border-yellow-500 dark:border-yellow-400 rounded-lg p-4 flex items-start">
-                        <svg class="w-5 h-5 text-yellow-600 dark:text-yellow-400 ml-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="mt-3 sm:mt-4 bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 border-l-4 border-yellow-500 dark:border-yellow-400 rounded-lg p-3 sm:p-4 flex items-start">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600 dark:text-yellow-400 ml-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                         </svg>
-                        <p class="text-sm text-yellow-800 dark:text-yellow-300 font-medium">
+                        <p class="text-xs sm:text-sm text-yellow-800 dark:text-yellow-300 font-medium">
                             تحذير: لديك {{ $subscriptionInfo['messages_remaining'] }} رسالة متبقية فقط. يرجى ترقية اشتراكك لإرسال المزيد.
                         </p>
                     </div>
                 @elseif($subscriptionInfo['messages_remaining'] !== null && $subscriptionInfo['messages_remaining'] == 0)
-                    <div class="mt-4 bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border-l-4 border-red-500 dark:border-red-400 rounded-lg p-4 flex items-start">
-                        <svg class="w-5 h-5 text-red-600 dark:text-red-400 ml-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="mt-3 sm:mt-4 bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border-l-4 border-red-500 dark:border-red-400 rounded-lg p-3 sm:p-4 flex items-start">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-red-600 dark:text-red-400 ml-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
-                        <p class="text-sm text-red-800 dark:text-red-300 font-medium">
+                        <p class="text-xs sm:text-sm text-red-800 dark:text-red-300 font-medium">
                             لقد استنفدت جميع الرسائل المسموحة! يرجى ترقية اشتراكك لإرسال المزيد.
                         </p>
                     </div>
                 @endif
             </div>
         @else
-            <div class="bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 border-l-4 border-yellow-500 dark:border-yellow-400 rounded-lg p-4 mb-8 flex items-center shadow-md">
-                <svg class="w-6 h-6 text-yellow-600 dark:text-yellow-400 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 border-l-4 border-yellow-500 dark:border-yellow-400 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6 md:mb-8 flex items-center shadow-md">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-yellow-600 dark:text-yellow-400 ml-2 sm:ml-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
-                <p class="text-sm text-yellow-800 dark:text-yellow-300 font-medium">
+                <p class="text-xs sm:text-sm text-yellow-800 dark:text-yellow-300 font-medium">
                     لا يوجد اشتراك نشط. يرجى الاشتراك في إحدى الباقات لإرسال الرسائل.
                 </p>
             </div>
         @endif
 
         {{-- ========== Campaigns Table ========== --}}
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
-            <div class="bg-gradient-to-r from-primary-500 to-secondary-500 px-6 py-4">
+        <div class="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+            <div class="bg-gradient-to-r from-primary-500 to-secondary-500 px-3 sm:px-4 md:px-6 py-3 sm:py-4">
                 <div class="flex items-center justify-between">
-                    <h2 class="text-xl font-bold text-white flex items-center">
-                        <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <h2 class="text-base sm:text-lg md:text-xl font-bold text-white flex items-center">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
                         </svg>
-                        الحملات السابقة
+                        <span class="hidden sm:inline">الحملات السابقة</span>
+                        <span class="sm:hidden">الحملات</span>
                     </h2>
                 </div>
             </div>
             
             {{-- Filters --}}
-            <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700/50 border-b border-gray-200 dark:border-gray-600">
-                <form method="GET" action="{{ route('owner.collections.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 bg-gray-50 dark:bg-gray-700/50 border-b border-gray-200 dark:border-gray-600">
+                <form method="GET" action="{{ route('owner.collections.index') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                     {{-- Filter by Send Type --}}
                     <div>
                         <label for="send_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">نوع الإرسال</label>
@@ -172,25 +175,26 @@
                 </form>
             </div>
             
-            <div class="p-6">
+            <div class="p-3 sm:p-4 lg:p-6">
                 @if($campaigns->count() > 0)
-                    <div class="overflow-x-auto rounded-lg">
-                        <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <div class="overflow-x-auto -mx-3 sm:-mx-4 lg:-mx-6 rounded-lg">
+                        <div class="inline-block min-w-full align-middle">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                             <thead class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800">
                                 <tr>
-                                    <th class="px-6 py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">رقم الحملة</th>
-                                    <th class="px-6 py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">نوع الإرسال</th>
-                                    <th class="px-6 py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">عدد المستلمين</th>
-                                    <th class="px-6 py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">قناة الإرسال</th>
-                                    <th class="px-6 py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">حالة الإرسال</th>
-                                    <th class="px-6 py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">وقت الإرسال</th>
-                                    <th class="px-6 py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">الإجراءات</th>
+                                    <th class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">رقم الحملة</th>
+                                    <th class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap hidden sm:table-cell">نوع الإرسال</th>
+                                    <th class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">عدد المستلمين</th>
+                                    <th class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap hidden md:table-cell">قناة الإرسال</th>
+                                    <th class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">حالة الإرسال</th>
+                                    <th class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap hidden lg:table-cell">وقت الإرسال</th>
+                                    <th class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">الإجراءات</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                 @foreach($campaigns as $campaign)
                                     <tr class="hover:bg-primary-50 dark:hover:bg-gray-700 transition-all duration-200">
-                                        <td class="px-6 py-4 whitespace-nowrap">
+                                        <td class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center text-white font-bold text-sm ml-3">
                                                     {{ mb_substr($campaign->campaign_number ?? 'C', 0, 1) }}
@@ -198,8 +202,8 @@
                                                 <div class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $campaign->campaign_number }}</div>
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold {{ $campaign->send_type_color }}">
+                                        <td class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap hidden sm:table-cell">
+                                            <span class="inline-flex items-center px-2 py-1 sm:px-3 sm:py-1.5 rounded-full text-xs font-semibold {{ $campaign->send_type_color }}">
                                                 @if($campaign->send_type === 'auto')
                                                     <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -208,54 +212,56 @@
                                                 {{ $campaign->send_type_text }}
                                             </span>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-300 border border-primary-200 dark:border-primary-800">
+                                        <td class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
+                                            <span class="inline-flex items-center px-2 py-1 sm:px-3 sm:py-1.5 rounded-full text-xs font-semibold bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-300 border border-primary-200 dark:border-primary-800">
                                                 {{ $campaign->total_recipients }}
                                             </span>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
+                                        <td class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap hidden md:table-cell">
                                             @if($campaign->channel == 'sms')
-                                                <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
-                                                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <span class="inline-flex items-center px-2 py-1 sm:px-3 sm:py-1.5 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                                                    <svg class="w-3 h-3 sm:w-4 sm:h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                                     </svg>
                                                     SMS
                                                 </span>
                                             @else
-                                                <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
-                                                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <span class="inline-flex items-center px-2 py-1 sm:px-3 sm:py-1.5 rounded-full text-xs font-semibold bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                                                    <svg class="w-3 h-3 sm:w-4 sm:h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                                     </svg>
                                                     Email
                                                 </span>
                                             @endif
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm {{ $campaign->status_color }}">
+                                        <td class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 sm:px-3 sm:py-1.5 text-xs font-semibold rounded-full shadow-sm {{ $campaign->status_color }}">
                                                 {{ $campaign->status_text }}
                                             </span>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                                        <td class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 dark:text-gray-100 hidden lg:table-cell">
                                             @if($campaign->send_type === 'scheduled' && $campaign->scheduled_at)
                                                 {{ $campaign->scheduled_at->format('Y-m-d H:i') }}
                                             @else
                                                 {{ $campaign->created_at->format('Y-m-d H:i') }}
                                             @endif
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
+                                        <td class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
                                             <a href="{{ route('owner.collections.show', $campaign) }}" 
-                                               class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white text-sm font-medium rounded-lg transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
-                                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                               class="inline-flex items-center px-2 py-1.5 sm:px-4 sm:py-2 bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
+                                                <svg class="w-3 h-3 sm:w-4 sm:h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                                 </svg>
-                                                عرض التفاصيل
+                                                <span class="hidden sm:inline">عرض التفاصيل</span>
+                                                <span class="sm:hidden">عرض</span>
                                             </a>
                                         </td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
+                        </div>
                     </div>
                     
                     {{-- Pagination --}}
@@ -324,29 +330,30 @@
 </div>
 
 {{-- ========== Campaign Modal ========== --}}
-<div id="campaignModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden overflow-y-auto h-full w-full z-50" style="display: none; align-items: center; justify-content: center; padding: 2rem;">
-    <div class="relative w-full max-w-6xl bg-white dark:bg-gray-800 rounded-xl shadow-2xl transform transition-all opacity-0 scale-95" style="max-height: 90vh; overflow-y: auto;">
+<div id="campaignModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden overflow-y-auto h-full w-full z-50" style="display: none; align-items: flex-start; justify-content: center; padding: 1rem;">
+    <div class="relative w-full max-w-6xl bg-white dark:bg-gray-800 rounded-xl shadow-2xl transform transition-all opacity-0 scale-95 my-4 sm:my-8" style="max-height: calc(100vh - 2rem); overflow-y: auto;">
         {{-- Modal Header --}}
-        <div class="sticky top-0 bg-gradient-to-r from-primary-500 to-secondary-500 text-white px-6 py-4 rounded-t-xl flex items-center justify-between z-10 shadow-md">
-            <h3 class="text-xl font-bold flex items-center">
-                <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="sticky top-0 bg-gradient-to-r from-primary-500 to-secondary-500 text-white px-4 sm:px-6 py-3 sm:py-4 rounded-t-xl flex items-center justify-between z-10 shadow-md">
+            <h3 class="text-lg sm:text-xl font-bold flex items-center">
+                <svg class="w-5 h-5 sm:w-6 sm:h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
-                إنشاء حملة تحصيل جديدة
+                <span class="hidden sm:inline">إنشاء حملة تحصيل جديدة</span>
+                <span class="sm:hidden">حملة جديدة</span>
             </h3>
             <button onclick="closeCampaignModal()" class="text-white hover:text-gray-200 transition-colors duration-200 p-1 rounded-full hover:bg-white/20">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
             </button>
         </div>
 
         {{-- Form --}}
-        <form id="campaignForm" action="{{ route('owner.collections.store') }}" method="POST" class="p-6" onsubmit="return validateCampaignSubmission(event)">
+        <form id="campaignForm" action="{{ route('owner.collections.store') }}" method="POST" class="p-4 sm:p-6" onsubmit="return validateCampaignSubmission(event)">
             @csrf
 
             {{-- Grid Layout --}}
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 {{-- Left Column --}}
                 <div class="space-y-6">
                     {{-- Select Clients --}}
@@ -398,9 +405,9 @@
                         <div class="border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 shadow-sm overflow-hidden" style="max-height: 300px; overflow-y: auto;">
                             <div id="debtorsList" class="divide-y divide-gray-200 dark:divide-gray-600">
                                 @foreach($debtors as $debtor)
-                                    <label class="flex items-center p-3 hover:bg-gray-50 dark:hover:bg-gray-600/50 cursor-pointer transition-colors duration-150 debtor-item" 
-                                           data-name="{{ strtolower($debtor->name) }}" 
-                                           data-phone="{{ $debtor->phone }}">
+                                    <div class="flex items-center p-3 hover:bg-gray-50 dark:hover:bg-gray-600/50 transition-colors duration-150 debtor-item" 
+                                         data-name="{{ strtolower($debtor->name) }}" 
+                                         data-phone="{{ $debtor->phone }}">
                                         <input type="checkbox" 
                                                name="client_ids[]" 
                                                value="{{ $debtor->id }}" 
@@ -416,14 +423,25 @@
                                                         {{ $debtor->phone }}
                                                     </p>
                                                 </div>
-                                                <div class="ml-3 text-left">
+                                                <div class="ml-3 flex items-center gap-2">
                                                     <p class="text-sm font-semibold text-primary-600 dark:text-primary-400">
-                                                        {{ number_format($debtor->debt_amount, 2) }} ر.س
+                                                        {{ number_format($debtor->has_installments ? $debtor->remaining_amount : $debtor->debt_amount, 2) }} ر.س
                                                     </p>
+                                                    @if(($debtor->has_installments ? $debtor->remaining_amount : $debtor->debt_amount) > 0)
+                                                        <a href="{{ route('owner.payments.iframe', $debtor) }}" 
+                                                           target="_blank"
+                                                           class="inline-flex items-center px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-lg transition-colors"
+                                                           title="فتح صفحة الدفع">
+                                                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                                                            </svg>
+                                                            دفع
+                                                        </a>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
-                                    </label>
+                                    </div>
                                 @endforeach
                             </div>
                             @if($debtors->count() === 0)

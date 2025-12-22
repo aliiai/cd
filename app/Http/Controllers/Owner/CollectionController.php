@@ -8,6 +8,7 @@ use App\Models\CollectionCampaign;
 use App\Notifications\CampaignCreatedNotification;
 use App\Notifications\MessageSentNotification;
 use App\Services\FourJawalyService;
+use App\Services\PaymobService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -170,9 +171,41 @@ class CollectionController extends Controller
             if ($validated['channel'] === 'sms') {
                 // إرسال SMS عبر 4jawaly
                 $smsService = new FourJawalyService();
+                $paymobService = new PaymobService();
                 
                 foreach ($debtors as $debtor) {
                     try {
+                        // إنشاء رابط دفع تلقائياً إذا لم يكن موجوداً
+                        $paymentLink = $debtor->payment_link;
+                        
+                        if (!$paymentLink) {
+                            try {
+                                $amount = $debtor->has_installments 
+                                    ? $debtor->remaining_amount 
+                                    : $debtor->debt_amount;
+                                
+                                if ($amount > 0) {
+                                    $result = $paymobService->generatePaymentLink(
+                                        amount: $amount,
+                                        debtorName: $debtor->name,
+                                        debtorEmail: $debtor->email ?? $debtor->owner->email,
+                                        debtorPhone: $debtor->phone,
+                                        debtorId: $debtor->id
+                                    );
+                                    
+                                    if ($result && isset($result['payment_link'])) {
+                                        $paymentLink = $result['payment_link'];
+                                        $debtor->update(['payment_link' => $paymentLink]);
+                                    }
+                                }
+                            } catch (\Exception $e) {
+                                Log::warning('Failed to generate payment link for debtor', [
+                                    'debtor_id' => $debtor->id,
+                                    'error' => $e->getMessage(),
+                                ]);
+                            }
+                        }
+                        
                         // استبدال placeholders في الرسالة
                         $message = $validated['message'];
                         
@@ -185,9 +218,14 @@ class CollectionController extends Controller
                             : number_format($debtor->debt_amount, 2);
                         $message = str_replace(['{{amount}}', '@{{amount}}'], $debtAmount, $message);
                         
-                        // استبدال {{link}} أو @{{link}} برابط الدفع إن وجد
-                        $paymentLink = $debtor->payment_link ?? 'غير متوفر';
-                        $message = str_replace(['{{link}}', '@{{link}}'], $paymentLink, $message);
+                        // استبدال {{link}} أو @{{link}} برابط الدفع
+                        // استخدام رابط مختصر لتجنب تجاوز حد الرسائل (15 رسالة SMS)
+                        $paymentLinkForSms = 'غير متوفر';
+                        if ($paymentLink && $paymentLink !== 'غير متوفر') {
+                            // إنشاء رابط مختصر باستخدام route خاص
+                            $paymentLinkForSms = route('owner.payment.short-link', ['debtor' => $debtor->id]);
+                        }
+                        $message = str_replace(['{{link}}', '@{{link}}'], $paymentLinkForSms, $message);
                         
                         // تسجيل الرسالة المعدلة للتأكد من الاستبدال
                         Log::debug('SMS message after placeholder replacement', [
@@ -209,14 +247,37 @@ class CollectionController extends Controller
                         $errorMessage = null;
                         if (!$result['success']) {
                             // استخدام error بدلاً من message لأن message قد يكون مضللاً
-                            $errorMessage = $result['error'] ?? 
-                                          (isset($result['message']) && stripos($result['message'], 'فشل') !== false ? $result['message'] : null) ??
-                                          ($result['message'] ?? 'فشل الإرسال');
+                            $error = $result['error'] ?? null;
+                            
+                            // تحويل error إلى string إذا كان array
+                            if (is_array($error)) {
+                                $error = json_encode($error, JSON_UNESCAPED_UNICODE);
+                            } elseif (!is_string($error)) {
+                                $error = (string) $error;
+                            }
+                            
+                            $message = $result['message'] ?? null;
+                            if (is_array($message)) {
+                                $message = json_encode($message, JSON_UNESCAPED_UNICODE);
+                            } elseif (!is_string($message)) {
+                                $message = $message ? (string) $message : null;
+                            }
+                            
+                            $errorMessage = $error ?? 
+                                          (isset($message) && is_string($message) && stripos($message, 'فشل') !== false ? $message : null) ??
+                                          ($message ?? 'فشل الإرسال');
+                            
+                            // التأكد من أن errorMessage هو string
+                            if (!is_string($errorMessage)) {
+                                $errorMessage = is_array($errorMessage) ? json_encode($errorMessage, JSON_UNESCAPED_UNICODE) : (string) $errorMessage;
+                            }
                             
                             // إذا كانت الرسالة تقول "نجح" أو "حفظ" لكن success = false، نستخدم رسالة افتراضية
-                            if (stripos($errorMessage, 'نجح') !== false || 
+                            if (is_string($errorMessage) && (
+                                stripos($errorMessage, 'نجح') !== false || 
                                 stripos($errorMessage, 'حفظ') !== false || 
-                                stripos($errorMessage, 'success') !== false) {
+                                stripos($errorMessage, 'success') !== false
+                            )) {
                                 $errorMessage = 'فشل إرسال الرسالة - استجابة API غير واضحة';
                             }
                         }

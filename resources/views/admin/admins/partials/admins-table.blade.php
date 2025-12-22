@@ -3,13 +3,13 @@
         <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead class="bg-gradient-to-r from-primary-600 via-primary-500 to-secondary-600">
                 <tr>
-                    <th class="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider">الاسم</th>
-                    <th class="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider">البريد الإلكتروني</th>
-                    <th class="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider">الدور</th>
-                    <th class="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider">عدد الصلاحيات</th>
-                    <th class="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider">الحالة</th>
-                    <th class="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider">تاريخ الإنشاء</th>
-                    <th class="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider">الإجراءات</th>
+                    <th class="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">الاسم</th>
+                    <th class="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">البريد الإلكتروني</th>
+                    <th class="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">الدور</th>
+                    <th class="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">عدد الصلاحيات</th>
+                    <th class="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">الحالة</th>
+                    <th class="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">تاريخ الإنشاء</th>
+                    <th class="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">الإجراءات</th>
                 </tr>
             </thead>
             <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700" id="adminsTableBody">

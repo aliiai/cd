@@ -268,7 +268,16 @@ class Debtor extends Model
             ->where('status', '!=', 'cancelled')
             ->sum('paid_amount');
         
-        $this->remaining_amount = $this->remaining_amount;
+        // حساب المبلغ المتبقي بشكل صحيح
+        $totalUnpaid = $this->installments()
+            ->where('status', '!=', 'paid')
+            ->where('status', '!=', 'cancelled')
+            ->get()
+            ->sum(function($inst) {
+                return max(0, $inst->amount - $inst->paid_amount);
+            });
+        
+        $this->remaining_amount = $totalUnpaid;
         $this->save();
     }
 

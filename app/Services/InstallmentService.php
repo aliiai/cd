@@ -116,10 +116,19 @@ class InstallmentService
                 ->where('status', '!=', 'cancelled')
                 ->sum('paid_amount');
             
-            $debtor->remaining_amount = $debtor->remaining_amount;
+            // حساب المبلغ المتبقي بشكل صحيح
+            $totalUnpaid = $debtor->installments()
+                ->where('status', '!=', 'paid')
+                ->where('status', '!=', 'cancelled')
+                ->get()
+                ->sum(function($inst) {
+                    return max(0, $inst->amount - $inst->paid_amount);
+                });
+            
+            $debtor->remaining_amount = $totalUnpaid;
             
             // تحديث حالة المديون إذا تم سداد كل الدفعات
-            if ($debtor->remaining_amount == 0) {
+            if ($debtor->remaining_amount <= 0) {
                 $debtor->status = 'paid';
             }
             

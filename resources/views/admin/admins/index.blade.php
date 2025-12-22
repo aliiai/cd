@@ -4,16 +4,16 @@
 <div class="min-h-screen bg-gradient-to-br from-slate-50 via-primary-50 to-secondary-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12">
     <div class="w-full mx-auto sm:px-6 lg:px-8">
         <!-- Header -->
-        <div class="mb-8">
-            <div class="flex items-center justify-between">
+        <div class="mb-4 sm:mb-6 md:mb-8">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">{{ __('common.admins_management') }}</h1>
-                    <p class="text-lg text-gray-600 dark:text-gray-400">{{ __('common.admins_management_description') }}</p>
+                    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-1 sm:mb-2">{{ __('common.admins_management') }}</h1>
+                    <p class="text-xs sm:text-sm lg:text-base text-gray-600 dark:text-gray-400">{{ __('common.admins_management_description') }}</p>
                 </div>
                 @can('create admins')
                     <a href="{{ route('admin.admins.create') }}" 
-                       class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold">
-                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       class="inline-flex items-center justify-center px-4 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold text-sm sm:text-base">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                         </svg>
                         {{ __('common.new_admin') }}

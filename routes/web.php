@@ -26,6 +26,7 @@ use App\Http\Controllers\Owner\SubscriptionController as OwnerSubscriptionContro
 use App\Http\Controllers\Owner\ReportController as OwnerReportController;
 use App\Http\Controllers\Owner\NotificationController as OwnerNotificationController;
 use App\Http\Controllers\Owner\TicketController as OwnerTicketController;
+use App\Http\Controllers\Owner\PaymentController as OwnerPaymentController;
 use App\Http\Controllers\LanguageController;
 
 Route::get('/', function () {
@@ -60,6 +61,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
         Route::get('/campaigns', [AdminAiReportController::class, 'campaigns'])->name('campaigns');
         Route::get('/messages', [AdminAiReportController::class, 'messages'])->name('messages');
         Route::get('/subscriptions', [AdminAiReportController::class, 'subscriptions'])->name('subscriptions');
+        
+        // Export Routes
+        Route::get('/service-providers/export', [AdminAiReportController::class, 'exportServiceProviders'])->name('service-providers.export');
+        Route::get('/campaigns/export', [AdminAiReportController::class, 'exportCampaigns'])->name('campaigns.export');
+        Route::get('/messages/export', [AdminAiReportController::class, 'exportMessages'])->name('messages.export');
+        Route::get('/subscriptions/export', [AdminAiReportController::class, 'exportSubscriptions'])->name('subscriptions.export');
     });
     Route::get('/settings', [AdminSettingsController::class, 'index'])->name('settings');
     Route::post('/settings/profile', [AdminSettingsController::class, 'updateProfile'])->name('settings.profile');
@@ -126,6 +133,15 @@ Route::prefix('owner')->name('owner.')->middleware(['auth', 'role:owner'])->grou
         Route::post('/{installment}/postpone', [OwnerDebtorController::class, 'postponeInstallment'])->name('postpone');
         Route::post('/{installment}/cancel', [OwnerDebtorController::class, 'cancelInstallment'])->name('cancel');
     });
+    
+    // Payment Routes
+    Route::prefix('payments')->name('payments.')->group(function () {
+        Route::post('/debtors/{debtor}/create-link', [OwnerPaymentController::class, 'createPaymentLink'])->name('create-link');
+        Route::get('/debtors/{debtor}/iframe', [OwnerPaymentController::class, 'openPaymentIframe'])->name('iframe');
+    });
+    
+    // Short payment link (for SMS)
+    Route::get('/payment-link/{debtor}', [OwnerPaymentController::class, 'shortPaymentLink'])->name('payment.short-link');
     Route::get('/collections', [OwnerCollectionController::class, 'index'])->name('collections.index');
     Route::post('/collections', [OwnerCollectionController::class, 'store'])->name('collections.store');
     Route::get('/collections/{campaign}', [OwnerCollectionController::class, 'show'])->name('collections.show');
@@ -153,6 +169,13 @@ Route::prefix('owner')->name('owner.')->middleware(['auth', 'role:owner'])->grou
         Route::get('/campaigns', [OwnerReportController::class, 'campaigns'])->name('campaigns');
         Route::get('/subscription', [OwnerReportController::class, 'subscription'])->name('subscription');
         Route::get('/audit', [OwnerReportController::class, 'audit'])->name('audit');
+        
+        // Export Routes
+        Route::get('/debt-status/export', [OwnerReportController::class, 'exportDebtStatus'])->name('debt-status.export');
+        Route::get('/messages/export', [OwnerReportController::class, 'exportMessages'])->name('messages.export');
+        Route::get('/campaigns/export', [OwnerReportController::class, 'exportCampaigns'])->name('campaigns.export');
+        Route::get('/subscription/export', [OwnerReportController::class, 'exportSubscription'])->name('subscription.export');
+        Route::get('/audit/export', [OwnerReportController::class, 'exportAudit'])->name('audit.export');
     });
     
     // Notifications Routes
@@ -172,4 +195,22 @@ Route::prefix('owner')->name('owner.')->middleware(['auth', 'role:owner'])->grou
     
     // Test SMS Route (للاختبار فقط)
     Route::post('/test-sms', [\App\Http\Controllers\Owner\TestSmsController::class, 'test'])->name('test-sms');
+});
+
+// Paymob Callbacks (بدون auth middleware لأن Paymob سيرسل إليها مباشرة)
+Route::prefix('payment')->name('payment.')->group(function () {
+    // Callback URL (redirect after payment) - GET or POST
+    Route::match(['get', 'post'], '/callback', [OwnerPaymentController::class, 'handleCallback'])
+        ->name('callback')
+        ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+    
+    // Transaction Processed Callback (webhook)
+    Route::post('/callback/transaction-processed', [OwnerPaymentController::class, 'handleTransactionProcessedCallback'])
+        ->name('callback.processed')
+        ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+    
+    // Transaction Response Callback (webhook)
+    Route::post('/callback/transaction-response', [OwnerPaymentController::class, 'handleTransactionResponseCallback'])
+        ->name('callback.response')
+        ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 });

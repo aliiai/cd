@@ -5,9 +5,9 @@
     <div class="w-full mx-auto sm:px-6 lg:px-8">
         
         {{-- ========== Header Section ========== --}}
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">{{ __('common.users_management') }}</h1>
-            <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('common.users_management_description') }}</p>
+        <div class="mb-4 sm:mb-6 md:mb-8">
+            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-1 sm:mb-2">{{ __('common.users_management') }}</h1>
+            <p class="text-xs sm:text-sm lg:text-base text-gray-600 dark:text-gray-400">{{ __('common.users_management_description') }}</p>
         </div>
 
         {{-- ========== Success/Error Messages ========== --}}

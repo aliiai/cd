@@ -4,9 +4,9 @@
 <div class="min-h-screen bg-gradient-to-br from-slate-50 via-primary-50 to-secondary-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12">
     <div class="w-full mx-auto sm:px-6 lg:px-8">
         <!-- Header -->
-        <div class="mb-8">
-            <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">إدارة الشكاوى</h1>
-            <p class="text-lg text-gray-600 dark:text-gray-400">عرض وإدارة جميع الشكاوى من المستخدمين</p>
+        <div class="mb-4 sm:mb-6 md:mb-8">
+            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-1 sm:mb-2">إدارة الشكاوى</h1>
+            <p class="text-xs sm:text-sm lg:text-base text-gray-600 dark:text-gray-400">عرض وإدارة جميع الشكاوى من المستخدمين</p>
         </div>
 
         <!-- Statistics Cards -->

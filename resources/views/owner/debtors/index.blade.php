@@ -2,17 +2,17 @@
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-slate-50 via-primary-50 to-secondary-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-    <div class="w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="w-full mx-auto px-2 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
         {{-- ========== Header Section ========== --}}
-        <div class="mb-8">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="mb-4 sm:mb-6 md:mb-8">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4">
                 <div>
-                    <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">{{ __('owner.debtors_title') }}</h1>
-                    <p class="text-lg text-gray-600 dark:text-gray-400">{{ __('owner.debtors_description') }}</p>
+                    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-1 sm:mb-2">{{ __('owner.debtors_title') }}</h1>
+                    <p class="text-sm sm:text-base lg:text-lg text-gray-600 dark:text-gray-400">{{ __('owner.debtors_description') }}</p>
                 </div>
                 <button onclick="openDebtorModal()" 
-                        class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-700 dark:from-primary-500 dark:to-primary-600 hover:from-primary-700 hover:to-primary-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5">
-                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        class="inline-flex items-center justify-center px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 bg-gradient-to-r from-primary-600 to-primary-700 dark:from-primary-500 dark:to-primary-600 hover:from-primary-700 hover:to-primary-800 text-white text-sm sm:text-base font-semibold rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5 w-full md:w-auto">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                     </svg>
                     {{ __('owner.add_debtor') }}
@@ -22,39 +22,40 @@
 
         {{-- ========== Success/Error Messages ========== --}}
         @if(session('success'))
-            <div class="mb-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-l-4 border-green-500 dark:border-green-400 rounded-lg shadow-sm">
+            <div class="mb-4 sm:mb-6 p-3 sm:p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-l-4 border-green-500 dark:border-green-400 rounded-lg shadow-sm">
                 <div class="flex items-center">
-                    <svg class="w-5 h-5 text-green-600 dark:text-green-400 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-green-600 dark:text-green-400 ml-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    <p class="text-sm font-medium text-green-800 dark:text-green-300">{{ session('success') }}</p>
+                    <p class="text-xs sm:text-sm font-medium text-green-800 dark:text-green-300">{{ session('success') }}</p>
                 </div>
             </div>
         @endif
 
         @if(session('error'))
-            <div class="mb-6 p-4 bg-gradient-to-r from-red-50 to-rose-50 dark:from-red-900/30 dark:to-rose-900/30 border-l-4 border-red-500 dark:border-red-400 rounded-lg shadow-sm">
+            <div class="mb-4 sm:mb-6 p-3 sm:p-4 bg-gradient-to-r from-red-50 to-rose-50 dark:from-red-900/30 dark:to-rose-900/30 border-l-4 border-red-500 dark:border-red-400 rounded-lg shadow-sm">
                 <div class="flex items-center">
-                    <svg class="w-5 h-5 text-red-600 dark:text-red-400 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-red-600 dark:text-red-400 ml-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    <p class="text-sm font-medium text-red-800 dark:text-red-300">{{ session('error') }}</p>
+                    <p class="text-xs sm:text-sm font-medium text-red-800 dark:text-red-300">{{ session('error') }}</p>
                 </div>
             </div>
         @endif
 
         {{-- ========== Subscription Usage Info ========== --}}
         @if($subscriptionInfo)
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border-l-4 border-primary-500 dark:border-primary-400 p-6 mb-6">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center">
-                        <svg class="w-5 h-5 text-primary-600 dark:text-primary-400 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-lg border-l-4 border-primary-500 dark:border-primary-400 p-4 sm:p-5 md:p-6 mb-4 sm:mb-6">
+                <div class="flex items-center justify-between mb-3 sm:mb-4">
+                    <h3 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-primary-600 dark:text-primary-400 ml-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                         </svg>
-                        {{ __('owner.subscription_usage_info') }}
+                        <span class="hidden sm:inline">{{ __('owner.subscription_usage_info') }}</span>
+                        <span class="sm:hidden">الاشتراك</span>
                     </h3>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                     <div>
                         <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">{{ __('owner.current_package') }}</p>
                         <p class="text-xl font-bold text-gray-900 dark:text-gray-100">{{ $subscriptionInfo['subscription_name'] }}</p>
@@ -749,6 +750,38 @@ style="display: none; align-items: flex-start; justify-content: center;">
             .catch(error => {
                 console.error('Error:', error);
                 document.getElementById('debtorsTableContainer').innerHTML = '<div class="text-center py-12 text-red-600">{{ __('owner.error_loading_data') }}</div>';
+            });
+        }
+    });
+
+    // ========== Functions for Actions Menu (Mobile) ==========
+    function toggleActionsMenu(menuId) {
+        // إغلاق جميع القوائم المفتوحة
+        document.querySelectorAll('[id^="actions-menu-"]').forEach(menu => {
+            if (menu.id !== menuId) {
+                menu.classList.add('hidden');
+            }
+        });
+        
+        // تبديل القائمة المحددة
+        const menu = document.getElementById(menuId);
+        if (menu) {
+            menu.classList.toggle('hidden');
+        }
+    }
+
+    function closeActionsMenu(menuId) {
+        const menu = document.getElementById(menuId);
+        if (menu) {
+            menu.classList.add('hidden');
+        }
+    }
+
+    // إغلاق القوائم عند النقر خارجها
+    document.addEventListener('click', function(event) {
+        if (!event.target.closest('[id^="actions-menu-"]') && !event.target.closest('button[onclick*="toggleActionsMenu"]')) {
+            document.querySelectorAll('[id^="actions-menu-"]').forEach(menu => {
+                menu.classList.add('hidden');
             });
         }
     });

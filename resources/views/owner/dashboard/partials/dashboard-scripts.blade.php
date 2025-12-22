@@ -41,8 +41,10 @@
         const maxValue = Math.max(...amounts, 0);
         const yAxisMax = maxValue > 0 ? Math.ceil(maxValue * 1.15) : 1000;
         
-        // إنشاء gradient للـ fill
-        const gradient = collectionTrendCtx.createLinearGradient(0, 0, 0, 400);
+        // إنشاء gradient للـ fill - متجاوب مع حجم الحاوية
+        const container = document.getElementById('collection-chart-container');
+        const containerHeight = container ? container.offsetHeight : (window.innerWidth >= 1024 ? 400 : 250);
+        const gradient = collectionTrendCtx.createLinearGradient(0, 0, 0, containerHeight);
         gradient.addColorStop(0, 'rgba(92, 112, 224, 0.3)');
         gradient.addColorStop(1, 'rgba(92, 112, 224, 0.05)');
         
@@ -78,10 +80,10 @@
                         labels: {
                             color: chartColors.legendColor,
                             font: {
-                                size: 13,
+                                size: window.innerWidth < 640 ? 11 : (window.innerWidth < 1024 ? 12 : 13),
                                 weight: '500',
                             },
-                            padding: 15,
+                            padding: window.innerWidth < 640 ? 10 : 15,
                             usePointStyle: true,
                             pointStyle: 'circle',
                         }
@@ -112,10 +114,13 @@
                         ticks: {
                             color: chartColors.tickColor,
                             font: {
-                                size: 12,
+                                size: window.innerWidth < 640 ? 10 : (window.innerWidth < 1024 ? 11 : 12),
                                 weight: '500',
                             },
-                            padding: 10,
+                            padding: window.innerWidth < 640 ? 5 : 10,
+                            maxRotation: window.innerWidth < 640 ? 45 : 0,
+                            autoSkip: true,
+                            maxTicksLimit: window.innerWidth < 640 ? 5 : undefined,
                         }
                     },
                     y: {
@@ -128,9 +133,10 @@
                         ticks: {
                             color: chartColors.tickColor,
                             font: {
-                                size: 12,
+                                size: window.innerWidth < 640 ? 10 : (window.innerWidth < 1024 ? 11 : 12),
                             },
-                            padding: 10,
+                            padding: window.innerWidth < 640 ? 5 : 10,
+                            maxTicksLimit: window.innerWidth < 640 ? 5 : undefined,
                             callback: function(value) {
                                 return value.toLocaleString('ar-SA') + ' ر.س';
                             }

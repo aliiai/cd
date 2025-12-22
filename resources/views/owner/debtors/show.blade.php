@@ -112,12 +112,12 @@
                     <table class="w-full">
                         <thead>
                             <tr class="border-b border-gray-200 dark:border-gray-700">
-                                <th class="px-4 py-3 text-right text-sm font-semibold text-gray-700 dark:text-gray-300">رقم الدفعة</th>
-                                <th class="px-4 py-3 text-right text-sm font-semibold text-gray-700 dark:text-gray-300">المبلغ</th>
-                                <th class="px-4 py-3 text-right text-sm font-semibold text-gray-700 dark:text-gray-300">تاريخ الاستحقاق</th>
-                                <th class="px-4 py-3 text-right text-sm font-semibold text-gray-700 dark:text-gray-300">المبلغ المدفوع</th>
-                                <th class="px-4 py-3 text-right text-sm font-semibold text-gray-700 dark:text-gray-300">الحالة</th>
-                                <th class="px-4 py-3 text-right text-sm font-semibold text-gray-700 dark:text-gray-300">الإجراءات</th>
+                                <th class="px-4 py-3 text-right text-sm font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">رقم الدفعة</th>
+                                <th class="px-4 py-3 text-right text-sm font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">المبلغ</th>
+                                <th class="px-4 py-3 text-right text-sm font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">تاريخ الاستحقاق</th>
+                                <th class="px-4 py-3 text-right text-sm font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">المبلغ المدفوع</th>
+                                <th class="px-4 py-3 text-right text-sm font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">الحالة</th>
+                                <th class="px-4 py-3 text-right text-sm font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">الإجراءات</th>
                             </tr>
                         </thead>
                         <tbody>

@@ -3,12 +3,12 @@
         <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead class="bg-gradient-to-r from-primary-600 to-primary-600 dark:from-primary-700 dark:to-primary-800">
                 <tr>
-                    <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider">الاسم</th>
-                    <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider">البريد الإلكتروني</th>
-                    <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider">الدور</th>
-                    <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider">حالة الحساب</th>
-                    <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider">تاريخ التسجيل</th>
-                    <th class="px-6 py-4 text-center text-xs font-semibold text-white uppercase tracking-wider">الإجراءات</th>
+                    <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider whitespace-nowrap">الاسم</th>
+                    <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider whitespace-nowrap">البريد الإلكتروني</th>
+                    <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider whitespace-nowrap">الدور</th>
+                    <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider whitespace-nowrap">حالة الحساب</th>
+                    <th class="px-6 py-4 text-right text-xs font-semibold text-white uppercase tracking-wider whitespace-nowrap">تاريخ التسجيل</th>
+                    <th class="px-6 py-4 text-center text-xs font-semibold text-white uppercase tracking-wider whitespace-nowrap">الإجراءات</th>
                 </tr>
             </thead>
             <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700" id="usersTableBody">

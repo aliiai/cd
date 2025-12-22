@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-slate-50 via-primary-50 to-secondary-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-    <div class="w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="w-full mx-auto px-2 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
         
         {{-- ========== Header Section ========== --}}
         @include('owner.dashboard.partials.header-section')
@@ -36,7 +36,7 @@
         ])
 
         {{-- ========== 3. الرسوم البيانية ========== --}}
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 mb-4 sm:mb-6 md:mb-8">
             
             {{-- رسم بياني: تطور التحصيل عبر الزمن --}}
             @include('owner.dashboard.partials.collection-trend-chart', [
@@ -49,7 +49,7 @@
         </div>
 
         {{-- ========== 4. استخدام قنوات التواصل والتنبيهات الذكية ========== --}}
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 md:gap-6 mb-4 sm:mb-6 md:mb-8">
             
             {{-- استخدام قنوات التواصل --}}
             @include('owner.dashboard.partials.channel-usage-chart', [

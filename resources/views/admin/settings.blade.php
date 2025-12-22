@@ -4,33 +4,33 @@
 <div class="py-6">
     <div class="w-full mx-auto sm:px-6 lg:px-8">
         <!-- Page Header -->
-        <div class="mb-6">
-            <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">الإعدادات</h1>
-            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">إدارة معلومات حسابك وإعدادات الأمان والتفضيلات</p>
+        <div class="mb-4 sm:mb-6 md:mb-8">
+            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-1 sm:mb-2">الإعدادات</h1>
+            <p class="text-xs sm:text-sm lg:text-base text-gray-600 dark:text-gray-400">إدارة معلومات حسابك وإعدادات الأمان والتفضيلات</p>
         </div>
 
         <!-- Success Message -->
         @if(session('success'))
-        <div class="mb-6 p-4 bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-lg">
+        <div class="mb-4 sm:mb-6 p-3 sm:p-4 bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-lg">
             <div class="flex items-center">
-                <svg class="w-5 h-5 text-primary-600 dark:text-primary-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5 text-primary-600 dark:text-primary-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                <p class="text-sm font-medium text-primary-800 dark:text-primary-300">{{ session('success') }}</p>
+                <p class="text-xs sm:text-sm font-medium text-primary-800 dark:text-primary-300">{{ session('success') }}</p>
             </div>
         </div>
         @endif
 
         <!-- Error Message -->
         @if($errors->any())
-        <div class="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-            <div class="flex items-center">
-                <svg class="w-5 h-5 text-red-600 dark:text-red-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="mb-4 sm:mb-6 p-3 sm:p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+            <div class="flex items-start">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5 text-red-600 dark:text-red-400 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                <div>
-                    <h3 class="text-sm font-medium text-red-800 dark:text-red-300">يرجى تصحيح الأخطاء التالية:</h3>
-                    <ul class="mt-2 text-sm text-red-700 dark:text-red-400 list-disc list-inside">
+                <div class="flex-1 min-w-0">
+                    <h3 class="text-xs sm:text-sm font-medium text-red-800 dark:text-red-300">يرجى تصحيح الأخطاء التالية:</h3>
+                    <ul class="mt-2 text-xs sm:text-sm text-red-700 dark:text-red-400 list-disc list-inside">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
@@ -41,26 +41,26 @@
         @endif
 
         <!-- Tabs Navigation -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 mb-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 mb-4 sm:mb-6">
             <div class="border-b border-gray-200 dark:border-gray-700">
-                <nav class="flex space-x-8 space-x-reverse px-6" aria-label="Tabs">
-                    <button onclick="showTab('profile')" id="tab-profile" class="tab-button active py-4 px-1 border-b-2 border-primary-500 font-medium text-sm text-primary-600 dark:text-primary-400">
+                <nav class="flex space-x-4 sm:space-x-8 space-x-reverse px-3 sm:px-6 overflow-x-auto" aria-label="Tabs">
+                    <button onclick="showTab('profile')" id="tab-profile" class="tab-button active py-3 sm:py-4 px-1 border-b-2 border-primary-500 font-medium text-xs sm:text-sm text-primary-600 dark:text-primary-400 whitespace-nowrap">
                         معلومات الحساب
                     </button>
-                    <button onclick="showTab('password')" id="tab-password" class="tab-button py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600">
+                    <button onclick="showTab('password')" id="tab-password" class="tab-button py-3 sm:py-4 px-1 border-b-2 border-transparent font-medium text-xs sm:text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600 whitespace-nowrap">
                         كلمة المرور
                     </button>
-                    <button onclick="showTab('preferences')" id="tab-preferences" class="tab-button py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600">
+                    <button onclick="showTab('preferences')" id="tab-preferences" class="tab-button py-3 sm:py-4 px-1 border-b-2 border-transparent font-medium text-xs sm:text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600 whitespace-nowrap">
                         التفضيلات
                     </button>
-                    <button onclick="showTab('security')" id="tab-security" class="tab-button py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600">
+                    <button onclick="showTab('security')" id="tab-security" class="tab-button py-3 sm:py-4 px-1 border-b-2 border-transparent font-medium text-xs sm:text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600 whitespace-nowrap">
                         الأمان والجلسات
                     </button>
                 </nav>
             </div>
 
             <!-- Tab Content -->
-            <div class="p-6">
+            <div class="p-4 sm:p-6">
                 <!-- Profile Information Tab -->
                 <div id="tab-content-profile" class="tab-content">
                     <form method="POST" action="{{ route('admin.settings.profile') }}" enctype="multipart/form-data" x-data="{ photoPreview: '{{ $user->profile_photo_url ?? '' }}' }">
@@ -150,7 +150,7 @@
 
                             <!-- Submit Button -->
                             <div class="flex justify-end">
-                                <button type="submit" class="px-6 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+                                <button type="submit" class="w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium text-sm sm:text-base rounded-lg shadow-md hover:shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
                                     حفظ التغييرات
                                 </button>
                             </div>
@@ -213,7 +213,7 @@
 
                             <!-- Submit Button -->
                             <div class="flex justify-end">
-                                <button type="submit" class="px-6 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+                                <button type="submit" class="w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium text-sm sm:text-base rounded-lg shadow-md hover:shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
                                     تحديث كلمة المرور
                                 </button>
                             </div>
@@ -278,7 +278,7 @@
 
                             <!-- Submit Button -->
                             <div class="flex justify-end">
-                                <button type="submit" class="px-6 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+                                <button type="submit" class="w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium text-sm sm:text-base rounded-lg shadow-md hover:shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
                                     حفظ التفضيلات
                                 </button>
                             </div>
@@ -291,7 +291,7 @@
                     <div class="space-y-6">
                         <!-- Active Sessions -->
                         <div>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">الجلسات النشطة</h3>
+                            <h3 class="text-base sm:text-lg lg:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3 sm:mb-4">الجلسات النشطة</h3>
                             
                             @if($sessions->isEmpty())
                                 <div class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 text-center">
@@ -347,7 +347,7 @@
                                             @enderror
                                         </div>
                                         
-                                        <button type="submit" class="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2">
+                                        <button type="submit" class="w-full sm:w-auto px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white font-medium text-xs sm:text-sm rounded-lg shadow-sm hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2">
                                             تسجيل الخروج من جميع الجلسات الأخرى
                                         </button>
                                     </form>
@@ -356,8 +356,8 @@
                         </div>
 
                         <!-- Last Login Info -->
-                        <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">معلومات تسجيل الدخول</h3>
+                        <div class="border-t border-gray-200 dark:border-gray-700 pt-4 sm:pt-6">
+                            <h3 class="text-base sm:text-lg lg:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3 sm:mb-4">معلومات تسجيل الدخول</h3>
                             <div class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>

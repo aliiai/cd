@@ -1,4 +1,4 @@
-<div class="relative" x-data="{ open: false }" wire:init="loadNotifications" wire:poll.5s="loadNotifications" x-init="$watch('$wire.unreadCount', value => console.log('Unread count:', value))">
+<div class="relative" x-data="{ open: false }" wire:init="loadNotifications" wire:poll.5s="loadNotifications">
     <!-- Notification Button -->
     <button 
         type="button"
@@ -28,7 +28,7 @@
         x-transition:leave="transition ease-in duration-75"
         x-transition:leave-start="transform opacity-100 scale-100"
         x-transition:leave-end="transform opacity-0 scale-95"
-        class="absolute {{ app()->getLocale() === 'ar' ? 'left-0' : 'right-0' }} mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg z-50 border border-gray-200 dark:border-gray-700"
+        class="absolute {{ app()->getLocale() === 'ar' ? 'right-0' : 'left-0' }} mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg z-50 border border-gray-200 dark:border-gray-700"
         style="display: none;"
     >
         <!-- Header -->

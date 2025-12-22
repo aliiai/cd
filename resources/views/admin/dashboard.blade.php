@@ -5,13 +5,13 @@
     <div class="w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
         {{-- ========== Header Section ========== --}}
-        <div class="mb-8">
-            <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">{{ __('common.admin_dashboard_title') }}</h1>
-            <p class="text-lg text-gray-600 dark:text-gray-400">{{ __('common.admin_dashboard_description') }}</p>
+        <div class="mb-4 sm:mb-6 md:mb-8">
+            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-1 sm:mb-2">{{ __('common.admin_dashboard_title') }}</h1>
+            <p class="text-sm sm:text-base lg:text-lg text-gray-600 dark:text-gray-400">{{ __('common.admin_dashboard_description') }}</p>
         </div>
 
         {{-- ========== 1. البطاقات الإحصائية الكبيرة ========== --}}
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-6 mb-6 sm:mb-8 lg:mb-8">
             
             {{-- بطاقة مقدمي الخدمة --}}
             @include('admin.dashboard.partials.stat-card-primary', [
@@ -60,7 +60,7 @@
         </div>
 
         {{-- ========== 2. البطاقات الإحصائية الثانوية ========== --}}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-6 mb-6 sm:mb-8 lg:mb-8">
             
             {{-- بطاقة المبالغ المحصلة --}}
             @include('admin.dashboard.partials.stat-card-secondary', [
@@ -83,27 +83,27 @@
             ])
 
             {{-- بطاقة نشاط اليوم --}}
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border-r-4 border-primary-400 dark:border-primary-500">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300">{{ __('common.today_activity') }}</h3>
-                    <div class="bg-primary-100 dark:bg-primary-900/30 rounded-lg p-2">
-                        <svg class="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 md:p-6 border-r-4 border-primary-400 dark:border-primary-500">
+                <div class="flex items-center justify-between mb-3 sm:mb-4 lg:mb-4">
+                    <h3 class="text-sm sm:text-base lg:text-lg font-semibold text-gray-700 dark:text-gray-300">{{ __('common.today_activity') }}</h3>
+                    <div class="bg-primary-100 dark:bg-primary-900/30 rounded-lg p-1.5 sm:p-2 lg:p-2">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
                 </div>
-                <div class="space-y-3">
+                <div class="space-y-2 sm:space-y-3 lg:space-y-3">
                     <div class="flex items-center justify-between">
-                        <span class="text-gray-600 dark:text-gray-400">{{ __('common.messages_sent') }}</span>
-                        <span class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ number_format($todayMessages) }}</span>
+                        <span class="text-xs sm:text-sm lg:text-sm text-gray-600 dark:text-gray-400">{{ __('common.messages_sent') }}</span>
+                        <span class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-gray-100">{{ number_format($todayMessages) }}</span>
                     </div>
                     <div class="flex items-center justify-between">
-                        <span class="text-gray-600 dark:text-gray-400">{{ __('common.new_debtors') }}</span>
-                        <span class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ number_format($todayDebtors) }}</span>
+                        <span class="text-xs sm:text-sm lg:text-sm text-gray-600 dark:text-gray-400">{{ __('common.new_debtors') }}</span>
+                        <span class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-gray-100">{{ number_format($todayDebtors) }}</span>
                     </div>
                     <div class="flex items-center justify-between">
-                        <span class="text-gray-600 dark:text-gray-400">{{ __('common.joined_users') }}</span>
-                        <span class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ number_format($todayUsers) }}</span>
+                        <span class="text-xs sm:text-sm lg:text-sm text-gray-600 dark:text-gray-400">{{ __('common.joined_users') }}</span>
+                        <span class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-gray-100">{{ number_format($todayUsers) }}</span>
                     </div>
                 </div>
             </div>
@@ -111,16 +111,16 @@
         </div>
 
         {{-- ========== 3. الرسوم البيانية والجداول ========== --}}
-        <div class="grid grid-cols-2 gap-6 mb-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-6 mb-6 sm:mb-8 lg:mb-8">
             
             {{-- الرسوم البيانية --}}
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-6">
                 @include('admin.dashboard.partials.status-chart', ['statusDistribution' => $statusDistribution])
                 @include('admin.dashboard.partials.messages-chart')
             </div>
 
             {{-- أحدث الأنشطة --}}
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-6">
                 @include('admin.dashboard.partials.recent-owners', ['recentOwners' => $recentOwners])
                 @include('admin.dashboard.partials.recent-campaigns', ['recentCampaigns' => $recentCampaigns])
             </div>

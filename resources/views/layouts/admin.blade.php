@@ -48,40 +48,92 @@
 <body class="font-sans antialiased h-screen overflow-hidden bg-gray-50 dark:bg-gray-900" style="font-family: 'Cairo', sans-serif;">
     <div class="flex h-full">
         <!-- Sidebar -->
-        <aside class="flex-shrink-0 transition-all duration-300 h-full fixed {{ app()->getLocale() === 'ar' ? 'right-0' : 'left-0' }} top-0 z-30">
+        <aside class="flex-shrink-0 transition-all duration-300 h-full fixed {{ app()->getLocale() === 'ar' ? 'right-0' : 'left-0' }} top-0 z-30 hidden lg:block">
+            @livewire('sidebar')
+        </aside>
+
+        <!-- Mobile Sidebar Overlay -->
+        <div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black/50 z-20 lg:hidden hidden" onclick="if(typeof window.closeMobileSidebar === 'function') { window.closeMobileSidebar(); }"></div>
+
+        <!-- Mobile Sidebar -->
+        <aside class="flex-shrink-0 transition-all duration-300 h-full fixed {{ app()->getLocale() === 'ar' ? 'right-0' : 'left-0' }} top-0 z-30 lg:hidden transform {{ app()->getLocale() === 'ar' ? 'translate-x-full' : '-translate-x-full' }}" id="mobile-sidebar">
             @livewire('sidebar')
         </aside>
 
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col transition-all duration-300" id="main-content">
+        <div class="flex-1 flex flex-col transition-all duration-300 w-full lg:w-auto" id="main-content">
             <!-- Header -->
             <header class="sticky top-0 z-20">
                 <x-header />
             </header>
 
             <!-- Page Content -->
-            <main class="flex-1 p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+            <main class="flex-1 p-3 sm:p-4 md:p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">
                 @yield('content')
             </main>
         </div>
     </div>
 
     <script>
+        // Mobile Sidebar Functions - Make them globally available immediately
+        window.openMobileSidebar = function() {
+            const sidebar = document.getElementById('mobile-sidebar');
+            const overlay = document.getElementById('mobile-sidebar-overlay');
+            if (sidebar && overlay) {
+                const isRTL = document.documentElement.dir === 'rtl';
+                if (isRTL) {
+                    sidebar.classList.remove('translate-x-full');
+                } else {
+                    sidebar.classList.remove('-translate-x-full');
+                }
+                sidebar.classList.add('translate-x-0');
+                overlay.classList.remove('hidden');
+                // منع التمرير في body عند فتح Sidebar
+                document.body.style.overflow = 'hidden';
+            }
+        };
+
+        window.closeMobileSidebar = function() {
+            const sidebar = document.getElementById('mobile-sidebar');
+            const overlay = document.getElementById('mobile-sidebar-overlay');
+            const isRTL = document.documentElement.dir === 'rtl';
+            if (sidebar && overlay) {
+                sidebar.classList.remove('translate-x-0');
+                if (isRTL) {
+                    sidebar.classList.add('translate-x-full');
+                } else {
+                    sidebar.classList.add('-translate-x-full');
+                }
+                overlay.classList.add('hidden');
+                // إعادة التمرير في body عند إغلاق Sidebar
+                document.body.style.overflow = '';
+            }
+        };
+
         // تحديث margin للمحتوى الرئيسي بناءً على حالة Sidebar
         document.addEventListener('DOMContentLoaded', function() {
-            const sidebar = document.querySelector('[wire\\:click="toggle"]')?.closest('div');
+            const sidebar = document.querySelector('aside.hidden.lg\\:block');
             const mainContent = document.getElementById('main-content');
             
             function updateMargin() {
-                const sidebarWidth = sidebar?.offsetWidth || 320;
-                const isRTL = document.documentElement.dir === 'rtl';
-                if (mainContent) {
-                    if (isRTL) {
-                        mainContent.style.marginRight = sidebarWidth + 'px';
-                        mainContent.style.marginLeft = '0';
-                    } else {
-                        mainContent.style.marginLeft = sidebarWidth + 'px';
+                // على الشاشات الكبيرة فقط
+                if (window.innerWidth >= 1024) {
+                    const sidebarWidth = sidebar?.offsetWidth || 320;
+                    const isRTL = document.documentElement.dir === 'rtl';
+                    if (mainContent) {
+                        if (isRTL) {
+                            mainContent.style.marginRight = sidebarWidth + 'px';
+                            mainContent.style.marginLeft = '0';
+                        } else {
+                            mainContent.style.marginLeft = sidebarWidth + 'px';
+                            mainContent.style.marginRight = '0';
+                        }
+                    }
+                } else {
+                    // على الشاشات الصغيرة، لا margin
+                    if (mainContent) {
                         mainContent.style.marginRight = '0';
+                        mainContent.style.marginLeft = '0';
                     }
                 }
             }
@@ -93,10 +145,14 @@
             window.addEventListener('resize', updateMargin);
             
             // مراقبة تغييرات Livewire
-            Livewire.hook('message.processed', () => {
-                setTimeout(updateMargin, 100);
-            });
+            if (typeof Livewire !== 'undefined') {
+                Livewire.hook('message.processed', () => {
+                    setTimeout(updateMargin, 100);
+                });
+            }
         });
+
+        // Functions are already exposed globally above
     </script>
 
     @livewireScripts
